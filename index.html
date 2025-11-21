@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz Loading</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <!-- ЭКРАН 1 -->
+  <div class="page page1" id="page1">
+    <div class="bg"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="content">
+      <h1 class="title">Lose Weight Just by Walking</h1>
+
+      <p class="subtitle">
+        Your personalized weight loss and step goal plan
+      </p>
+
+      <div class="progress-wrapper">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+          <div class="progress-percent" id="progressPercent">0%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ <!-- ЭКРАН 2 -->
+<div class="page page2 hidden" id="page2">
+  <div class="page2-inner">
+    <!-- ВЕРХ: заголовок + подзаголовок -->
+    <div class="page2-top">
+      <h1 class="page2-title">
+        <span class="page2-title-accent">27 million</span>
+      </h1>
+
+      <p class="page2-subtitle">
+        users have chosen walking by Montibus
+      </p>
+    </div>
+
+    <!-- СЕРЕДИНА: фото, которое подстраивается по размеру -->
+    <div class="page2-middle">
+      <img
+        src="assets/2.png"
+        alt="Walking by Slimkit users"
+        class="page2-image"
+      />
+    </div>
+
+    <!-- НИЗ: дисклеймер + кнопка -->
+    <div class="page2-bottom">
+      <p class="page2-consent">
+        By clicking <strong>"Continue"</strong>, I agree to the processing of my personal data.
+        My information will not be shared without my consent.
+        <a href="#" class="page2-link">Privacy Policy</a> and
+        <a href="#" class="page2-link">Terms</a>.
+      </p>
+
+      <div class="page2-cta">
+        <button class="page2-button" type="button">
+          Continue
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+ 
+</body>
+</html>
