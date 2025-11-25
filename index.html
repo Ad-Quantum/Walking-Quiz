@@ -1,75 +1,196 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Quiz Loading</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Walking Quiz</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="script.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- ЭКРАН 1 -->
-  <div class="page page1" id="page1">
-    <div class="bg"></div>
-    <div class="bg-overlay"></div>
 
-    <div class="content">
-      <h1 class="title">Lose Weight Just by Walking</h1>
+  <div class="view active view--no-bg" id="view-1">
+    <div class="bg-image" style="background-image: url('assets/1.2.png');"></div>
+    <main class="layout-main layout-main--centered">
+      <div class="container-narrow text-center">
+        <h1 class="text-display" style="color: #fff; font-size: 36px;">Lose Weight Just by Walking</h1>
+        <p class="text-subtitle" style="color: #fff; opacity: 0.9;">Your personalized weight loss plan</p>
+        <div class="loader-wrap"><div id="loading-bar-fill" class="loader-fill"></div></div>
+        <div id="loading-text" class="text-caption" style="color: #fff; margin-top: 8px;">0%</div>
+      </div>
+    </main>
+  </div>
 
-      <p class="subtitle">
-        Your personalized weight loss and step goal plan
-      </p>
-
-      <div class="progress-wrapper">
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill"></div>
-          <div class="progress-percent" id="progressPercent">0%</div>
+  <div class="view" id="view-2">
+    <header class="layout-header"></header>
+    <main class="layout-main">
+      <div class="container-wide text-center">
+        <h1 class="text-h1">Walk to Lose Weight</h1>
+        <p class="text-subtitle">ACCORDING TO YOUR AGE</p>
+        
+        <div class="grid-system grid-age grid-push-down">
+          <div class="card-person" data-trigger="next">
+            <div class="card-person__img-wrap"><img src="assets/2.1.png" class="card-person__img"></div>
+            <div class="btn btn--primary btn--age">25–35 &gt;</div>
+          </div>
+          <div class="card-person" data-trigger="next">
+            <div class="card-person__img-wrap"><img src="assets/2.2.png" class="card-person__img"></div>
+            <div class="btn btn--primary btn--age">36–45 &gt;</div>
+          </div>
+          <div class="card-person" data-trigger="next">
+            <div class="card-person__img-wrap"><img src="assets/2.3.png" class="card-person__img"></div>
+            <div class="btn btn--primary btn--age">46–55 &gt;</div>
+          </div>
+          <div class="card-person" data-trigger="next">
+            <div class="card-person__img-wrap"><img src="assets/2.4.png" class="card-person__img"></div>
+            <div class="btn btn--primary btn--age">56+ &gt;</div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-
- <!-- ЭКРАН 2 -->
-<div class="page page2 hidden" id="page2">
-  <div class="page2-inner">
-    <!-- ВЕРХ: заголовок + подзаголовок -->
-    <div class="page2-top">
-      <h1 class="page2-title">
-        <span class="page2-title-accent">27 million</span>
-      </h1>
-
-      <p class="page2-subtitle">
-        users have chosen walking by Montibus
-      </p>
-    </div>
-
-    <!-- СЕРЕДИНА: фото, которое подстраивается по размеру -->
-    <div class="page2-middle">
-      <img
-        src="assets/2.png"
-        alt="Walking by Slimkit users"
-        class="page2-image"
-      />
-    </div>
-
-    <!-- НИЗ: дисклеймер + кнопка -->
-    <div class="page2-bottom">
-      <p class="page2-consent">
-        By clicking <strong>"Continue"</strong>, I agree to the processing of my personal data.
-        My information will not be shared without my consent.
-        <a href="#" class="page2-link">Privacy Policy</a> and
-        <a href="#" class="page2-link">Terms</a>.
-      </p>
-
-      <div class="page2-cta">
-        <button class="page2-button" type="button">
-          Continue
-        </button>
+    </main>
+    
+    <footer class="layout-footer layout-footer--transparent">
+      <div class="legal-footer">
+        <div class="container-narrow">
+          <p class="text-legal">
+             By continuing, you confirm and guarantee that you have read, understood, and agreed to our <a href="#" class="link">Terms of Use</a>, <a href="#" class="link">Privacy Policy</a>, and <a href="#" class="link">Refund Policy</a>.
+          </p>
+        </div>
       </div>
-    </div>
+    </footer>
   </div>
-</div>
 
- 
+  <div class="view view--gradient" id="view-3">
+    <main class="layout-main layout-main--centered" style="padding-bottom: 0; height: 100%;">
+      <div class="container-wide" style="height: 100%; display: flex; flex-direction: column;">
+        <div style="flex: 0 0 auto; text-align: center; margin-top: 20px;">
+          <h1 class="text-display">27 million</h1>
+          <p class="text-subtitle">users have chosen walking</p>
+        </div>
+        <div class="v3-image-box"><img src="assets/2.png" class="v3-img"></div>
+        <div style="flex: 0 0 auto; text-align: center; margin-bottom: 40px;">
+           <div class="container-narrow">
+             <p class="text-legal" style="margin-bottom: 12px;">
+               By pressing "Continue" I hereby agree to processing of my personal data. Nothing is shared without my permission. <a href="#" class="link">Privacy Policy</a> and <a href="#" class="link">Terms</a> apply.
+             </p>
+           </div>
+           <button class="btn btn--primary" data-trigger="next">Continue</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-4">
+    <header class="layout-header">
+      <div class="nav-group">
+        <button class="btn-arrow" data-trigger="back"><svg viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="step-progress"><div class="step-progress__track"><div class="step-progress__fill" style="width: 20%;"></div></div><div class="step-progress__dots"><div class="step-dot active"></div><div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div></div></div>
+        <button class="btn-arrow" data-trigger="next"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </header>
+    <main class="layout-main">
+      <div class="container-wide text-center">
+        <h1 class="text-h1">What is your goal?</h1>
+        <p class="text-subtitle">Select multiple goals</p>
+        <div class="grid-system grid-2">
+          <div class="card-goal" data-action="toggle">
+            <div class="card-goal__left"><div class="card-goal__check">✓</div><span class="card-goal__title">Lose weight</span></div>
+            <img src="assets/goal-1.png" class="card-goal__img">
+          </div>
+          <div class="card-goal" data-action="toggle">
+            <div class="card-goal__left"><div class="card-goal__check">✓</div><span class="card-goal__title">Boost heart health</span></div>
+            <img src="assets/goal-2.png" class="card-goal__img">
+          </div>
+          <div class="card-goal" data-action="toggle">
+            <div class="card-goal__left"><div class="card-goal__check">✓</div><span class="card-goal__title">Tone up</span></div>
+            <img src="assets/goal-3.png" class="card-goal__img">
+          </div>
+          <div class="card-goal" data-action="toggle">
+            <div class="card-goal__left"><div class="card-goal__check">✓</div><span class="card-goal__title">Calm stress</span></div>
+            <img src="assets/goal-4.png" class="card-goal__img">
+          </div>
+          <div class="card-goal" data-action="toggle">
+            <div class="card-goal__left"><div class="card-goal__check">✓</div><span class="card-goal__title">Sleep better</span></div>
+            <img src="assets/goal-5.png" class="card-goal__img">
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="layout-footer"><button class="btn btn--primary" data-trigger="next">Next</button></footer>
+  </div>
+
+  <div class="view" id="view-5">
+    <header class="layout-header">
+      <div class="nav-group">
+        <button class="btn-arrow" data-trigger="back"><svg viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="step-progress"><div class="step-progress__track"><div class="step-progress__fill" style="width: 40%;"></div></div><div class="step-progress__dots"><div class="step-dot active"></div><div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div></div></div>
+        <button class="btn-arrow" data-trigger="next"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </header>
+    <main class="layout-main">
+      <div class="container-narrow text-center">
+        <h1 class="text-h1">Without vs With Walking app</h1>
+        <p class="text-subtitle">Walking gives you long-term results through creating a natural process of losing weight adapted to individual characteristics of your health</p>
+        <div class="content-image-wrap"><img src="assets/without-vs-with.png" class="content-img"></div>
+        <p class="text-subtitle">Another great benefit is that you will start feeling better after working out with Walking app for a couple of days</p>
+      </div>
+    </main>
+    <footer class="layout-footer"><button class="btn btn--primary" data-trigger="next">Next</button></footer>
+  </div>
+
+  <div class="view" id="view-6">
+    <header class="layout-header">
+      <div class="nav-group">
+        <button class="btn-arrow" data-trigger="back"><svg viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="step-progress"><div class="step-progress__track"><div class="step-progress__fill" style="width: 60%;"></div></div><div class="step-progress__dots"><div class="step-dot active"></div><div class="step-dot active"></div><div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div></div></div>
+        <button class="btn-arrow" data-trigger="next"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </header>
+    <main class="layout-main">
+      <div class="container-narrow text-center">
+        <h1 class="text-h1">What’s your body type?</h1>
+        <div class="grid-system grid-1">
+          <div class="card-body" data-trigger="next">
+            <span class="card-body__title">Regular</span><img src="assets/6.3.png" class="card-body__img">
+          </div>
+          <div class="card-body" data-trigger="next">
+            <span class="card-body__title">Flabby</span><img src="assets/6.2.png" class="card-body__img">
+          </div>
+          <div class="card-body" data-trigger="next">
+            <span class="card-body__title">Extra</span><img src="assets/6.1.png" class="card-body__img">
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-7">
+    <header class="layout-header">
+      <div class="nav-group">
+        <button class="btn-arrow" data-trigger="back"><svg viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="step-progress"><div class="step-progress__track"><div class="step-progress__fill" style="width: 80%;"></div></div><div class="step-progress__dots"><div class="step-dot active"></div><div class="step-dot active"></div><div class="step-dot active"></div><div class="step-dot active"></div><div class="step-dot"></div></div></div>
+        <button class="btn-arrow" data-trigger="next"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </header>
+    <main class="layout-main">
+      <div class="container-narrow text-center">
+        <h1 class="text-h1">What's your target body type?</h1>
+        <div class="grid-system grid-1">
+          <div class="card-body" data-trigger="next">
+            <span class="card-body__title">A few pounds lighter</span><img src="assets/target-1.png" class="card-body__img">
+          </div>
+          <div class="card-body" data-trigger="next">
+            <span class="card-body__title">Fit</span><img src="assets/target-2.png" class="card-body__img">
+          </div>
+          <div class="card-body" data-trigger="next">
+            <span class="card-body__title">Shapely</span><img src="assets/target-3.png" class="card-body__img">
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
