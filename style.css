@@ -2,6 +2,7 @@
    1. DESIGN TOKENS (АТОМЫ)
    ========================= */
 :root {
+  /* Цвета */
   --c-primary: #2962ff; 
   --c-primary-hover: #1e40ff; 
   --c-accent: #ffd600;
@@ -13,15 +14,19 @@
   --c-bg-white: #ffffff; 
   --c-bg-surface: #f5f8ff;
   
+  /* Градиент */
   --bg-gradient-main: linear-gradient(180deg, #f3e9ff 0%, #f7f1ff 20%, #ffffff 70%, #ffffff 100%);
 
+  /* Шрифты и размеры */
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
   --radius-btn: 999px; 
   --radius-card: 20px;
   
+  /* Ширины контейнеров */
   --w-wide: 900px; 
   --w-narrow: 560px;
   
+  /* Отступы */
   --header-py: 70px; 
   --footer-pb: 100px;
 }
@@ -48,7 +53,7 @@ body {
 
 .text-subtitle { 
   font-size: 18px; color: var(--c-text-sub); font-weight: 400; margin-bottom: 24px;
-  white-space: normal; overflow: visible; text-overflow: clip;
+  white-space: normal; overflow-wrap: break-word; /* Перенос строк */
 }
 
 .text-caption { font-size: 14px; color: var(--c-text-light); }
@@ -56,7 +61,7 @@ body {
 .text-legal { 
   font-size: 12px; color: #6f6f6f; line-height: 1.5; 
   width: 100%; margin: 0 auto; text-align: center;
-  white-space: normal; overflow: visible; text-overflow: clip;
+  white-space: normal; overflow-wrap: break-word;
 }
 
 .text-highlight { color: var(--c-primary); font-weight: 700; }
@@ -77,10 +82,10 @@ body {
 .view--gradient { background: var(--bg-gradient-main); }
 .view--no-bg { background: transparent !important; }
 
-/* HEADER */
+/* HEADER (Заглушка для 1-3 экранов) */
 .layout-header { flex: 0 0 auto; width: 100%; padding-top: var(--header-py); padding-bottom: 36px; z-index: 50; }
 
-/* NAV-HEADER (ГЛОБАЛЬНЫЙ) */
+/* NAV-HEADER (ГЛОБАЛЬНЫЙ ФИКСИРОВАННЫЙ) */
 .nav-header {
   position: fixed; top: 0; left: 0; right: 0; background: #ffffff;
   display: flex; align-items: center; justify-content: center;
@@ -94,6 +99,8 @@ body {
   padding: 0 20px 200px; display: flex; flex-direction: column; align-items: center; 
 }
 .layout-main--centered { justify-content: center; padding-bottom: 40px; }
+
+/* Отступ под фиксированный хедер (JS меняет переменную, или 110px) */
 .layout-main--with-header { padding-top: var(--header-h, 110px); }
 
 .bg-image { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; }
@@ -115,6 +122,7 @@ body {
    ========================= */
 .container-wide { width: 100%; max-width: var(--w-wide); margin: 0 auto; }
 .container-narrow { width: 100%; max-width: var(--w-narrow); margin: 0 auto; }
+
 .grid-system { display: grid; width: 100%; gap: 20px; }
 
 .grid-age { grid-template-columns: repeat(2, auto); justify-content: center; gap: 24px; margin-top: 60px; }
@@ -172,9 +180,7 @@ body {
 .card-checkbox__check { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #ccc; background: #fff; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 14px; flex-shrink: 0; }
 .card-checkbox__title { font-weight: 700; font-size: 16px; color: var(--c-text-main); flex: 1; text-align: left; }
 .card-checkbox__img { height: 80px; width: auto; object-fit: cover; display: block; margin: 0; }
-.card-checkbox.selected { background: #3f51ff; border-color: #3f51ff; } 
-.card-checkbox.selected .card-checkbox__title { color: #fff; } 
-.card-checkbox.selected .card-checkbox__check { border-color: #fff; color: var(--c-primary); }
+.card-checkbox.selected { background: #3f51ff; border-color: #3f51ff; } .card-checkbox.selected .card-checkbox__title { color: #fff; } .card-checkbox.selected .card-checkbox__check { border-color: #fff; color: var(--c-primary); }
 
 /* Card Universal (Body Type) */
 .card { 
@@ -191,12 +197,11 @@ body {
 .card-zone { 
   background: var(--c-bg-surface); border-radius: 16px; border: 2px solid transparent; 
   cursor: pointer; transition: 0.2s all; 
-  padding: 18px 20px; min-height: 70px; 
-  width: 100%; max-width: 320px; margin: 0 auto; 
-  display: flex; align-items: center; 
+  padding: 10px 8px; min-height: 50px; 
+  width: 100%; display: flex; align-items: center; 
 }
-.card-zone__check { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #ccc; background: #fff; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 14px; flex-shrink: 0; }
-.card-zone__title { font-size: 18px; font-weight: 600; color: var(--c-text-main); flex: 1; text-align: center; padding-right: 24px; }
+.card-zone__check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #ccc; background: #fff; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 12px; flex-shrink: 0; }
+.card-zone__title { font-size: 16px; font-weight: 600; color: var(--c-text-main); flex: 1; text-align: center; padding-right: 20px; line-height: 1.2; }
 .card-zone.selected { background: #3f51ff; border-color: #3f51ff; } 
 .card-zone.selected .card-zone__title { color: #fff; } 
 .card-zone.selected .card-zone__check { border-color: #fff; color: var(--c-primary); }
@@ -219,14 +224,43 @@ body {
 #view-3 .sticky-footer { position: static; padding: 0; margin: 0; background: transparent; }
 .sticky-footer { position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border: none; backdrop-filter: none; padding: 20px 20px 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; z-index: 100; }
 
-/* Screen 8 Layers */
-.zones-layout { display: flex; flex-direction: column; gap: 32px; width: 100%; margin-top: 20px; }
-.zones-layout__image { display: flex; justify-content: center; align-items: center; width: 100%; }
-.zones-stack { position: relative; width: 100%; max-width: 300px; aspect-ratio: 1 / 2; }
-.zones-base { position: relative; width: 100%; height: auto; display: block; z-index: 1; }
-.zones-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+/* Screen 8: Layers & Grid */
+.zones-layout { 
+  display: grid; 
+  /* 2 колонки ВСЕГДА */
+  grid-template-columns: 0.8fr 1fr; 
+  gap: 12px; 
+  width: 100%; 
+  margin-top: 20px; 
+  align-items: stretch; /* Растягиваем */
+}
+
+.zones-layout__image { 
+  position: relative; width: 100%; 
+  /* Высота на мобильном фиксирована */
+  height: 300px; 
+  min-height: 100%;
+}
+
+.zones-stack { 
+  position: relative; /* База для слоев */
+  width: 100%; 
+  height: 100%; 
+}
+
+.zones-base, .zones-layer { 
+  position: absolute; 
+  top: 0; left: 0; 
+  width: 100%; height: 100%; 
+  object-fit: contain; 
+  object-position: center top; /* Прижимаем к верху */
+}
+
+.zones-layer { opacity: 0; transition: opacity 0.2s; z-index: 2; }
 .zones-layer.visible { opacity: 1; }
-.zones-layout__list { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+.zones-base { z-index: 1; opacity: 1; }
+
+.zones-layout__list { display: flex; flex-direction: column; gap: 8px; width: 100%; }
 
 /* MEDIA DESKTOP */
 @media (min-width: 768px) {
@@ -235,10 +269,17 @@ body {
   .card-person__img-wrap { width: 180px; height: 180px; }
   .text-h1 { font-size: 40px; }
   
-  /* Screen 8 Desktop */
-  .zones-layout { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: 40px; }
-  .zones-stack { max-width: 400px; }
-  .zones-layout__list { align-items: center; }
+  /* Экран 8 Десктоп */
+  .zones-layout { gap: 40px; }
+  .zones-layout__image { 
+    height: auto; /* Автовысота от соседа */
+  }
+  .zones-stack { 
+    position: sticky; 
+    top: 90px; 
+    height: auto; 
+    min-height: 400px; 
+  }
 }
 
 /* MEDIA MOBILE */
