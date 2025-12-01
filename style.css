@@ -22,9 +22,9 @@
   --radius-btn: 999px; 
   --radius-card: 20px;
   
-  /* Ширины контейнеров */
   --w-wide: 900px; 
-  --w-narrow: 560px;
+  /* ИСПРАВЛЕНО: было 544px, стало 528px */
+  --w-narrow: 528px;
   
   /* Отступы */
   --header-py: 70px; 
@@ -52,8 +52,12 @@ body {
 .text-h1-large { font-size: 36px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
 
 .text-subtitle { 
-  font-size: 18px; color: var(--c-text-sub); font-weight: 400; margin-bottom: 24px;
-  white-space: normal; overflow-wrap: break-word; /* Перенос строк */
+  /* ИСПРАВЛЕНО: Размер шрифта уменьшен до 16px */
+  font-size: 16px; 
+  color: var(--c-text-sub); 
+  font-weight: 400; 
+  margin-bottom: 24px;
+  white-space: normal; overflow-wrap: break-word;
 }
 
 .text-caption { font-size: 14px; color: var(--c-text-light); }
@@ -82,10 +86,10 @@ body {
 .view--gradient { background: var(--bg-gradient-main); }
 .view--no-bg { background: transparent !important; }
 
-/* HEADER (Заглушка для 1-3 экранов) */
+/* HEADER */
 .layout-header { flex: 0 0 auto; width: 100%; padding-top: var(--header-py); padding-bottom: 36px; z-index: 50; }
 
-/* NAV-HEADER (ГЛОБАЛЬНЫЙ ФИКСИРОВАННЫЙ) */
+/* NAV-HEADER (ГЛОБАЛЬНЫЙ) */
 .nav-header {
   position: fixed; top: 0; left: 0; right: 0; background: #ffffff;
   display: flex; align-items: center; justify-content: center;
@@ -96,7 +100,8 @@ body {
 /* MAIN */
 .layout-main { 
   position: relative; z-index: 2; flex: 1; overflow-y: auto; width: 100%; 
-  padding: 0 20px 200px; display: flex; flex-direction: column; align-items: center; 
+  padding: 0 20px 140px; 
+  display: flex; flex-direction: column; align-items: center; 
 }
 .layout-main--centered { justify-content: center; padding-bottom: 40px; }
 
@@ -106,11 +111,7 @@ body {
 .bg-image { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; }
 
 /* FOOTER */
-.layout-footer { 
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; 
-  display: flex; flex-direction: column; align-items: center; justify-content: center; 
-  background: #ffffff; padding: 20px 20px var(--footer-pb); 
-}
+.layout-footer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #ffffff; padding: 20px 20px var(--footer-pb); }
 .layout-footer--transparent { background: transparent; pointer-events: none; }
 .layout-footer--transparent > * { pointer-events: auto; }
 
@@ -174,18 +175,20 @@ body {
 /* Card Checkbox (Goals) */
 .card-checkbox { 
   background: var(--c-bg-surface); border-radius: var(--radius-card); border: 2px solid transparent; 
-  width: 100%; min-height: 80px; cursor: pointer; transition: 0.2s all; overflow: hidden; 
+  width: 100%; min-height: 100px; cursor: pointer; transition: 0.2s all; overflow: hidden; 
   display: flex; align-items: center; padding: 0 0 0 20px; gap: 16px; 
 }
 .card-checkbox__check { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #ccc; background: #fff; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 14px; flex-shrink: 0; }
 .card-checkbox__title { font-weight: 700; font-size: 16px; color: var(--c-text-main); flex: 1; text-align: left; }
-.card-checkbox__img { height: 80px; width: auto; object-fit: cover; display: block; margin: 0; }
-.card-checkbox.selected { background: #3f51ff; border-color: #3f51ff; } .card-checkbox.selected .card-checkbox__title { color: #fff; } .card-checkbox.selected .card-checkbox__check { border-color: #fff; color: var(--c-primary); }
+.card-checkbox__img { height: 100px; width: auto; object-fit: cover; display: block; margin: 0; }
+.card-checkbox.selected { background: #3f51ff; border-color: #3f51ff; } 
+.card-checkbox.selected .card-checkbox__title { color: #fff; } 
+.card-checkbox.selected .card-checkbox__check { border-color: #fff; color: var(--c-primary); }
 
 /* Card Universal (Body Type) */
 .card { 
   background: var(--c-bg-surface); border-radius: var(--radius-card); border: 2px solid transparent; 
-  width: 100%; min-height: 80px; cursor: pointer; transition: 0.2s all; overflow: hidden; 
+  width: 100%; min-height: 100px; cursor: pointer; transition: 0.2s all; overflow: hidden; 
   display: flex; align-items: center; justify-content: space-between; padding: 0 0 0 24px; 
 }
 .card__title { font-weight: 700; font-size: 16px; color: var(--c-text-main); flex: 1; padding-right: 16px; text-align: left; }
@@ -201,13 +204,26 @@ body {
   width: 100%; display: flex; align-items: center; 
 }
 .card-zone__check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #ccc; background: #fff; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 12px; flex-shrink: 0; }
-.card-zone__title { font-size: 16px; font-weight: 600; color: var(--c-text-main); flex: 1; text-align: center; padding-right: 20px; line-height: 1.2; }
+.card-zone__title { font-size: 16px; font-weight: 700; color: var(--c-text-main); flex: 1; text-align: center; padding-right: 20px; line-height: 1.2; }
 .card-zone.selected { background: #3f51ff; border-color: #3f51ff; } 
 .card-zone.selected .card-zone__title { color: #fff; } 
 .card-zone.selected .card-zone__check { border-color: #fff; color: var(--c-primary); }
 
 .content-image-wrap { display: flex; justify-content: center; margin: 24px 0; }
 .content-img { max-width: 100%; height: auto; border-radius: 20px; object-fit: contain; }
+
+/* ИСПРАВЛЕНО: КОНТЕЙНЕР КАРТИНКИ 5 ЭКРАНА */
+.image-container-card { 
+  background: var(--c-bg-surface); 
+  border-radius: var(--radius-card); 
+  width: 100%; 
+  padding: 24px; 
+  /* Увеличены внешние отступы до 36px */
+  margin: 36px 0; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+}
 
 /* =========================
    6. LAYOUT SPECIFICS
@@ -222,28 +238,37 @@ body {
 .v3-img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
 .v3-footer { flex: 0 0 auto; width: 100%; display: flex; flex-direction: column; align-items: center; background: transparent; }
 #view-3 .sticky-footer { position: static; padding: 0; margin: 0; background: transparent; }
-.sticky-footer { position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border: none; backdrop-filter: none; padding: 20px 20px 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; z-index: 100; }
+
+/* STICKY FOOTER */
+.sticky-footer { 
+  position: fixed; bottom: 0; left: 0; right: 0; 
+  background: #ffffff; 
+  border: none; 
+  backdrop-filter: none; 
+  padding: 20px 20px 40px; 
+  display: flex; flex-direction: column; align-items: center; justify-content: center; 
+  gap: 12px; z-index: 100;
+  border-top: 2px solid #f5f8ff; 
+}
 
 /* Screen 8: Layers & Grid */
 .zones-layout { 
   display: grid; 
-  /* 2 колонки ВСЕГДА */
   grid-template-columns: 0.8fr 1fr; 
   gap: 12px; 
   width: 100%; 
   margin-top: 20px; 
-  align-items: stretch; /* Растягиваем */
+  align-items: stretch; 
 }
 
 .zones-layout__image { 
   position: relative; width: 100%; 
-  /* Высота на мобильном фиксирована */
-  height: 300px; 
+  height: 300px; /* Фикс высота для мобилок */
   min-height: 100%;
 }
 
 .zones-stack { 
-  position: relative; /* База для слоев */
+  position: relative; 
   width: 100%; 
   height: 100%; 
 }
@@ -253,7 +278,7 @@ body {
   top: 0; left: 0; 
   width: 100%; height: 100%; 
   object-fit: contain; 
-  object-position: center top; /* Прижимаем к верху */
+  object-position: center top; 
 }
 
 .zones-layer { opacity: 0; transition: opacity 0.2s; z-index: 2; }
@@ -271,15 +296,8 @@ body {
   
   /* Экран 8 Десктоп */
   .zones-layout { gap: 40px; }
-  .zones-layout__image { 
-    height: auto; /* Автовысота от соседа */
-  }
-  .zones-stack { 
-    position: sticky; 
-    top: 90px; 
-    height: auto; 
-    min-height: 400px; 
-  }
+  .zones-layout__image { height: auto; }
+  .zones-stack { position: sticky; top: 90px; height: auto; min-height: 400px; }
 }
 
 /* MEDIA MOBILE */
@@ -293,6 +311,8 @@ body {
   .btn--age { font-size: 14px; padding: 6px 12px; margin-top: -15px; }
   .btn { width: 100%; padding: 14px 20px; }
   .grid-age { margin-top: 30px; gap: 16px; }
-  .layout-main { padding-bottom: 140px; }
+  
+  /* Отступ снизу меньше */
+  .layout-main { padding-bottom: 120px; }
   .nav-header { padding-top: 40px; }
 }
