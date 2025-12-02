@@ -4,6 +4,20 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentViewIndex = 0;
   const QUIZ_START_INDEX = 3; 
 
+  // --- 1. Функция компенсации скроллбара ---
+  function fixScrollbar() {
+    const activeMain = document.querySelector('.view.active .layout-main');
+    if (activeMain) {
+      // Вычисляем разницу между полной шириной и шириной контента
+      const scrollbarWidth = activeMain.offsetWidth - activeMain.clientWidth;
+      // Передаем это значение в CSS
+      document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
+    } else {
+      document.documentElement.style.setProperty('--scrollbar-width', '0px');
+    }
+  }
+
+  // --- 2. Измерение высоты шапки ---
   function measureHeader() {
     if (globalHeader && !globalHeader.classList.contains('hidden')) {
       const height = globalHeader.offsetHeight;
@@ -13,22 +27,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function showView(index) {
     if (index < 0 || index >= views.length) return;
-    if (views[currentViewIndex]) views[currentViewIndex].classList.remove("active");
+    
+    if (views[currentViewIndex]) {
+      views[currentViewIndex].classList.remove("active");
+    }
+
     const nextView = views[index];
     nextView.classList.add("active");
+    
+    // Скролл наверх
     const mainContent = nextView.querySelector('.layout-main');
     if (mainContent) mainContent.scrollTop = 0;
+    // Для split-layout скролл может быть внутри center
+    const splitCenter = nextView.querySelector('.split-layout__center');
+    if (splitCenter) splitCenter.scrollTop = 0;
+
     currentViewIndex = index;
+
+    // Управление хедером
     if (currentViewIndex >= QUIZ_START_INDEX) {
       globalHeader.classList.remove("hidden");
       updateQuizProgress();
-      setTimeout(measureHeader, 0); 
+      
+      // Запускаем расчеты
+      setTimeout(() => {
+        measureHeader();
+        fixScrollbar(); 
+      }, 0);
     } else {
       globalHeader.classList.add("hidden");
+      setTimeout(fixScrollbar, 0);
     }
   }
 
-  window.addEventListener('resize', measureHeader);
+  // Слушаем ресайз окна
+  window.addEventListener('resize', () => {
+    measureHeader();
+    fixScrollbar();
+  });
 
   function updateQuizProgress() {
     const progressBar = globalHeader.querySelector(".step-progress");
@@ -49,6 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const bar = document.getElementById("loading-bar-fill");
     const txt = document.getElementById("loading-text");
     if (!bar || !txt) return;
+
     let progress = 0;
     const timer = setInterval(() => {
       progress += 1;
@@ -64,7 +101,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.body.addEventListener("click", (e) => {
     const target = e.target;
 
-    // NEXT
     const nextBtn = target.closest('[data-trigger="next"]');
     if (nextBtn) {
       if (nextBtn.classList.contains('card') || nextBtn.classList.contains('card-person')) {
@@ -76,29 +112,20 @@ document.addEventListener("DOMContentLoaded", () => {
       showView(currentViewIndex + 1);
       return;
     }
-
-    // BACK
     const backBtn = target.closest('[data-trigger="back"]');
     if (backBtn) { showView(currentViewIndex - 1); return; }
 
-    // TOGGLE
     const toggleCard = target.closest('[data-action="toggle"]');
     if (toggleCard) {
       toggleCard.classList.toggle("selected");
-      
-      // ЛОГИКА СЛОЕВ (ЭКРАН 8)
       const imgId = toggleCard.getAttribute("data-img");
       if (imgId) {
         const layer = document.getElementById(imgId);
         if (layer) {
-          if (toggleCard.classList.contains("selected")) {
-            layer.classList.add("visible");
-          } else {
-            layer.classList.remove("visible");
-          }
+          if (toggleCard.classList.contains("selected")) layer.classList.add("visible");
+          else layer.classList.remove("visible");
         }
       }
-
       if (navigator.vibrate) navigator.vibrate(5);
       return;
     }
