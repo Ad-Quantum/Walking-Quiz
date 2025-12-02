@@ -11,26 +11,17 @@
 <body>
 
   <header id="global-header" class="nav-header hidden">
-     <button class="btn-arrow" data-trigger="back">
-       <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-     </button>
-     
-     <div class="step-progress">
-       <div class="step-progress__track">
-         <div class="step-progress__fill" style="width: 0%;"></div>
+     <div class="nav-header__content"> <button class="btn-arrow" data-trigger="back">
+         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+       </button>
+       <div class="step-progress">
+         <div class="step-progress__track"><div class="step-progress__fill" style="width: 0%;"></div></div>
+         <div class="step-progress__dots"><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div></div>
        </div>
-       <div class="step-progress__dots">
-         <div class="step-dot"></div>
-         <div class="step-dot"></div>
-         <div class="step-dot"></div>
-         <div class="step-dot"></div>
-         <div class="step-dot"></div>
-       </div>
+       <button class="btn-arrow" data-trigger="next">
+         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+       </button>
      </div>
-
-     <button class="btn-arrow" data-trigger="next">
-       <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-     </button>
   </header>
 
   <div class="view active view--no-bg" id="view-1">
@@ -46,60 +37,47 @@
   </div>
 
   <div class="view" id="view-2">
-    <header class="layout-header"></header>
-    <main class="layout-main">
-      <div class="container-wide text-center">
-        <h1 class="text-h1">Walk to Lose Weight</h1>
-        <p class="text-subtitle">ACCORDING TO YOUR AGE</p>
-        <div class="grid-system grid-age grid-push-down">
-          <div class="card-person" data-trigger="next">
-            <div class="card-person__img-wrap"><img src="assets/2.1.png" class="card-person__img"></div>
-            <div class="btn btn--primary btn--age">25–35 &gt;</div>
-          </div>
-          <div class="card-person" data-trigger="next">
-            <div class="card-person__img-wrap"><img src="assets/2.2.png" class="card-person__img"></div>
-            <div class="btn btn--primary btn--age">36–45 &gt;</div>
-          </div>
-          <div class="card-person" data-trigger="next">
-            <div class="card-person__img-wrap"><img src="assets/2.3.png" class="card-person__img"></div>
-            <div class="btn btn--primary btn--age">46–55 &gt;</div>
-          </div>
-          <div class="card-person" data-trigger="next">
-            <div class="card-person__img-wrap"><img src="assets/2.4.png" class="card-person__img"></div>
-            <div class="btn btn--primary btn--age">56+ &gt;</div>
+    <div class="split-layout">
+      <div class="split-layout__top">
+        <h1 class="text-h1 text-center">Walk to Lose Weight</h1>
+        <p class="text-subtitle text-center" style="margin-bottom: 0;">ACCORDING TO YOUR AGE</p>
+      </div>
+      <div class="split-layout__center">
+        <div class="split-layout__content-wrapper">
+          <div class="grid-system grid-age" style="margin-top: 0;">
+            <div class="card-person" data-trigger="next"><div class="card-person__img-wrap"><img src="assets/2.1.png" class="card-person__img"></div><div class="btn btn--primary btn--age">25–35 &gt;</div></div>
+            <div class="card-person" data-trigger="next"><div class="card-person__img-wrap"><img src="assets/2.2.png" class="card-person__img"></div><div class="btn btn--primary btn--age">36–45 &gt;</div></div>
+            <div class="card-person" data-trigger="next"><div class="card-person__img-wrap"><img src="assets/2.3.png" class="card-person__img"></div><div class="btn btn--primary btn--age">46–55 &gt;</div></div>
+            <div class="card-person" data-trigger="next"><div class="card-person__img-wrap"><img src="assets/2.4.png" class="card-person__img"></div><div class="btn btn--primary btn--age">56+ &gt;</div></div>
           </div>
         </div>
       </div>
-    </main>
-    <footer class="layout-footer layout-footer--transparent">
-      <div class="legal-footer">
+      <div class="split-layout__bottom">
         <div class="container-narrow">
           <p class="text-legal">
              By continuing, you confirm and guarantee that you have read, understood, and agreed to our <a href="#" class="link">Terms of Use</a>, <a href="#" class="link">Privacy Policy</a>, and <a href="#" class="link">Refund Policy</a>.
           </p>
         </div>
       </div>
-    </footer>
+    </div>
   </div>
 
   <div class="view view--gradient" id="view-3">
-    <main class="layout-main layout-main--centered" style="padding-bottom: 0; height: 100%;">
-      <div class="container-wide" style="height: 100%; display: flex; flex-direction: column;">
-        <div style="flex: 0 0 auto; text-align: center; margin-top: 20px;">
-          <h1 class="text-display">27 million</h1>
-          <p class="text-subtitle">users have chosen walking</p>
-        </div>
-        <div class="v3-image-box"><img src="assets/2.png" class="v3-img"></div>
-        <div style="flex: 0 0 auto; text-align: center; margin-bottom: 40px;">
-           <div class="container-narrow">
-             <p class="text-legal" style="margin-bottom: 12px;">
-               By pressing "Continue" I hereby agree to processing of my personal data. Nothing is shared without my permission. <a href="#" class="link">Privacy Policy</a> and <a href="#" class="link">Terms</a> apply.
-             </p>
-           </div>
-           <button class="btn btn--primary" data-trigger="next">Continue</button>
-        </div>
+    <div class="split-layout">
+      <div class="split-layout__top">
+        <h1 class="text-display text-center">27 million</h1>
+        <p class="text-subtitle text-center" style="margin-bottom: 0;">users have chosen walking</p>
       </div>
-    </main>
+      <div class="split-layout__center">
+        <div class="split-img-container"><img src="assets/2.png" class="split-img"></div>
+      </div>
+      <div class="split-layout__bottom">
+        <div class="container-narrow">
+           <p class="text-legal" style="margin-bottom: 12px;">By pressing "Continue" I hereby agree to processing of my personal data. Nothing is shared without my permission. <a href="#" class="link">Privacy Policy</a> and <a href="#" class="link">Terms</a> apply.</p>
+        </div>
+        <button class="btn btn--primary" data-trigger="next">Continue</button>
+      </div>
+    </div>
   </div>
 
   <div class="view" id="view-4">
@@ -124,32 +102,21 @@
       <div class="container-narrow text-center">
         <h1 class="text-h1-large">Without vs With Walking app</h1>
         <p class="text-subtitle">Walking gives you long-term results through creating a natural process of losing weight adapted to <span class="text-highlight">individual characteristics of your health</span></p>
-        <div class="image-container-card">
-            <img src="assets/5.1.png" class="content-img" alt="Graph">
-        </div>
+        <div class="image-container-card"><img src="assets/5.1.png" class="content-img" alt="Graph"></div>
         <p class="text-subtitle">Another great benefit is that <span class="text-highlight">you will start feeling better after working out with Walking app for a couple of days</span></p>
-        
-        <div class="inline-footer">
-           <button class="btn btn--primary" data-trigger="next">Next</button>
-        </div>
+        <div class="inline-footer"><button class="btn btn--primary" data-trigger="next">Next</button></div>
       </div>
     </main>
-    </div>
+  </div>
 
   <div class="view" id="view-6">
     <main class="layout-main layout-main--with-header">
       <div class="container-narrow text-center">
         <h1 class="text-h1-large">What’s your body type?</h1>
         <div class="grid-system grid-1">
-          <div class="card" data-trigger="next">
-            <span class="card__title">Regular</span><img src="assets/6.3.png" class="card__img">
-          </div>
-          <div class="card" data-trigger="next">
-            <span class="card__title">Flabby</span><img src="assets/6.2.png" class="card__img">
-          </div>
-          <div class="card" data-trigger="next">
-            <span class="card__title">Extra</span><img src="assets/6.1.png" class="card__img">
-          </div>
+          <div class="card" data-trigger="next"><span class="card__title">Regular</span><img src="assets/6.3.png" class="card__img"></div>
+          <div class="card" data-trigger="next"><span class="card__title">Flabby</span><img src="assets/6.2.png" class="card__img"></div>
+          <div class="card" data-trigger="next"><span class="card__title">Extra</span><img src="assets/6.1.png" class="card__img"></div>
         </div>
       </div>
     </main>
