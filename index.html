@@ -11,13 +11,24 @@
 <body>
 
   <header id="global-header" class="nav-header hidden">
-     <div class="nav-header__content"> <button class="btn-arrow" data-trigger="back">
+     <div class="nav-header__content"> 
+       <button class="btn-arrow" data-trigger="back">
          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
        </button>
+       
        <div class="step-progress">
-         <div class="step-progress__track"><div class="step-progress__fill" style="width: 0%;"></div></div>
-         <div class="step-progress__dots"><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div></div>
+         <div class="step-progress__track">
+           <div class="step-progress__fill" style="width: 0%;"></div>
+         </div>
+         <div class="step-progress__dots">
+           <div class="step-dot"></div>
+           <div class="step-dot"></div>
+           <div class="step-dot"></div>
+           <div class="step-dot"></div>
+           <div class="step-dot"></div>
+         </div>
        </div>
+
        <button class="btn-arrow" data-trigger="next">
          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
        </button>
@@ -28,7 +39,7 @@
     <div class="bg-image" style="background-image: url('assets/1.2.png');"></div>
     <main class="layout-main layout-main--centered">
       <div class="container-narrow text-center">
-        <h1 class="text-display" style="color: #fff; font-size: 36px;">Lose Weight Just by Walking</h1>
+        <h1 class="h1" style="color: #fff; font-size: 36px;">Lose Weight Just by Walking</h1>
         <p class="text-subtitle" style="color: #fff; opacity: 0.9;">Your personalized weight loss plan</p>
         <div class="loader-wrap"><div id="loading-bar-fill" class="loader-fill"></div></div>
         <div id="loading-text" class="text-caption" style="color: #fff; margin-top: 8px;">0%</div>
@@ -39,7 +50,7 @@
   <div class="view" id="view-2">
     <div class="split-layout">
       <div class="split-layout__top">
-        <h1 class="text-h1 text-center">Walk to Lose Weight</h1>
+        <h1 class="h3 text-center">Walk to Lose Weight</h1>
         <p class="text-subtitle text-center" style="margin-bottom: 0;">ACCORDING TO YOUR AGE</p>
       </div>
       <div class="split-layout__center">
@@ -65,7 +76,7 @@
   <div class="view view--gradient" id="view-3">
     <div class="split-layout">
       <div class="split-layout__top">
-        <h1 class="text-display text-center">27 million</h1>
+        <h1 class="h1 text-center">27 million</h1>
         <p class="text-subtitle text-center" style="margin-bottom: 0;">users have chosen walking</p>
       </div>
       <div class="split-layout__center">
@@ -83,7 +94,7 @@
   <div class="view" id="view-4">
     <main class="layout-main layout-main--with-header">
       <div class="container-wide text-center">
-        <h1 class="text-h1-large">What is your goal?</h1>
+        <h1 class="h2">What is your goal?</h1>
         <p class="text-subtitle">Select multiple goals</p>
         <div class="grid-system grid-2">
           <div class="card-checkbox" data-action="toggle"><div class="card-checkbox__check">✓</div><span class="card-checkbox__title">Lose weight</span><img src="assets/4.1.png" class="card-checkbox__img"></div>
@@ -100,7 +111,7 @@
   <div class="view" id="view-5">
     <main class="layout-main layout-main--with-header">
       <div class="container-narrow text-center">
-        <h1 class="text-h1-large">Without vs With Walking app</h1>
+        <h1 class="h2">Without vs With Walking app</h1>
         <p class="text-subtitle">Walking gives you long-term results through creating a natural process of losing weight adapted to <span class="text-highlight">individual characteristics of your health</span></p>
         <div class="image-container-card"><img src="assets/5.1.png" class="content-img" alt="Graph"></div>
         <p class="text-subtitle">Another great benefit is that <span class="text-highlight">you will start feeling better after working out with Walking app for a couple of days</span></p>
@@ -112,7 +123,7 @@
   <div class="view" id="view-6">
     <main class="layout-main layout-main--with-header">
       <div class="container-narrow text-center">
-        <h1 class="text-h1-large">What’s your body type?</h1>
+        <h1 class="h2">What’s your body type?</h1>
         <div class="grid-system grid-1">
           <div class="card" data-trigger="next"><span class="card__title">Regular</span><img src="assets/6.3.png" class="card__img"></div>
           <div class="card" data-trigger="next"><span class="card__title">Flabby</span><img src="assets/6.2.png" class="card__img"></div>
@@ -125,7 +136,7 @@
   <div class="view" id="view-7">
     <main class="layout-main layout-main--with-header">
       <div class="container-narrow text-center">
-        <h1 class="text-h1-large">What's your target body type?</h1>
+        <h1 class="h2">What's your target body type?</h1>
         <div class="grid-system grid-1">
           <div class="card" data-trigger="next"><span class="card__title">A few pounds lighter</span><img src="assets/7.1.png" class="card__img"></div>
           <div class="card" data-trigger="next"><span class="card__title">Fit</span><img src="assets/7.2.png" class="card__img"></div>
@@ -138,7 +149,7 @@
   <div class="view" id="view-8">
     <main class="layout-main layout-main--with-header">
       <div class="container-narrow text-center">
-        <h1 class="text-h1-large">Choose your target zones</h1>
+        <h1 class="h2">Choose your target zones</h1>
         <div class="zones-layout">
           <div class="zones-layout__image">
              <div class="zones-stack">
@@ -163,6 +174,76 @@
           </div>
         </div>
         <div class="inline-footer"><button class="btn btn--primary" data-trigger="next">Next</button></div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-9">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">When was the last time you felt great about your weight?</h1>
+        
+        <div class="grid-system grid-1">
+          <div class="card" data-trigger="next">
+            <span class="card__title">Within the last year</span>
+            <img src="assets/9.1-circle@2x.png" class="card__img--small">
+          </div>
+          <div class="card" data-trigger="next">
+            <span class="card__title">1-2 years ago</span>
+            <img src="assets/9.2-circle@2x.png" class="card__img--small">
+          </div>
+          <div class="card" data-trigger="next">
+            <span class="card__title">More than 3 years ago</span>
+            <img src="assets/9.3.png" class="card__img--small">
+          </div>
+          <div class="card" data-trigger="next">
+            <span class="card__title">I'm happy with my weight now</span>
+            <img src="assets/9.4.png" class="card__img--small">
+          </div>
+          <div class="card" data-trigger="next">
+            <span class="card__title">I've never really felt great about it</span>
+            <img src="assets/9.5.png" class="card__img--small">
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-10">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">What is your activity level?</h1>
+        
+        <div class="grid-system grid-1">
+          
+          <div class="card" data-trigger="next">
+            <div class="card__text-wrap">
+              <span class="card__title">Beginner</span>
+              <span class="card__subtitle">I'm new to fitness</span>
+            </div>
+            <img src="assets/10.1.svg" class="card__img--small card__img--normal">
+            <img src="assets/10.1-active.svg" class="card__img--small card__img--active">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <div class="card__text-wrap">
+              <span class="card__title">Intermediate</span>
+              <span class="card__subtitle">I work out 2-3 times a week</span>
+            </div>
+            <img src="assets/10.2.svg" class="card__img--small card__img--normal">
+            <img src="assets/10.2-active.svg" class="card__img--small card__img--active">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <div class="card__text-wrap">
+              <span class="card__title">Advanced</span>
+              <span class="card__subtitle">I have regular workouts</span>
+            </div>
+            <img src="assets/10.3.svg" class="card__img--small card__img--normal">
+            <img src="assets/10.3-active.svg" class="card__img--small card__img--active">
+          </div>
+
+        </div>
       </div>
     </main>
   </div>
