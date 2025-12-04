@@ -97,7 +97,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 .card--small { background: var(--c-bg-surface); border-radius: var(--radius-card); border: 2px solid transparent; width: 100%; min-height: 80px; cursor: pointer; transition: 0.2s all; overflow: hidden; display: flex; align-items: center; justify-content: space-between; padding: 0 0 0 24px; }
 .card__title { font-weight: 700; font-size: 16px; color: var(--c-text-main); flex: 1; padding-right: 16px; text-align: left; }
 .card__img { height: 100px; width: auto; object-fit: cover; display: block; margin: 0; }
-.card__img--small { height: 40px !important; width: auto; object-fit: contain !important; margin-right: 24px; display: block; }
+.card__img--small { height: 48px !important; width: auto; object-fit: contain !important; margin-right: 24px; display: block; }
 
 .card.selected { background: #3f51ff; border-color: #3f51ff; } .card.selected .card__title { color: #fff; }
 .card--small.selected { background: #3f51ff; border-color: #3f51ff; } .card--small.selected .card__title { color: #fff; }
