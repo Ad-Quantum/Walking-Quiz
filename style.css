@@ -175,6 +175,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   .h2 { font-size: 22px; } 
   
   .text-subtitle { font-size: 16px; margin-bottom: 16px; }
+  .card__subtitle { font-size: 12px; color: var(--c-text-sub); font-weight: 400; margin-top: 4px; line-height: 1.4; }
   
   /* Карточки */
   .card-person__img-wrap { width: 120px; height: 120px; }
