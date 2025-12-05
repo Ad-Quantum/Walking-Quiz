@@ -107,4 +107,13 @@ document.addEventListener("DOMContentLoaded", () => {
   views.forEach((v, i) => v.classList.toggle("active", i === 0));
   globalHeader.classList.add("hidden");
   if (currentViewIndex === 0) startLoader();
-});
+
+    // Логика для Toggle Switch (Экран 22)
+  const fastingToggle = document.getElementById('fasting-toggle');
+  if (fastingToggle) {
+    fastingToggle.addEventListener('click', () => {
+      fastingToggle.classList.toggle('active');
+      if (navigator.vibrate) navigator.vibrate(5);
+    });
+  }
+});// Конец DOMContentLoaded
