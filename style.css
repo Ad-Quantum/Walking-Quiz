@@ -117,7 +117,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 .card-zone__title { font-size: 16px; font-weight: 700; color: var(--c-text-main); flex: 1; text-align: center; padding-right: 20px; line-height: 1.2; }
 .card-zone.selected { background: #3f51ff; border-color: #3f51ff; } .card-zone.selected .card-zone__title { color: #fff; } .card-zone.selected .card-zone__check { border-color: #fff; color: var(--c-primary); }
 
-.content-image-wrap { display: flex; justify-content: center; margin: 24px 0; }
+.content-image-wrap { display: flex; justify-content: center; margin: 10px 0; }
 .content-img { max-width: 100%; height: auto; border-radius: 20px; object-fit: contain; }
 .image-container-card { background: var(--c-bg-surface); border-radius: var(--radius-card); width: 100%; padding: 24px; margin: 36px 0; display: flex; justify-content: center; align-items: center; }
 
@@ -146,6 +146,62 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 
 .card.selected .card__subtitle {
   color: #ffffff !important; /* Используем !important, чтобы точно перебить серый цвет */
+}
+
+/* =========================
+   TOGGLE SWITCH (Для Экрана 22)
+   ========================= */
+
+/* Контейнер для строки с переключателем */
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Разъезжаются по краям */
+  width: 100%;
+  padding: 20px 0; /* Отступы сверху и снизу */
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 10px;
+}
+
+.switch-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--c-text-main);
+}
+
+/* Сам переключатель (iOS style) */
+.toggle-switch {
+  position: relative;
+  width: 50px;
+  height: 30px;
+  background-color: #e0e0e0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Кружок внутри */
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 26px;
+  height: 26px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Активное состояние */
+.toggle-switch.active {
+  background-color: var(--c-primary);
+}
+
+.toggle-switch.active::after {
+  transform: translateX(20px);
 }
 
 /* MEDIA */
