@@ -277,3 +277,87 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
     height: 12px;
   }
 }
+
+/* =========================
+   DATE PICKER (SWIPER)
+   ========================= */
+.date-selector-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  height: 250px; /* Высота всего барабана */
+  /*margin: 40px auto 0;*/
+  margin: auto; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.date-selector {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+}
+
+/* Синяя рамка выбора */
+.date-highlight {
+  position: absolute;
+  top: 50%;
+  left: -10px;
+  right: -10px;
+  height: 50px; /* Высота строки выбора */
+  margin-top: -36px; /* Ровно половина высоты, чтобы центрировать */
+  border-top: 2px solid #2962ff;
+  border-bottom: 2px solid #2962ff;
+  pointer-events: none;
+  z-index: 10;
+  border-radius: 8px;
+}
+
+
+
+/* Настройки Swiper */
+.swiper {
+  /* width: 32%; убрали */
+  height: 100%;
+  overflow: hidden;
+  /* Маска для красивого исчезновения сверху и снизу */
+  mask-image: linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%);
+}
+
+/* Индивидуальная ширина колонок */
+.swiper-month {
+  width: 45%; /* Месяцам нужно больше места */
+}
+.swiper-day {
+  width: 20%; /* Дням нужно меньше всего */
+}
+.swiper-year {
+  width: 35%; /* Годам средне */
+}
+
+.swiper-slide {
+  display: flex;       /* Включаем Flexbox */
+  align-items: center; /* Центрируем текст по вертикали */
+  justify-content: center; /* Центрируем текст по горизонтали */
+  font-size: 18px;
+  color: #a0a0a0;
+  height: 50px !important; /* Фиксируем высоту слайда */
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+    /* Гарантируем, что текст не переносится */
+  white-space: nowrap; 
+  overflow: visible;
+}
+
+/* Активный элемент (по центру) */
+.swiper-slide-active {
+  color: #111;
+  font-weight: 700;
+  font-size: 22px;
+  transform: scale(1.1);
+  z-index: 100;
+}
