@@ -116,4 +116,52 @@ document.addEventListener("DOMContentLoaded", () => {
       if (navigator.vibrate) navigator.vibrate(5);
     });
   }
+
+// Запуск Date Picker с небольшой задержкой
+  setTimeout(() => {
+    if (typeof initSwiperDatePicker === 'function') {
+      initSwiperDatePicker();
+    }
+  }, 300);
+
 });// Конец DOMContentLoaded
+
+// --- ЛОГИКА ДЛЯ DATE PICKER ---
+function initSwiperDatePicker() {
+  if (typeof Swiper === 'undefined') return;
+
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const currentYear = new Date().getFullYear();
+
+  const monthWrap = document.getElementById('wrapper-month');
+  const dayWrap = document.getElementById('wrapper-day');
+  const yearWrap = document.getElementById('wrapper-year');
+
+  if (!monthWrap || !dayWrap || !yearWrap) return;
+
+  // Очистка
+  monthWrap.innerHTML = ''; dayWrap.innerHTML = ''; yearWrap.innerHTML = '';
+
+  // Генерация HTML
+  months.forEach(m => monthWrap.innerHTML += `<div class="swiper-slide">${m}</div>`);
+  for(let i=1; i<=31; i++) { dayWrap.innerHTML += `<div class="swiper-slide">${i}</div>`; }
+  for(let i=0; i<10; i++) { yearWrap.innerHTML += `<div class="swiper-slide">${currentYear + i}</div>`; }
+
+  // Настройки Swiper
+  const commonConfig = {
+    direction: 'vertical',
+    centeredSlides: true,
+    slidesPerView: 5,
+    spaceBetween: 0,
+    mousewheel: true,
+    grabCursor: true,
+    loop: false,
+    on: {
+      click: function(swiper) { swiper.slideTo(swiper.clickedIndex); }
+    }
+  };
+
+  new Swiper('.swiper-month', commonConfig);
+  new Swiper('.swiper-day', commonConfig);
+  new Swiper('.swiper-year', commonConfig);
+}
