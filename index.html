@@ -94,10 +94,10 @@
 
   <div class="view" id="view-4">
     <main class="layout-main layout-main--with-header">
-      <div class="container-wide text-center">
+      <div class="container-narrow text-center"style="margin-bottom: 70px;">
         <h1 class="h2">What is your goal?</h1>
         <p class="text-subtitle">Select multiple goals</p>
-        <div class="grid-system grid-2">
+        <div class="grid-system grid-1">
           <div class="card-checkbox" data-action="toggle"><div class="card-checkbox__check">✓</div><span class="card-checkbox__title">Lose weight</span><img src="assets/4.1.png" class="card-checkbox__img"></div>
           <div class="card-checkbox" data-action="toggle"><div class="card-checkbox__check">✓</div><span class="card-checkbox__title">Boost heart health</span><img src="assets/4.2.png" class="card-checkbox__img"></div>
           <div class="card-checkbox" data-action="toggle"><div class="card-checkbox__check">✓</div><span class="card-checkbox__title">Tone up</span><img src="assets/4.3.png" class="card-checkbox__img"></div>
@@ -791,7 +791,7 @@
 
   <div class="view" id="view-42">
     <main class="layout-main layout-main--with-header">
-      <div class="container-narrow text-center" style="display: flex; flex-direction: column; height: 100%;">
+      <div class="container-narrow text-center" style="display: flex; flex-direction: column; height: 100%; margin-bottom: 80px;">
         
         <h1 class="h2">When do you want to see results?</h1>
 
@@ -810,15 +810,14 @@
             </div>
           </div>
         </div>
-
-        <div style="margin-top: auto; margin-bottom: 20px;">
-           <a href="#" class="link" onclick="document.querySelector('[data-trigger=next]').click(); return false;">Skip this question</a>
-        </div>
       </div>
     </main>
 
-    <footer class="layout-footer">
+    <footer class="layout-footer" style="padding-bottom: 60px;">
       <button class="btn btn--primary" data-trigger="next">Done</button>
+      <div style="margin-top: 20px;">
+           <a href="#" class="link" onclick="document.querySelector('[data-trigger=next]').click(); return false;">Skip this question</a>
+      </div>
     </footer>
   </div>
 
