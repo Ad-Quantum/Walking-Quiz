@@ -12,6 +12,8 @@
 <body>
 
   <header id="global-header" class="nav-header hidden">
+      <img src="assets/slimkit icon.png" alt="Walking Quiz Logo" class="header-logo" />
+
      <div class="nav-header__content"> 
        <button class="btn-arrow" data-trigger="back">
          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -94,10 +96,10 @@
 
   <div class="view" id="view-4">
     <main class="layout-main layout-main--with-header">
-      <div class="container-narrow text-center"style="margin-bottom: 70px;">
+      <div class="container-wide  text-center">
         <h1 class="h2">What is your goal?</h1>
         <p class="text-subtitle">Select multiple goals</p>
-        <div class="grid-system grid-1">
+        <div class="grid-system grid-2">
           <div class="card-checkbox" data-action="toggle"><div class="card-checkbox__check">✓</div><span class="card-checkbox__title">Lose weight</span><img src="assets/4.1.png" class="card-checkbox__img"></div>
           <div class="card-checkbox" data-action="toggle"><div class="card-checkbox__check">✓</div><span class="card-checkbox__title">Boost heart health</span><img src="assets/4.2.png" class="card-checkbox__img"></div>
           <div class="card-checkbox" data-action="toggle"><div class="card-checkbox__check">✓</div><span class="card-checkbox__title">Tone up</span><img src="assets/4.3.png" class="card-checkbox__img"></div>
@@ -181,10 +183,10 @@
 
   <div class="view" id="view-9">
     <main class="layout-main layout-main--with-header">
-      <div class="container-narrow text-center">
-        <h1 class="h2">When was the last time you felt great about your weight?</h1>
+      <div class="container-wide text-center">
+        <h1 class="h2-wide">When was the last time you felt great about your weight?</h1>
         
-        <div class="grid-system grid-1">
+        <div class="grid-system grid-2">
           <div class="card" data-trigger="next">
             <span class="card__title">Within the last year</span>
             <img src="assets/9.1-circle@2x.png" class="card__img--small">
@@ -251,10 +253,10 @@
 
   <div class="view" id="view-11">
     <main class="layout-main layout-main--with-header">
-      <div class="container-narrow text-center">
-        <h1 class="h2">What motivates you to exercise?</h1>
+      <div class="container-wide text-center">
+        <h1 class="h2-wide">What motivates you to exercise?</h1>
         
-        <div class="grid-system grid-1">
+        <div class="grid-system grid-2">
           
           <div class="card-checkbox" data-action="toggle">
             <div class="card-checkbox__check">✓</div>
@@ -287,12 +289,9 @@
           </div>
 
         </div>
-        
-        <div class="inline-footer">
-           <button class="btn btn--primary" data-trigger="next">Continue</button>
-        </div>
 
       </div>
+      <footer class="layout-footer"><button class="btn btn--primary" data-trigger="next">Continue</button></footer>
     </main>
   </div>
 
