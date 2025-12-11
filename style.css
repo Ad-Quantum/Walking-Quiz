@@ -18,6 +18,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 /* 2. TYPOGRAPHY */
 .h1 { font-size: 48px; font-weight: 800; color: var(--c-primary); line-height: 1.1; margin-bottom: 8px; }
 .h2 { font-size: 36px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
+.h2-wide {font-size: 36px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; margin-left: 150px; margin-right: 150px;}
 .h3 { font-size: 32px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
 .text-subtitle { font-size: 16px; color: var(--c-text-sub); font-weight: 400; margin-bottom: 24px; white-space: normal; overflow-wrap: break-word; }
 .text-caption { font-size: 14px; color: var(--c-text-light); }
@@ -35,17 +36,42 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 
 .layout-header { flex: 0 0 auto; width: 100%; padding-top: var(--header-py); padding-bottom: 36px; z-index: 50; }
 
+
+.header-logo {
+  position: absolute; /* Извлекаем из потока, чтобы не толкал другие элементы */
+  top: 20px;           /* Позиционируем по вертикали по центру хедера */
+  left: 30px;         /* Фиксированный отступ слева */
+  transform: translateY(-50%); /* Корректировка для точного центрирования по вертикали */
+  height: 25px;       /* Высота подбирается под размер стрелок */
+  width: auto;        /* Ширина авто, чтобы не искажать пропорции */
+  object-fit: contain;
+  z-index: 600;       /* Поверх всего */
+  margin-top: 12px;      
+}
+
+/* В мобильной версии скрываем логотип (как договаривались ранее) */
+@media (max-width: 767px) {
+  .header-logo {
+    display: none;
+  }
+}
+
 /* NAV-HEADER */
 .nav-header {
-  position: fixed; top: 0; left: 0; right: 0; background: #ffffff;
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  background: #ffffff;
+
   display: flex; align-items: center; justify-content: center;
   max-width: 100%; margin: 0 auto; gap: 20px; 
-  padding: 70px calc(20px + var(--scrollbar-width, 0px)) 10px 20px;
+  padding: 40px calc(20px + var(--scrollbar-width, 0px)) 10px 20px;
   z-index: 500;
 }
 .nav-header__content { display: flex; align-items: center; justify-content: center; gap: 20px; width: 100%; max-width: var(--w-wide); padding: 0 20px; }
 
-.layout-main { position: relative; z-index: 2; flex: 1; overflow-y: auto; width: 100%; padding: 0 20px 140px; display: flex; flex-direction: column; align-items: center; }
+.layout-main { position: relative; z-index: 2; flex: 1; overflow-y: auto; width: 100%; padding: 0 20px 0px; display: flex; flex-direction: column; align-items: center; }
 .layout-main--centered { justify-content: center; padding-bottom: 40px; }
 .layout-main--with-header { padding-top: var(--header-h, 110px); }
 .bg-image { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; }
@@ -229,6 +255,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   
   /* 2. ВОЗВРАЩАЕМ ПРАВКУ ДЛЯ H2 */
   .h2 { font-size: 22px; } 
+  .h2-wide { font-size: 22px; } 
   
   .text-subtitle { font-size: 16px; margin-bottom: 16px; }
   .card__subtitle { font-size: 12px; color: var(--c-text-sub); font-weight: 400; margin-top: 4px; line-height: 1.4; }
@@ -286,8 +313,10 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   width: 100%;
   max-width: 340px;
   height: 250px; /* Высота всего барабана */
-  /*margin: 40px auto 0;*/
-  margin: auto; 
+  margin: 0 auto 0 auto;
+  /* margin: auto;
+  /*margin-top: 0px;
+  margin-bottom: 0px;*/
   display: flex;
   justify-content: center;
   align-items: center;
