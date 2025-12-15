@@ -126,42 +126,160 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });// Конец DOMContentLoaded
 
-// --- ЛОГИКА ДЛЯ DATE PICKER ---
-function initSwiperDatePicker() {
-  if (typeof Swiper === 'undefined') return;
+document.addEventListener('DOMContentLoaded', () => {
+  const view26 = document.getElementById('view-26');
+  if (!view26) return; 
 
-  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  const currentYear = new Date().getFullYear();
+  // --- ЭЛЕМЕНТЫ ---
+  const btns = view26.querySelectorAll('.toggle-btn');
+  const groupCm = view26.querySelector('#input-cm-group');
+  const groupFt = view26.querySelector('#input-ft-group');
+  const btnNext = view26.querySelector('#btn-next');
+  
+  // Поля ввода
+  const inputCm = view26.querySelector('#val-cm');
+  const inputFt = view26.querySelector('#val-ft');
+  const inputIn = view26.querySelector('#val-in');
+  const inputs = view26.querySelectorAll('.input-huge');
 
-  const monthWrap = document.getElementById('wrapper-month');
-  const dayWrap = document.getElementById('wrapper-day');
-  const yearWrap = document.getElementById('wrapper-year');
+  // Плашка и ее содержимое
+  const banner = view26.querySelector('#info-banner');
+  const iconInfo = view26.querySelector('#icon-info');
+  const iconError = view26.querySelector('#icon-error');
+  const bannerTitle = view26.querySelector('#banner-title');
+  const bannerDesc = view26.querySelector('#banner-desc');
 
-  if (!monthWrap || !dayWrap || !yearWrap) return;
+  // Переменные состояния
+  let currentUnit = 'cm'; // 'cm' или 'ft'
+  let savedHeightCm = 0;  // Здесь храним актуальный рост в см
 
-  // Очистка
-  monthWrap.innerHTML = ''; dayWrap.innerHTML = ''; yearWrap.innerHTML = '';
+  // --- ФУНКЦИИ КОНВЕРТАЦИИ ---
 
-  // Генерация HTML
-  months.forEach(m => monthWrap.innerHTML += `<div class="swiper-slide">${m}</div>`);
-  for(let i=1; i<=31; i++) { dayWrap.innerHTML += `<div class="swiper-slide">${i}</div>`; }
-  for(let i=0; i<10; i++) { yearWrap.innerHTML += `<div class="swiper-slide">${currentYear + i}</div>`; }
+  // Из СМ в Футы/Дюймы
+  function cmToFtIn(cm) {
+    const realFeet = cm / 30.48;
+    let ft = Math.floor(realFeet);
+    let inches = Math.round((realFeet - ft) * 12);
+    
+    if (inches === 12) { ft += 1; inches = 0; }
+    return { ft, in: inches };
+  }
 
-  // Настройки Swiper
-  const commonConfig = {
-    direction: 'vertical',
-    centeredSlides: true,
-    slidesPerView: 5,
-    spaceBetween: 0,
-    mousewheel: true,
-    grabCursor: true,
-    loop: false,
-    on: {
-      click: function(swiper) { swiper.slideTo(swiper.clickedIndex); }
+  // Из Футов/Дюймов в СМ
+  function ftInToCm(ft, inches) {
+    const f = parseFloat(ft) || 0;
+    const i = parseFloat(inches) || 0;
+    return Math.round((f * 30.48) + (i * 2.54));
+  }
+
+  // --- ВАЛИДАЦИЯ И ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ---
+
+  function updateState() {
+    // 1. Определяем текущий рост в сантиметрах
+    if (currentUnit === 'cm') {
+      savedHeightCm = parseInt(inputCm.value) || 0;
+    } else {
+      savedHeightCm = ftInToCm(inputFt.value, inputIn.value);
     }
-  };
 
-  new Swiper('.swiper-month', commonConfig);
-  new Swiper('.swiper-day', commonConfig);
-  new Swiper('.swiper-year', commonConfig);
-}
+    // 2. Логика отображения
+    
+    // Если поле пустое -> Сброс в исходное состояние (Info), кнопка выключена
+    if (savedHeightCm === 0) {
+      setBanner('info');
+      btnNext.disabled = true;
+      return;
+    }
+
+    // Если значение недопустимое (<100 или >300) -> Ошибка
+    if (savedHeightCm < 100 || savedHeightCm > 300) {
+      setBanner('error');
+      btnNext.disabled = true; // Кнопка неактивна
+    } else {
+      // Значение валидное -> Успех
+      setBanner('info');
+      btnNext.disabled = false; // Кнопка активна
+    }
+  }
+
+  // Управление видом плашки
+  function setBanner(state) {
+    if (state === 'error') {
+      banner.classList.add('error');
+      
+      iconInfo.classList.add('hidden');
+      iconError.classList.remove('hidden');
+
+      bannerTitle.textContent = 'Please double-check and enter valid height';
+      bannerDesc.classList.add('hidden'); // Скрываем описание в ошибке
+    } else {
+      banner.classList.remove('error');
+      
+      iconError.classList.add('hidden');
+      iconInfo.classList.remove('hidden');
+
+      bannerTitle.textContent = 'Calculating your BMI';
+      bannerDesc.textContent = 'Body mass index (BMI) is a metric of body fat percentage commonly used to estimate risk levels of potential health problems.';
+      bannerDesc.classList.remove('hidden');
+    }
+  }
+
+  // --- ОБРАБОТЧИКИ СОБЫТИЙ ---
+
+  // 1. Ввод цифр
+  inputs.forEach(input => {
+    input.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g, ''); // Только цифры
+      updateState();
+    });
+  });
+
+  // 2. Переключение вкладок
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Не делаем ничего, если кликнули на уже активную кнопку
+      if (btn.classList.contains('active')) return;
+
+      const newUnit = btn.dataset.unit;
+
+      // Конвертация значений ПЕРЕД переключением
+      if (newUnit === 'ft') {
+        // Переход CM -> FT
+        const cmVal = parseInt(inputCm.value);
+        if (cmVal) {
+          const res = cmToFtIn(cmVal);
+          inputFt.value = res.ft;
+          inputIn.value = res.in;
+        } else {
+          inputFt.value = '';
+          inputIn.value = '';
+        }
+        
+        groupCm.classList.add('hidden');
+        groupFt.classList.remove('hidden');
+
+      } else {
+        // Переход FT -> CM
+        const ftVal = inputFt.value;
+        const inVal = inputIn.value;
+        
+        if (ftVal || inVal) {
+          inputCm.value = ftInToCm(ftVal, inVal);
+        } else {
+          inputCm.value = '';
+        }
+
+        groupFt.classList.add('hidden');
+        groupCm.classList.remove('hidden');
+      }
+
+      // Переключаем визуальный стиль кнопок
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Обновляем состояние
+      currentUnit = newUnit;
+      updateState();
+    });
+  });
+});
