@@ -749,47 +749,58 @@
     </footer>
   </div>
 
+<div class="view" id="view-26">
+  <main class="layout-main layout-main--with-header">
+    <div class="container-narrow text-center">
+      
+      <h1 class="h2" style="margin-bottom: 60px;">Your height</h1>
 
-  <div class="view" id="view-26">
-    <main class="layout-main layout-main--with-header">
-      <div class="container-narrow text-center">
-        <h1 class="h2">Твой рост</h1>
+      <div class="units-toggle-wrapper">
+        <button class="toggle-btn" data-unit="ft">FT</button>
+        <button class="toggle-btn active" data-unit="cm">CM</button>
+      </div>
 
-          <div class="unit-toggle">
-            <button class="toggle-btn active" data-unit="cm">СМ</button>
-            <button class="toggle-btn" data-unit="ft">ФТ</button>
+      <div class="height-input-area">
+        
+        <div id="input-cm-group" class="input-group-row">
+          <input type="tel" id="val-cm" class="input-huge" placeholder="0" maxlength="3">
+          <span class="unit-text">cm</span>
+        </div>
+
+        <div id="input-ft-group" class="input-group-row hidden">
+          <div class="input-sub-group">
+            <input type="tel" id="val-ft" class="input-huge input-short" placeholder="0" maxlength="1">
+            <span class="unit-text">ft.</span>
           </div>
-
-          <div id="input-cm-group" class="input-group">
-              <input type="tel" id="input-cm" class="main-input" placeholder="0" maxlength="3">
-              <span class="unit-label">см</span>
+          <div class="input-sub-group">
+            <input type="tel" id="val-in" class="input-huge input-short" placeholder="0" maxlength="2">
+            <span class="unit-text">in.</span>
           </div>
-
-          <div id="input-ft-group" class="input-group hidden">
-            <div class="ft-wrapper">
-                <input type="tel" id="input-ft" class="main-input" placeholder="0" maxlength="1">
-                <span class="unit-label">фт</span>
-            </div>
-            <div class="ft-wrapper">
-               <input type="tel" id="input-in" class="main-input" placeholder="0" maxlength="4">
-               <span class="unit-label">дюйм.</span>
-            </div>
-          </div>
-
-          <div id="info-banner" class="banner hidden">
-              <div class="banner-icon" id="banner-icon">ℹ️</div>
-               <p class="banner-text" id="banner-text"></p>
-          </div>
+        </div>
 
       </div>
-    </main>
-    <footer class="layout-footer">
-      <button class="btn btn--primary" data-trigger="next">Continue</button>
-    </footer>
-  </div>
-  
 
+      <div id="info-banner" class="info-banner">
+        <div class="icon-and-text">
+          <img src="assets/26.1.png" id="icon-info" style="width: 20px;"> 
+          <img src="assets/26.2.png" id="icon-error" class="hidden" style="width: 20px;">
+          
+          <p class="h4" id="banner-title">Calculating your BMI</p>
+        </div>
+        <p class="info-banner-text" id="banner-desc">Body mass index (BMI) is a metric of body fat percentage commonly used to estimate risk levels of potential health problems.
+        </p>
+      </div>
 
+    </div>
+
+    <div class="layout-footer">
+      <button id="btn-next" class="btn btn--primary" disabled>
+        Готово
+      </button>
+    </div>
+
+  </main>
+</div>
 
   <div class="view" id="view-30">
     <main class="layout-main layout-main--with-header">
