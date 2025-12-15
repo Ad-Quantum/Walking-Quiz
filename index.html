@@ -794,7 +794,56 @@
     </div>
 
     <div class="layout-footer">
-      <button id="btn-next" class="btn btn--primary" disabled>
+      <button id="btn-next" class="btn btn--primary" data-trigger="next" disabled>
+        Done
+      </button>
+    </div>
+
+  </main>
+</div>
+
+<div class="view" id="view-27">
+  <main class="layout-main layout-main--with-header">
+    <div class="container-narrow text-center">
+      
+      <h1 class="h2" style="margin-bottom: 60px;">Your current weight</h1>
+
+      <div class="units-toggle-wrapper">
+        <button class="toggle-btn" data-unit="lb">LB</button>
+        <button class="toggle-btn active" data-unit="kg">KG</button>
+      </div>
+
+      <div class="height-input-area">
+        
+        <div id="input-weight-kg-group" class="input-group-row">
+          <input type="tel" id="val-weight-kg" class="input-huge" placeholder="0" maxlength="3">
+          <span class="unit-text">kg</span>
+        </div>
+
+        <div id="input-weight-lb-group" class="input-group-row hidden">
+          <input type="tel" id="val-weight-lb" class="input-huge" placeholder="0" maxlength="3">
+          <span class="unit-text">lb</span>
+        </div>
+
+      </div>
+
+      <div id="info-banner-weight" class="info-banner">
+        <div class="icon-and-text">
+          <img src="assets/26.1.png" id="icon-info-weight" style="width: 20px;"> 
+          <img src="assets/26.2.png" id="icon-error-weight" class="hidden" style="width: 20px;">
+          <img src="assets/26.3.png" id="icon-success-weight" class="hidden" style="width: 20px;">
+          
+          <p class="h4" id="banner-title-weight">Enter your weight</p>
+        </div>
+        <p class="info-banner-text" id="banner-desc-weight">
+          We need your weight to calculate your BMI and build a personalized plan.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="layout-footer">
+      <button id="btn-next-weight" class="btn btn--primary" data-trigger="next" disabled>
         Done
       </button>
     </div>
