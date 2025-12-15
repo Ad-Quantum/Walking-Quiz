@@ -624,7 +624,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   flex-direction: row;
   gap: 10px;
   text-align: left;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .info-banner-text {
@@ -634,6 +634,11 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   color: var(--c-text-sub);
   width: 100%;
   text-align: left;
+}
+
+/* Состояние SUCCESS для плашки (Зеленая) */
+.info-banner.success {
+  background-color: #E8F5E9; /* Светло-зеленый фон */
 }
 
 /* Стиль неактивной кнопки (серый), когда стоит атрибут disabled */
