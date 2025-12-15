@@ -199,6 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Значение валидное -> Успех
       setBanner('info');
       btnNext.disabled = false; // Кнопка активна
+      window.userHeightCm = savedHeightCm; // Сохраняем рост глобально для экрана 27
     }
   }
 
@@ -278,6 +279,191 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.classList.add('active');
 
       // Обновляем состояние
+      currentUnit = newUnit;
+      updateState();
+    });
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const view27 = document.getElementById('view-27');
+  if (!view27) return;
+
+  // --- ЭЛЕМЕНТЫ ---
+  const btns = view27.querySelectorAll('.toggle-btn');
+  const groupKg = view27.querySelector('#input-weight-kg-group');
+  const groupLb = view27.querySelector('#input-weight-lb-group');
+  const btnNext = view27.querySelector('#btn-next-weight');
+
+  const inputKg = view27.querySelector('#val-weight-kg');
+  const inputLb = view27.querySelector('#val-weight-lb');
+  const inputs = view27.querySelectorAll('.input-huge');
+
+  // Плашка
+  const banner = view27.querySelector('#info-banner-weight');
+  const iconInfo = view27.querySelector('#icon-info-weight');
+  const iconError = view27.querySelector('#icon-error-weight');
+  const iconSuccess = view27.querySelector('#icon-success-weight');
+  const bannerTitle = view27.querySelector('#banner-title-weight');
+  const bannerDesc = view27.querySelector('#banner-desc-weight');
+
+  // Состояние
+  let currentUnit = 'kg'; // 'kg' или 'lb'
+  let savedWeightKg = 0;
+
+  // --- КОНВЕРТАЦИЯ ---
+  const KG_TO_LB = 2.20462;
+
+  function kgToLb(kg) { return Math.round(kg * KG_TO_LB); }
+  function lbToKg(lb) { return Math.round(lb / KG_TO_LB); }
+
+  // --- РАСЧЕТ BMI ---
+  function calculateBMI(weightKg, heightCm) {
+    if (!heightCm || heightCm <= 0) return 0;
+    const heightM = heightCm / 100;
+    return (weightKg / (heightM * heightM)).toFixed(1); // Округляем до 1 знака (напр. 24.5)
+  }
+
+  // --- ЛОГИКА ОТОБРАЖЕНИЯ (STATES) ---
+  function updateState() {
+    // 1. Читаем вес
+    if (currentUnit === 'kg') {
+      savedWeightKg = parseFloat(inputKg.value) || 0;
+    } else {
+      const lbVal = parseFloat(inputLb.value) || 0;
+      savedWeightKg = lbToKg(lbVal);
+    }
+
+    // Сброс классов плашки
+    banner.classList.remove('error', 'success');
+    iconError.classList.add('hidden');
+    iconInfo.classList.remove('hidden'); // По умолчанию показываем info (синюю/зеленую иконку)
+    btnNext.disabled = false; // По умолчанию активна, выключим если ошибка
+
+    // 2. Проверки лимитов (Error State 1 & 6)
+    // 4.1 Вес < 20 кг
+    if (savedWeightKg < 20 && savedWeightKg > 0) {
+      setBannerStyle('error');
+      bannerTitle.textContent = "Your weight is too low for this program.";
+      bannerDesc.classList.add('hidden'); // Текст не указан в ТЗ для этого кейса, скрываем или оставляем пустым
+      btnNext.disabled = true;
+      return;
+    }
+    
+    // 4.6 Вес > 299 кг (т.е. 300 и больше)
+    if (savedWeightKg > 299) {
+      setBannerStyle('error');
+      bannerTitle.textContent = "Your weight is too high to work out with this program.";
+      bannerDesc.classList.add('hidden');
+      btnNext.disabled = true;
+      return;
+    }
+
+    // Если пусто или 0
+    if (savedWeightKg === 0) {
+      bannerTitle.textContent = "Enter your weight";
+      bannerDesc.textContent = "We need your weight to calculate your BMI and build a personalized plan.";
+      bannerDesc.classList.remove('hidden');
+      btnNext.disabled = true;
+      return;
+    }
+
+    // 3. Расчет BMI
+    // Берем рост из глобальной переменной (которую мы сохранили на экране 26)
+    // Если пользователь пропустил экран 26 (в dev режиме), берем дефолт 170 см
+    const heightCm = window.userHeightCm || 170; 
+    
+    const bmi = calculateBMI(savedWeightKg, heightCm);
+    window.userWeightKg = savedWeightKg;
+    window.userBMI = bmi;
+
+    bannerDesc.classList.remove('hidden');
+
+// 4. Логика по BMI диапазонам
+    
+    // Underweight (BMI < 18.5) -> ERROR STYLE
+    if (bmi < 18.5) {
+      setBannerStyle('error');
+      // Используем innerHTML для поддержки тега <b>
+      bannerTitle.innerHTML = `Your BMI is ${bmi} which is considered <b>underweight</b>.`;
+      bannerDesc.textContent = "You have some work ahead of you, but it's great that you're taking this first step. We'll use your BMI to create a program just for you.";
+    } 
+    // Normal (18.5 <= BMI <= 24.9) -> SUCCESS STYLE
+    else if (bmi >= 18.5 && bmi <= 24.9) {
+      setBannerStyle('success');
+      bannerTitle.innerHTML = `Your BMI is ${bmi} which is considered <b>normal</b>`;
+      bannerDesc.textContent = "You're starting from a great place! Now we'll use your BMI to create a program tailored to your needs.";
+    }
+    // Overweight (25.0 <= BMI <= 29.9) -> ERROR STYLE
+    else if (bmi >= 25.0 && bmi <= 29.9) {
+      setBannerStyle('error');
+      bannerTitle.innerHTML = `Your BMI is ${bmi} which is considered <b>overweight</b>`;
+      bannerDesc.textContent = "You have some work ahead of you, but it's great that you're taking this first step. We'll use your BMI to create a program just for you.";
+    }
+    // Obese (BMI > 29.9) -> ERROR STYLE
+    else {
+      setBannerStyle('error');
+      bannerTitle.innerHTML = `Your BMI is ${bmi} which is considered <b>obese</b>`;
+      bannerDesc.textContent = "You have some work ahead of you, but it's great that you're taking this first step. We'll use your BMI to create a program just for you.";
+    }
+  }
+
+// Хелпер для стилизации плашки
+  function setBannerStyle(type) {
+    // Сначала скрываем ВСЕ иконки
+    iconInfo.classList.add('hidden');
+    iconError.classList.add('hidden');
+    iconSuccess.classList.add('hidden');
+
+    if (type === 'error') {
+      banner.classList.add('error');
+      iconError.classList.remove('hidden'); // Показываем красную (26.2)
+    } else if (type === 'success') {
+      banner.classList.add('success');
+      iconSuccess.classList.remove('hidden'); // Показываем новую (26.3)
+    } else {
+      // Default (Info)
+      iconInfo.classList.remove('hidden'); // Показываем синюю (26.1)
+    }
+  }
+
+  // --- СОБЫТИЯ ---
+
+  // Ввод цифр
+  inputs.forEach(inp => {
+    inp.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g, '');
+      updateState();
+    });
+  });
+
+  // Переключение LB / KG
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.classList.contains('active')) return;
+
+      const newUnit = btn.dataset.unit;
+      
+      if (newUnit === 'lb') {
+        // KG -> LB
+        const kgVal = parseFloat(inputKg.value);
+        if (kgVal) inputLb.value = kgToLb(kgVal);
+        else inputLb.value = '';
+        
+        groupKg.classList.add('hidden');
+        groupLb.classList.remove('hidden');
+      } else {
+        // LB -> KG
+        const lbVal = parseFloat(inputLb.value);
+        if (lbVal) inputKg.value = lbToKg(lbVal);
+        else inputKg.value = '';
+
+        groupLb.classList.add('hidden');
+        groupKg.classList.remove('hidden');
+      }
+
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
       currentUnit = newUnit;
       updateState();
     });
