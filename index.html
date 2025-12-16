@@ -851,6 +851,57 @@
   </main>
 </div>
 
+<div class="view" id="view-28">
+  <main class="layout-main layout-main--with-header">
+    <div class="container-narrow text-center">
+      
+      <h1 class="h2" style="margin-bottom: 60px;">Your goal weight</h1>
+
+      <div class="units-toggle-wrapper">
+        <button class="toggle-btn" data-unit="lb">LB</button>
+        <button class="toggle-btn active" data-unit="kg">KG</button>
+      </div>
+
+      <div class="height-input-area">
+        
+        <div id="input-target-kg-group" class="input-group-row">
+          <input type="tel" id="val-target-kg" class="input-huge" placeholder="0" maxlength="3">
+          <span class="unit-text">kg</span>
+        </div>
+
+        <div id="input-target-lb-group" class="input-group-row hidden">
+          <input type="tel" id="val-target-lb" class="input-huge" placeholder="0" maxlength="3">
+          <span class="unit-text">lb</span>
+        </div>
+
+      </div>
+
+      <div id="info-banner-target" class="info-banner">
+        <div class="icon-and-text">
+          <img src="assets/26.1.png" id="icon-info-target" style="width: 20px;"> 
+          <img src="assets/26.2.png" id="icon-error-target" class="hidden" style="width: 20px;">
+          
+          <p class="h4" id="banner-title-target">Target weight</p>
+        </div>
+        <p class="info-banner-text" id="banner-desc-target">
+          Enter your goal weight to see how much you need to lose.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="layout-footer">
+      <button id="btn-next-target" class="btn btn--primary" data-trigger="next" disabled>
+        Done
+      </button>
+    </div>
+
+  </main>
+</div>
+
+
+
+
   <div class="view" id="view-30">
     <main class="layout-main layout-main--with-header">
       <div class="container-wide text-center">
@@ -929,7 +980,7 @@
         
         <h1 class="h2">When do you want to see results?</h1>
 
-        <div class="date-selector-wrapper">
+        <div class="date-selector-wrapper" style="margin-top: 40px;">
           <div class="date-highlight"></div>
 
           <div class="date-selector">
