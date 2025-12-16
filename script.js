@@ -126,6 +126,59 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });// Конец DOMContentLoaded
 
+/* --- ФУНКЦИЯ ДЛЯ DATE PICKER (SWIPER) --- */
+function initSwiperDatePicker() {
+  // 1. Генерация данных
+
+  // Месяцы
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  const monthWrapper = document.getElementById('wrapper-month');
+  if (monthWrapper) {
+    monthWrapper.innerHTML = months.map(m => `<div class="swiper-slide">${m}</div>`).join('');
+  }
+
+  // Дни (1..31)
+  const dayWrapper = document.getElementById('wrapper-day');
+  if (dayWrapper) {
+    let daysHtml = '';
+    for (let i = 1; i <= 31; i++) {
+      daysHtml += `<div class="swiper-slide">${i}</div>`;
+    }
+    dayWrapper.innerHTML = daysHtml;
+  }
+
+  // Годы (Текущий + 10 лет вперед)
+  const yearWrapper = document.getElementById('wrapper-year');
+  if (yearWrapper) {
+    const currentYear = new Date().getFullYear();
+    let yearsHtml = '';
+    for (let i = 0; i < 10; i++) {
+      yearsHtml += `<div class="swiper-slide">${currentYear + i}</div>`;
+    }
+    yearWrapper.innerHTML = yearsHtml;
+  }
+
+  // 2. Инициализация Swiper
+  // Общие настройки для всех трех колонок
+  const config = {
+    direction: 'vertical',
+    slidesPerView: 5,        // Показываем 5 элементов (2 сверху, 1 центр, 2 снизу)
+    centeredSlides: true,    // Активный элемент по центру
+    loop: true,              // Бесконечная прокрутка
+    mousewheel: true,        // Поддержка колесика мыши
+    grabCursor: true,        // Курсор-рука
+    slideToClickedSlide: true // Клик по дате делает её активной
+  };
+
+  // Создаем экземпляры
+  new Swiper('.swiper-month', config);
+  new Swiper('.swiper-day', config);
+  new Swiper('.swiper-year', config);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const view26 = document.getElementById('view-26');
   if (!view26) return; 
@@ -372,7 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Берем рост из глобальной переменной (которую мы сохранили на экране 26)
     // Если пользователь пропустил экран 26 (в dev режиме), берем дефолт 170 см
     const heightCm = window.userHeightCm || 170; 
-    
+
     const bmi = calculateBMI(savedWeightKg, heightCm);
     window.userWeightKg = savedWeightKg;
     window.userBMI = bmi;
@@ -458,6 +511,184 @@ document.addEventListener('DOMContentLoaded', () => {
         if (lbVal) inputKg.value = lbToKg(lbVal);
         else inputKg.value = '';
 
+        groupLb.classList.add('hidden');
+        groupKg.classList.remove('hidden');
+      }
+
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentUnit = newUnit;
+      updateState();
+    });
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const view28 = document.getElementById('view-28');
+  if (!view28) return;
+
+  // --- ЭЛЕМЕНТЫ ---
+  const btns = view28.querySelectorAll('.toggle-btn');
+  const groupKg = view28.querySelector('#input-target-kg-group');
+  const groupLb = view28.querySelector('#input-target-lb-group');
+  const btnNext = view28.querySelector('#btn-next-target');
+
+  const inputKg = view28.querySelector('#val-target-kg');
+  const inputLb = view28.querySelector('#val-target-lb');
+  const inputs = view28.querySelectorAll('.input-huge');
+
+  // Плашка
+  const banner = view28.querySelector('#info-banner-target');
+  const iconInfo = view28.querySelector('#icon-info-target');   // 26.1
+  const iconError = view28.querySelector('#icon-error-target'); // 26.2
+  
+  const bannerTitle = view28.querySelector('#banner-title-target');
+  const bannerDesc = view28.querySelector('#banner-desc-target');
+
+  // Состояние
+  let currentUnit = 'kg'; 
+  let targetWeightKg = 0;
+
+  // --- КОНВЕРТАЦИЯ ---
+  const KG_TO_LB = 2.20462;
+  function kgToLb(kg) { return Math.round(kg * KG_TO_LB); }
+  function lbToKg(lb) { return Math.round(lb / KG_TO_LB); }
+
+  // --- РАСЧЕТ ДИАПАЗОНОВ ---
+  // Считаем Min (BMI 18.5) и Max (BMI 24.9) вес для роста пользователя
+  function calculateWeightRange(heightCm) {
+    if (!heightCm) return { min: 0, max: 0 };
+    const heightM = heightCm / 100;
+    // Formula: Weight = BMI * (height^2)
+    const minKg = 18.5 * (heightM * heightM);
+    const maxKg = 24.9 * (heightM * heightM);
+    return { 
+      min: Math.round(minKg), 
+      max: Math.round(maxKg) 
+    };
+  }
+
+  // --- ЛОГИКА ОТОБРАЖЕНИЯ (STATES) ---
+  function updateState() {
+    // 1. Читаем введенный целевой вес
+    if (currentUnit === 'kg') {
+      targetWeightKg = parseFloat(inputKg.value) || 0;
+    } else {
+      const lbVal = parseFloat(inputLb.value) || 0;
+      targetWeightKg = lbToKg(lbVal);
+    }
+
+    // Сброс стилей плашки
+    setBannerStyle('info'); 
+    btnNext.disabled = false;
+
+    // 0. Если пусто
+    if (targetWeightKg === 0) {
+      bannerTitle.textContent = "Target weight";
+      bannerDesc.textContent = "Enter your goal weight to see how much you need to lose.";
+      btnNext.disabled = true;
+      return;
+    }
+
+    // --- ПОЛУЧЕНИЕ ГЛОБАЛЬНЫХ ДАННЫХ ---
+    // Берем данные с прошлых экранов. Если нет (dev mode), ставим заглушки.
+    const userHeight = window.userHeightCm || 170; 
+    const currentWeight = window.userWeightKg || 80;
+
+    // Считаем диапазоны и сохраняем глобально
+    const range = calculateWeightRange(userHeight);
+    window.recommendedMinWeight = range.min;
+    window.recommendedMaxWeight = range.max;
+
+    // Форматируем Min/Max для текста (в зависимости от выбранной единицы)
+    let displayMin = range.min;
+    let displayMax = range.max;
+    if (currentUnit === 'lb') {
+      displayMin = kgToLb(range.min);
+      displayMax = kgToLb(range.max);
+    }
+
+    // --- ПРОВЕРКИ (Cases) ---
+
+    // 2.1. Вес < 20 кг -> ERROR, DISABLED
+    if (targetWeightKg < 20) {
+      setBannerStyle('error');
+      bannerTitle.textContent = "Uh-oh! Low weight alert!";
+      bannerDesc.textContent = `A normal weight range for your height is between ${displayMin} and ${displayMax}. Any weight below ${displayMin} is classified as underweight and is not recommended by World Health Organization.`;
+      btnNext.disabled = true;
+      return;
+    }
+
+    // 2.2. Целевой вес >= Текущего веса -> ERROR, DISABLED
+    if (targetWeightKg >= currentWeight) {
+      setBannerStyle('error');
+      bannerTitle.textContent = "Your target weight should be less than your current weight";
+      bannerDesc.textContent = "Please double check. You might have used metric system instead of imperial. You can change preferred unit system at the top of this page";
+      btnNext.disabled = true;
+      return;
+    }
+
+    // 2.3. 20 <= Цель < MIN (Недобор веса) -> ERROR, ACTIVE
+    if (targetWeightKg >= 20 && targetWeightKg < range.min) {
+      setBannerStyle('error');
+      bannerTitle.textContent = "Uh-oh! Low weight alert!";
+      bannerDesc.textContent = `A normal weight range for your height is between ${displayMin} and ${displayMax}. Any weight below ${displayMin} is classified as underweight and is not recommended by World Health Organization.`;
+      // Кнопка активна
+      return;
+    }
+
+    // 2.4. MIN <= Цель < Текущий (Нормальный сброс) -> ERROR (по ТЗ), ACTIVE
+    if (targetWeightKg >= range.min && targetWeightKg < currentWeight) {
+      setBannerStyle('info'); // ТЗ требует оставаться в состоянии error (красная иконка)
+      
+      // Считаем процент потери веса
+      const lossPct = ((currentWeight - targetWeightKg) / currentWeight * 100).toFixed(1);
+      // Сохраняем глобально (если нужно для будущих экранов)
+      window.weightLossPct = lossPct;
+
+      bannerTitle.textContent = `Get moving: lose ${lossPct}% of your weight`;
+      bannerDesc.textContent = "Working out just 5 minutes per day can significantly improve your overall well-being.";
+      // Кнопка активна
+      return;
+    }
+  }
+
+  // Хелпер для стилей
+  function setBannerStyle(type) {
+    iconInfo.classList.add('hidden');
+    iconError.classList.add('hidden');
+    banner.classList.remove('error');
+
+    if (type === 'error') {
+      banner.classList.add('error');
+      iconError.classList.remove('hidden');
+    } else {
+      // Info
+      iconInfo.classList.remove('hidden');
+    }
+  }
+
+  // --- СОБЫТИЯ ---
+  inputs.forEach(inp => {
+    inp.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g, '');
+      updateState();
+    });
+  });
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.classList.contains('active')) return;
+      const newUnit = btn.dataset.unit;
+      
+      if (newUnit === 'lb') {
+        const kgVal = parseFloat(inputKg.value);
+        if (kgVal) inputLb.value = kgToLb(kgVal); else inputLb.value = '';
+        groupKg.classList.add('hidden');
+        groupLb.classList.remove('hidden');
+      } else {
+        const lbVal = parseFloat(inputLb.value);
+        if (lbVal) inputKg.value = lbToKg(lbVal); else inputKg.value = '';
         groupLb.classList.add('hidden');
         groupKg.classList.remove('hidden');
       }
