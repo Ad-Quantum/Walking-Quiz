@@ -267,8 +267,20 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   .text-h1-large { font-size: 30px; }
   
   /* 2. ВОЗВРАЩАЕМ ПРАВКУ ДЛЯ H2 */
-  .h2 { font-size: 22px; } 
-  .h2-wide { font-size: 22px; } 
+  .h2 { 
+    font-size: 22px; 
+    font-weight: 700; 
+    line-height: 1.25; 
+    margin-bottom: 12px; 
+  } 
+  .h2-wide { 
+    font-size: 22px; 
+    font-weight: 700; 
+    line-height: 1.25; 
+    margin-bottom: 12px; 
+    margin-left: 0px; 
+    margin-right: 0px;
+  } 
   
   .text-subtitle { font-size: 16px; margin-bottom: 16px; }
   .card__subtitle { font-size: 12px; color: var(--c-text-sub); font-weight: 400; margin-top: 4px; line-height: 1.4; }
@@ -284,7 +296,14 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   
   /* Отступы контента */
   .layout-main { padding-bottom: 120px; }
-  .split-layout__top { padding-top: 16px; }
+   .split-layout__top { 
+    flex: 0 0 auto; 
+    width: 100%; 
+    text-align: center; 
+    padding-top: 40px; 
+    padding-left: 20px;
+    z-index: 10; 
+  }
   .split-layout__bottom { padding-bottom: 16px; }
 
   /* --- 1. ВОЗВРАЩАЕМ РАСТЯГИВАНИЕ ПРОГРЕСС-БАРА --- */
