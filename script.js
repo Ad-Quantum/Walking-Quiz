@@ -179,6 +179,10 @@ function initSwiperDatePicker() {
   new Swiper('.swiper-year', config);
 }
 
+
+
+// --- ЭКРАН 26 ---
+
 document.addEventListener('DOMContentLoaded', () => {
   const view26 = document.getElementById('view-26');
   if (!view26) return; 
@@ -253,6 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setBanner('info');
       btnNext.disabled = false; // Кнопка активна
       window.userHeightCm = savedHeightCm; // Сохраняем рост глобально для экрана 27
+      window.userHeightUnit = currentUnit; // <--- ДОБАВИТЬ ЭТУ СТРОКУ (сохраняем 'cm' или 'ft')
     }
   }
 
@@ -338,6 +343,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+
+
+// --- ЭКРАН 27 ---
 document.addEventListener('DOMContentLoaded', () => {
   const view27 = document.getElementById('view-27');
   if (!view27) return;
@@ -523,6 +531,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+
+// --- ЭКРАН 28 (ОБНОВЛЕННЫЙ) ---
 document.addEventListener('DOMContentLoaded', () => {
   const view28 = document.getElementById('view-28');
   if (!view28) return;
@@ -539,8 +549,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Плашка
   const banner = view28.querySelector('#info-banner-target');
-  const iconInfo = view28.querySelector('#icon-info-target');   // 26.1
-  const iconError = view28.querySelector('#icon-error-target'); // 26.2
+  const iconInfo = view28.querySelector('#icon-info-target');   
+  const iconError = view28.querySelector('#icon-error-target'); 
   
   const bannerTitle = view28.querySelector('#banner-title-target');
   const bannerDesc = view28.querySelector('#banner-desc-target');
@@ -555,11 +565,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function lbToKg(lb) { return Math.round(lb / KG_TO_LB); }
 
   // --- РАСЧЕТ ДИАПАЗОНОВ ---
-  // Считаем Min (BMI 18.5) и Max (BMI 24.9) вес для роста пользователя
   function calculateWeightRange(heightCm) {
     if (!heightCm) return { min: 0, max: 0 };
     const heightM = heightCm / 100;
-    // Formula: Weight = BMI * (height^2)
     const minKg = 18.5 * (heightM * heightM);
     const maxKg = 24.9 * (heightM * heightM);
     return { 
@@ -578,6 +586,10 @@ document.addEventListener('DOMContentLoaded', () => {
       targetWeightKg = lbToKg(lbVal);
     }
 
+    // === [НОВОЕ] СОХРАНЯЕМ В ГЛОБАЛЬНУЮ ПЕРЕМЕННУЮ ===
+    window.userTargetWeightKg = targetWeightKg; 
+    // =================================================
+
     // Сброс стилей плашки
     setBannerStyle('info'); 
     btnNext.disabled = false;
@@ -591,7 +603,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- ПОЛУЧЕНИЕ ГЛОБАЛЬНЫХ ДАННЫХ ---
-    // Берем данные с прошлых экранов. Если нет (dev mode), ставим заглушки.
     const userHeight = window.userHeightCm || 170; 
     const currentWeight = window.userWeightKg || 80;
 
@@ -600,7 +611,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.recommendedMinWeight = range.min;
     window.recommendedMaxWeight = range.max;
 
-    // Форматируем Min/Max для текста (в зависимости от выбранной единицы)
+    // Форматируем Min/Max для текста
     let displayMin = range.min;
     let displayMax = range.max;
     if (currentUnit === 'lb') {
@@ -608,9 +619,9 @@ document.addEventListener('DOMContentLoaded', () => {
       displayMax = kgToLb(range.max);
     }
 
-    // --- ПРОВЕРКИ (Cases) ---
+    // --- ПРОВЕРКИ ---
 
-    // 2.1. Вес < 20 кг -> ERROR, DISABLED
+    // 2.1. Вес < 20 кг -> ERROR
     if (targetWeightKg < 20) {
       setBannerStyle('error');
       bannerTitle.textContent = "Uh-oh! Low weight alert!";
@@ -619,7 +630,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // 2.2. Целевой вес >= Текущего веса -> ERROR, DISABLED
+    // 2.2. Целевой вес >= Текущего веса -> ERROR
     if (targetWeightKg >= currentWeight) {
       setBannerStyle('error');
       bannerTitle.textContent = "Your target weight should be less than your current weight";
@@ -633,22 +644,18 @@ document.addEventListener('DOMContentLoaded', () => {
       setBannerStyle('error');
       bannerTitle.textContent = "Uh-oh! Low weight alert!";
       bannerDesc.textContent = `A normal weight range for your height is between ${displayMin} and ${displayMax}. Any weight below ${displayMin} is classified as underweight and is not recommended by World Health Organization.`;
-      // Кнопка активна
       return;
     }
 
-    // 2.4. MIN <= Цель < Текущий (Нормальный сброс) -> ERROR (по ТЗ), ACTIVE
+    // 2.4. MIN <= Цель < Текущий (Нормальный сброс) -> INFO, ACTIVE
     if (targetWeightKg >= range.min && targetWeightKg < currentWeight) {
-      setBannerStyle('info'); // ТЗ требует оставаться в состоянии error (красная иконка)
+      setBannerStyle('info'); 
       
-      // Считаем процент потери веса
       const lossPct = ((currentWeight - targetWeightKg) / currentWeight * 100).toFixed(1);
-      // Сохраняем глобально (если нужно для будущих экранов)
-      window.weightLossPct = lossPct;
+      window.weightLossPct = lossPct; // Это уже сохранялось, оставляем как есть
 
       bannerTitle.textContent = `Get moving: lose ${lossPct}% of your weight`;
       bannerDesc.textContent = "Working out just 5 minutes per day can significantly improve your overall well-being.";
-      // Кнопка активна
       return;
     }
   }
@@ -663,7 +670,6 @@ document.addEventListener('DOMContentLoaded', () => {
       banner.classList.add('error');
       iconError.classList.remove('hidden');
     } else {
-      // Info
       iconInfo.classList.remove('hidden');
     }
   }
@@ -699,4 +705,188 @@ document.addEventListener('DOMContentLoaded', () => {
       updateState();
     });
   });
+
+
+  /* =========================
+     ЛОГИКА ЭКРАНА 29 (PROFILE SUMMARY)
+     ========================= */
+  
+  function updateView29() {
+    // 1. Получаем данные (или дефолтные, если тестируем без прохода)
+    const heightCm = window.userHeightCm || 170;
+    const weightKg = window.userWeightKg || 65;
+    const bmi = parseFloat(window.userBMI) || 22.5;
+    const minW = window.recommendedMinWeight || 53;
+    const maxW = window.recommendedMaxWeight || 81;
+
+    // Определяем единицы измерения (смотрим на активную кнопку в View-27)
+    // Если пользователь выбрал LB, конвертируем для отображения
+    let isLb = false;
+    const lbBtn = document.querySelector('#view-27 .toggle-btn[data-unit="lb"]');
+    if (lbBtn && lbBtn.classList.contains('active')) {
+      isLb = true;
+    }
+
+    // === НАЧАЛО ИЗМЕНЕНИЙ ===
+    // Определяем единицы измерения РОСТА (смотрим на активную кнопку в View-26)
+    let isFt = false;
+    const ftBtn = document.querySelector('#view-26 .toggle-btn[data-unit="ft"]');
+    if (ftBtn && ftBtn.classList.contains('active')) {
+      isFt = true;
+    }
+
+    // Формируем строку для отображения роста
+    let displayHeightStr = '';
+    if (isFt) {
+       // Конвертация CM -> FT/IN
+       const realFeet = heightCm / 30.48;
+       let ft = Math.floor(realFeet);
+       let inches = Math.round((realFeet - ft) * 12);
+       // Корректировка округления (если дюймов 12, то это +1 фут)
+       if (inches === 12) { ft++; inches = 0; }
+       displayHeightStr = `${ft}' ${inches}"`;
+    } else {
+       displayHeightStr = `${Math.round(heightCm)} см`;
+    }
+    // === КОНЕЦ ИЗМЕНЕНИЙ (логика расчета готова) ===
+
+    // --- Функции конвертации для отображения ---
+    const toDisplayWeight = (kg) => isLb ? Math.round(kg * 2.20462) : Math.round(kg);
+    const unitLabel = isLb ? 'lb' : 'кг';
+
+    // --- 2. Заполнение Текстовых Полей ---
+document.getElementById('disp-height').textContent = displayHeightStr;
+    document.getElementById('disp-weight').textContent = `${toDisplayWeight(weightKg)} ${unitLabel}`;
+    document.getElementById('disp-bmi').textContent = bmi.toFixed(2);
+    
+    // Диапазон нормы
+    document.getElementById('disp-range').textContent = 
+      `${toDisplayWeight(minW)} - ${toDisplayWeight(maxW)} ${unitLabel}`;
+
+// --- 3. Логика Верхней Карточки (Цвет и Сообщение) ---
+// --- 3. Логика Верхней Карточки (Цвет и Сообщение) ---
+const topCard = document.getElementById('profile-top-card');
+const msgBox = document.getElementById('profile-message-box');
+
+// Сброс предыдущих классов
+topCard.classList.remove('profile-card--green', 'profile-card--blue', 'profile-card--red');
+msgBox.classList.remove('profile-message-box--green', 'profile-message-box--blue', 'profile-message-box--red');
+
+if (bmi <= 18.5) {
+  // 1.1. BMI <= 18.5 — Синий вариант
+  topCard.classList.add('profile-card--blue');
+  msgBox.classList.add('profile-message-box--blue');
+  msgBox.innerHTML = `<span>‼️</span> Риск развития проблем со здоровьем`;
+} else if (bmi >= 28.0) {
+  // 1.2. BMI >= 28.0 — Красный вариант
+  topCard.classList.add('profile-card--red');
+  msgBox.classList.add('profile-message-box--red');
+  msgBox.innerHTML = `<span>🏃</span> Давай потренируемся!`;
+} else {
+  // 1.3. В любом другом случае — Зеленый вариант
+  topCard.classList.add('profile-card--green');
+  msgBox.classList.add('profile-message-box--green');
+  msgBox.innerHTML = `<span>🔥</span> Ты в отличной форме, так держать!`;
+}
+
+    // --- 4. Логика Градиентной Шкалы (Треугольник) ---
+    // Условия: 18.5 -> 20%, 25.0 -> 40%, 28.0 -> 60%, 32.0 -> 80%
+    let gradPercent = 0;
+    
+    if (bmi <= 18.5) {
+      // 0 .. 18.5 => 0% .. 20%
+      gradPercent = (bmi / 18.5) * 20;
+    } else if (bmi < 25) {
+      // 18.5 .. 25 => 20% .. 40%
+      gradPercent = 20 + ((bmi - 18.5) / (25 - 18.5)) * 20;
+    } else if (bmi < 28) {
+      // 25 .. 28 => 40% .. 60%
+      gradPercent = 40 + ((bmi - 25) / (28 - 25)) * 20;
+    } else if (bmi < 32) {
+      // 28 .. 32 => 60% .. 80%
+      gradPercent = 60 + ((bmi - 28) / (32 - 28)) * 20;
+    } else {
+      // 32+ => 80% .. 100% (лимитируем до 100)
+      gradPercent = 80 + ((bmi - 32) / 10) * 20; 
+      if (gradPercent > 100) gradPercent = 100;
+    }
+    
+    document.getElementById('triangle-gradient').style.left = `${gradPercent}%`;
+
+    // --- 5. Логика Нижней Серой Плашки (CSS Шкала) ---
+    const titleStatus = document.getElementById('weight-status-title');
+    const seg1 = document.getElementById('seg-1');
+    const seg2 = document.getElementById('seg-2');
+    const seg3 = document.getElementById('seg-3');
+    const rowDiff = document.getElementById('row-diff');
+    const diffVal = document.getElementById('disp-diff');
+
+    // Сброс цветов сегментов
+    [seg1, seg2, seg3].forEach(el => el.className = 'css-scale-seg');
+    rowDiff.classList.add('hidden'); // Скрываем строку разницы по умолчанию
+
+    // Расчет позиции треугольника CSS (18.5 = 33.33%, 25.0 = 66.66%)
+    let cssPercent = 0;
+    // Точки: 0->0%, 18.5->33.33%, 28->66.66%, 40->100% (условно)
+    
+if (bmi <= 18.5) {
+      // 1.1. BMI <= 18.5 — горит только seg-1 (Синий)
+      titleStatus.textContent = "Твой вес сейчас ниже нормы";
+      seg1.classList.add('blue');
+      
+      // Расчет позиции треугольника (от 0 до 18.5 -> от 0% до 33.33%)
+      cssPercent = (bmi / 18.5) * 33.33;
+      if (cssPercent < 0) cssPercent = 0;
+
+      // Разница веса до нормы
+      if (weightKg < minW) {
+        rowDiff.classList.remove('hidden');
+        const diff = toDisplayWeight(minW - weightKg);
+        diffVal.textContent = `+${diff} ${unitLabel}`;
+      }
+
+    } else if (bmi >= 28.0) {
+      // 1.2. BMI >= 28.0 — горит только seg-3 (Красный)
+      titleStatus.textContent = "Твой вес сейчас выше нормы";
+      seg3.classList.add('red');
+
+      // Расчет позиции треугольника (от 28.0 до 40.0 -> от 66.66% до 100%)
+      // 40 BMI берем как условный максимум для шкалы
+      cssPercent = 66.66 + ((bmi - 28.0) / (40.0 - 28.0)) * 33.34;
+      if (cssPercent > 100) cssPercent = 100;
+
+      // Разница веса (лишний вес)
+      if (weightKg > maxW) {
+        rowDiff.classList.remove('hidden');
+        const diff = toDisplayWeight(weightKg - maxW);
+        diffVal.textContent = `-${diff} ${unitLabel}`;
+      }
+
+    } else {
+      // 1.3. В любом другом случае (18.5 < BMI < 28.0) — горит только seg-2 (Зеленый)
+      titleStatus.textContent = "Твой вес находится в пределах нормы";
+      seg2.classList.add('green');
+
+      // Расчет позиции треугольника (от 18.5 до 28.0 -> от 33.33% до 66.66%)
+      cssPercent = 33.33 + ((bmi - 18.5) / (28.0 - 18.5)) * 33.33;
+    }
+
+    // Применяем итоговую позицию треугольника
+    document.getElementById('triangle-css').style.left = `${cssPercent}%`;
+  }
+
+  // Наблюдатель за переключением вью, чтобы запускать расчет при входе на экран 29
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.target.id === 'view-29' && mutation.target.classList.contains('active')) {
+        updateView29();
+      }
+    });
+  });
+  
+  const v29 = document.getElementById('view-29');
+  if (v29) {
+    observer.observe(v29, { attributes: true, attributeFilter: ['class'] });
+  }
 });
+
