@@ -899,10 +899,91 @@
   </main>
 </div>
 
+<div class="view" id="view-29">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center" style="width: 500px;">
+        
+        <h1 class="h2" style="margin-bottom: 24px;">Твой профиль</h1>
 
+        <div id="profile-top-card" class="profile-card profile-card--green">
+          
+          <div class="profile-stats-row">
+            <div class="profile-stat">
+              <span class="profile-stat__label">Рост</span>
+              <span class="profile-stat__value" id="disp-height">170 см</span>
+            </div>
+            <div class="profile-stat-divider"></div>
+            <div class="profile-stat">
+              <span class="profile-stat__label">Вес</span>
+              <span class="profile-stat__value" id="disp-weight">65 кг</span>
+            </div>
+          </div>
 
+          <div class="profile-bmi-row">
+            <span style="font-weight: 400;">Текущий ИМТ </span>
+            <span id="disp-bmi" style="font-weight: 800; margin-left: 1px;">22.49</span>
+          </div>
 
-  <div class="view" id="view-30">
+          <div class="scale-wrapper">
+<div class="scale-numbers-grid">
+    <span class="num-18">18.5</span>
+    <span class="num-25">25.0</span>
+    <span class="num-28">28.0</span>
+    <span class="num-32">32.0</span>
+  </div>
+             <div class="scale-track-img-wrap">
+               <img src="assets/29.1.png" class="scale-track-img">
+               <div id="triangle-gradient" class="scale-triangle"></div>
+             </div>
+             <div class="scale-labels-grid">
+                <span>Низкий</span>
+                <span>Норма</span>
+                <span>Повышен</span>
+                <span>Высокий</span>
+                <span>Критический</span>
+              </div>
+          </div>
+          <div id="profile-message-box" class="profile-message-box">
+             </div>
+
+        </div>
+
+        <div class="profile-gray-card">
+          
+          <h3 id="weight-status-title" class="h4" style="font-weight: 700; margin-bottom: 16px;">
+            Твой вес находится в пределах нормы
+          </h3>
+
+          <div class="css-scale-container">
+            <div class="css-scale-track">
+              <div id="seg-1" class="css-scale-seg"></div>
+              <div id="seg-2" class="css-scale-seg"></div>
+              <div id="seg-3" class="css-scale-seg"></div>
+            </div>
+            <div id="triangle-css" class="scale-triangle-css"></div>
+          </div>
+
+          <div class="profile-info-row">
+            <span class="profile-info-label">Твой диапазон нормы веса</span>
+            <span class="profile-info-val" id="disp-range">53 - 81 кг</span>
+          </div>
+
+          <div id="row-diff" class="profile-info-row hidden">
+            <span class="profile-info-label">До нормального веса</span>
+            <span class="profile-info-val" id="disp-diff">-5 кг</span>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+
+    <footer class="layout-footer">
+      <button class="btn btn--primary" data-trigger="next">Далее</button>
+    </footer>
+  </div>
+
+<div class="view" id="view-30">
     <main class="layout-main layout-main--with-header">
       <div class="container-wide text-center">
         <h1 class="h2">Do you have an important event?</h1>
