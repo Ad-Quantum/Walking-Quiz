@@ -295,15 +295,16 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   .grid-age { margin-top: 30px; gap: 16px; }
   
   /* Отступы контента */
-  .layout-main { padding-bottom: 120px; }
-   .split-layout__top { 
+  .split-layout__top { 
     flex: 0 0 auto; 
     width: 100%; 
     text-align: center; 
     padding-top: 40px; 
-    padding-left: 20px;
+    padding-left: 20px; 
+    /*padding-right: 20px; */
     z-index: 10; 
   }
+  .layout-main { padding-bottom: 120px; }
   .split-layout__bottom { padding-bottom: 16px; }
 
   /* --- 1. ВОЗВРАЩАЕМ РАСТЯГИВАНИЕ ПРОГРЕСС-БАРА --- */
@@ -668,4 +669,343 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   box-shadow: none;
   cursor: not-allowed;
   transform: none;
+}
+
+/* =========================
+   ЭКРАН 29: ПРОФИЛЬ
+   ========================= */
+
+/* Карточка Профиля (Верхняя) */
+.profile-card {
+  width: 100%;
+  border-radius: 20px;
+  padding: 0px; /* Равномерный отступ со всех сторон для корректного отображения внутренней плашки */
+  margin-bottom: 16px;
+  transition: background-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden; /* Чтобы скругления карточки обрезали вложенную плашку */
+}
+
+/* Цветовые темы верхней карточки */
+.profile-card--green { background-color: #eafbf0; } /* Зеленый (Ref 1) */
+.profile-card--blue  { background-color: #eaf8ff; } /* Синий (Ref 3) */
+.profile-card--red   { background-color: #fff2f6; } /* Красный (Ref 4) */
+
+/* Блок Рост / Вес */
+.profile-stats-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  margin: 8px 8px 20px 8px; /* Задаем внешние отступы от краев карточки */
+  width: auto; /* Позволяем margin работать корректно */
+  align-self: stretch;
+  height: 60;
+  /* Новые стили для соответствия референсу */
+  background-color: rgba(255, 255, 255, 0.5); /* Полупрозрачный белый для наложения цвета */
+  border-radius: 16px;
+  padding: 16px 0;
+  transition: background-color 0.3s ease;
+}
+
+/* Добавляем специфические цвета для внутренней плашки в зависимости от состояния карточки */
+.profile-card--green .profile-stats-row { background-color: #e1f6e9; }
+.profile-card--blue .profile-stats-row  { background-color: #e0f1fa; }
+.profile-card--red .profile-stats-row   { background-color: #fee5eb; }
+
+.profile-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  gap: 6px;
+}
+
+.profile-stat__label { 
+  font-size: 13px; 
+  font-weight: 400; 
+  color: #868686; 
+  margin-bottom: 4px; 
+}
+
+.profile-stat__value { 
+  font-size: 20px; 
+  font-weight: 700; 
+  color: #111; 
+}
+
+.profile-stat-divider {
+  width: 1px;
+  height: 40px;
+  background-color: rgba(0,0,0,0.1);
+  flex-shrink: 0; /* Чтобы черточка не сжималась */
+}
+
+.profile-bmi-row {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* Шкала с картинкой (Верхняя) */
+.scale-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto 20px;
+}
+
+.scale-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15%; /* Отступы примерно подгоняем под картинку 29.1 */
+  font-size: 10px;
+  color: #888;
+  margin-bottom: 4px;
+}
+/* Немного смещаем лейблы, чтобы попадали под деления картинки */
+.scale-labels span:nth-child(1) { margin-left: 5%; }
+.scale-labels span:nth-child(4) { margin-right: 5%; }
+
+.scale-track-img-wrap {
+  position: relative;
+  width: 100%;
+  height: auto; /* Высота полоски на картинке */
+  margin-bottom: 6px;
+}
+
+.scale-track-img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill; 
+  border-radius: 99px;
+  display: block;
+}
+
+.scale-labels-grid {
+  display: grid;
+  /* Создаем 5 абсолютно равных колонок */
+  grid-template-columns: repeat(5, 1fr);
+  width: 100%;
+  margin-top: 8px;
+  /* Убедитесь, что padding совпадает с отступами вашей картинки, если они есть */
+  box-sizing: border-box;
+}
+
+.scale-labels-grid span {
+  text-align: center;
+  color: #333;
+  
+  /* Динамический размер шрифта:
+     12px — минимальный размер
+     2.5vw — шрифт будет расти вместе с шириной экрана
+     16px — (опционально) максимальный предел, чтобы текст не стал огромным
+  */
+  font-size: clamp(8px, 2.5vw, 10px);
+  
+  /* Гарантируем, что текст не переносится на новую строку и не ломает сетку */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scale-numbers-grid {
+  display: grid;
+  /* Создаем те же 5 колонок, что и для шкалы */
+  grid-template-columns: repeat(5, 1fr);
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.scale-numbers-grid span {
+  font-size: clamp(8px, 2vw, 12px);
+  color: #888;
+  /* Центрируем текст относительно линии, а не ячейки */
+  width: 0; 
+  display: flex;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+/* Позиционируем каждое число на соответствующую вертикальную линию сетки */
+.num-18 { grid-column: 2; } /* Начало 2-й колонки (граница 1 и 2) */
+.num-25 { grid-column: 3; } /* Начало 3-й колонки (граница 2 и 3) */
+.num-28 { grid-column: 4; } /* Начало 4-й колонки (граница 3 и 4) */
+.num-32 { grid-column: 5; } /* Начало 5-й колонки (граница 4 и 5) */
+
+/* Треугольник для градиентной шкалы */
+.scale-triangle {
+  position: absolute;
+  top: 0; 
+  width: 0; 
+  height: 0; 
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid #000; /* Черный треугольник смотрит вниз */
+  transform: translateX(-50%);
+  transition: left 0.5s ease;
+}
+
+/*.scale-legend {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  font-weight: 500;
+  color: #111;
+}*/
+
+/* Плашка сообщения внизу цветной карты */
+.profile-message-box {
+  width: 100%;
+  border-radius: 0px 0px 12px 12px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.3s ease;
+}
+
+/* Цветовые темы для плашки сообщения */
+.profile-message-box--green { background-color: #baffce; }
+.profile-message-box--blue  { background-color: #d1f1ff; }
+.profile-message-box--red   { background-color: #ffdce5; }
+
+/* Нижняя Серая Карточка */
+.profile-gray-card {
+  background-color: #f5f5f5;
+  border-radius: 20px;
+  padding: 24px 20px;
+  width: 100%;
+  padding-left: 60px;
+  padding-right: 60px;
+}
+
+/* Шкала CSS (3 деления) */
+.css-scale-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 24px;
+  padding-top: 12px; /* Место под треугольник, если он будет сверху, но у нас он на шкале */
+}
+
+.css-scale-track {
+  display: flex;
+  height: 12px;
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  gap: 2px; /* Расстояние между сегментами */
+}
+
+.css-scale-seg {
+  flex: 1;
+  background-color: #d5d9e5; /* Серый по умолчанию */
+  transition: background-color 0.3s;
+}
+
+/* Цвета сегментов */
+.css-scale-seg.blue { background-color: #448AFF; } /* Как на реф 3 */
+.css-scale-seg.green { background-color: #9cffbb; } /* Как на реф 1 */
+.css-scale-seg.red { background-color: #FF5252; }   /* Как на реф 4 */
+
+/* Треугольник для CSS шкалы */
+.scale-triangle-css {
+  position: absolute;
+  top: 4px; /* Позиционируем прямо на полоску */
+  width: 0; 
+  height: 0; 
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #000;
+  transform: translateX(-50%);
+  transition: left 0.5s ease;
+  z-index: 5;
+}
+
+.profile-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.profile-info-label {
+  color: #111;
+  font-weight: 500;
+  text-align: left;
+}
+
+.profile-info-val {
+  font-weight: 700;
+  color: #111;
+}
+
+/* =========================
+   ИСПРАВЛЕННЫЙ ГИБКИЙ АДАПТИВ ЭКРАНА 29
+   ========================= */
+@media (max-width: 767px) {
+  
+  /* Перебиваем фиксированную ширину из HTML и CSS */
+  #view-29 .container-narrow {
+    width: 100% !important; 
+    max-width: 100% !important;
+    padding: 0 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Заставляем карточки занимать 100% ширины родителя */
+  .profile-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .profile-gray-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    box-sizing: border-box !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Адаптивные шрифты через clamp */
+  #view-29 .h2 {
+    font-size: clamp(22px, 6vw, 28px) !important;
+  }
+
+  /* Исправляем сетки шкал: теперь они будут сжиматься */
+  .scale-labels-grid, 
+  .scale-numbers-grid {
+    display: grid !important;
+    width: 100% !important;
+    gap: 0 !important;
+  }
+
+  .scale-labels-grid span, 
+  .scale-numbers-grid span {
+    /* Шрифт будет уменьшаться до 8px на очень узких экранах */
+    font-size: clamp(8px, 2.2vw, 11px) !important;
+    white-space: nowrap;
+  }
+
+  /* Внутренняя плашка Рост/Вес */
+  .profile-stats-row {
+    margin: 8px 8px 20px 8px !important;
+    width: auto !important;
+  }
+
+  /* Серая карточка: убираем боковой отступ 60px, который ломал вид */
+  .profile-gray-card {
+    padding: 20px 16px !important;
+  }
 }
