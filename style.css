@@ -950,7 +950,16 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
    ИСПРАВЛЕННЫЙ ГИБКИЙ АДАПТИВ ЭКРАНА 29
    ========================= */
 @media (max-width: 767px) {
-  
+
+   .scale-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto 20px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+   
   /* Перебиваем фиксированную ширину из HTML и CSS */
   #view-29 .container-narrow {
     width: 100% !important; 
