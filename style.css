@@ -10,6 +10,8 @@
   --radius-btn: 999px; --radius-card: 20px;
   --w-wide: 900px; --w-narrow: 528px;
   --header-py: 70px; --footer-pb: 100px;
+  --header-height: 90px;
+  --footer-height: 160px;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-text-main); overflow: hidden; height: 100vh; }
@@ -85,11 +87,17 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   /* Добавляем динамический нижний отступ, равный высоте футера + небольшой запас */
   padding-bottom: calc(var(--footer-h, 100px) + 20px) !important;
 }
-  .layout-main--centered { justify-content: center; padding-bottom: 40px; }
+.layout-main--centered { justify-content: center; padding-bottom: 40px; }
 .layout-main--with-header {
-  /* Мы берем высоту хедера из переменной и добавляем к ней ваши 20px */
-  padding-top: calc(var(--header-h, 110px) + 10px) !important;
+  /* Высота хедера + ваши 20px зазора */
+  padding-top: calc(var(--header-height) + 20px) !important;
+  /* Высота футера + запас, чтобы контент не прилипал */
+  padding-bottom: calc(var(--footer-height) + 20px) !important;
 }
+.view:not(:has(.layout-footer)) .layout-main {
+  padding-bottom: 40px !important;
+}
+
 .bg-image { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; }
 
 .layout-footer { 
@@ -286,7 +294,12 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
    7. MEDIA QUERIES (MOBILE)
    ========================= */
 @media (max-width: 767px) {
-  :root { --header-py: 30px; --footer-pb: 20px; }
+  :root { 
+    --header-py: 30px;
+    --footer-pb: 20px; 
+    --header-height: 80px; 
+    --footer-height: 140px;
+  }
   
   /* Типографика */
   .text-display { font-size: 36px; }
