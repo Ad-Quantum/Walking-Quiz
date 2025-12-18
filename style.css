@@ -74,7 +74,10 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 
 .layout-main { position: relative; z-index: 2; flex: 1; overflow-y: auto; width: 100%; padding: 0 20px 0px; display: flex; flex-direction: column; align-items: center; }
 .layout-main--centered { justify-content: center; padding-bottom: 40px; }
-.layout-main--with-header { padding-top: var(--header-h, 110px); }
+.layout-main--with-header {
+  /* Мы берем высоту хедера из переменной и добавляем к ней ваши 20px */
+  padding-top: calc(var(--header-h, 110px) + 10px) !important;
+}
 .bg-image { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; }
 
 .layout-footer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #ffffff; padding: 20px 20px var(--footer-pb); }
@@ -304,7 +307,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
     /*padding-right: 20px; */
     z-index: 10; 
   }
-  .layout-main { padding-bottom: 120px; }
+  /* .layout-main { padding-bottom: 120px; } */
   .split-layout__bottom { padding-bottom: 16px; }
 
   /* --- 1. ВОЗВРАЩАЕМ РАСТЯГИВАНИЕ ПРОГРЕСС-БАРА --- */
@@ -951,7 +954,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
    ========================= */
 @media (max-width: 767px) {
 
-   .scale-wrapper {
+.scale-wrapper {
   position: relative;
   width: 100%;
   max-width: 360px;
@@ -959,12 +962,11 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   padding-left: 16px;
   padding-right: 16px;
 }
-   
   /* Перебиваем фиксированную ширину из HTML и CSS */
   #view-29 .container-narrow {
     width: 100% !important; 
     max-width: 100% !important;
-    padding: 0 16px !important;
+    padding: 0px !important;
     box-sizing: border-box !important;
   }
 
