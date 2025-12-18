@@ -15,35 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  // Функция для замера высоты футера
-  function measureFooter() {
-  const activeView = document.querySelector('.view.active');
-  if (!activeView) return;
-
-  const footer = activeView.querySelector('.layout-footer');
-  // Если в текущем View есть фиксированный футер
-  if (footer && !footer.classList.contains('hidden')) {
-    const height = footer.offsetHeight;
-    document.documentElement.style.setProperty('--footer-h', height + 'px');
-  } else {
-    // Если футера нет (или он инлайновый), обнуляем переменную
-    document.documentElement.style.setProperty('--footer-h', '0px');
-  }
-  }
-  // Обновляем measureHeader, чтобы она была консистентна
-function measureHeader() {
-  if (globalHeader && !globalHeader.classList.contains('hidden')) {
-    const height = globalHeader.offsetHeight;
-    document.documentElement.style.setProperty('--header-h', height + 'px');
-  } else {
-    document.documentElement.style.setProperty('--header-h', '0px');
-  }
-}
 
 // Добавляем вызов в обработчик resize
 window.addEventListener('resize', () => { 
-  measureHeader(); 
-  measureFooter(); // Замеряем футер при ресайзе
   fixScrollbar(); 
 });
 
@@ -69,12 +43,7 @@ function showView(index) {
     globalHeader.classList.add("hidden");
   }
 
-  // Замеры высот после отрисовки
-  setTimeout(() => { 
-    measureHeader(); 
-    measureFooter(); // Измеряем футер нового экрана
-    fixScrollbar(); 
-  }, 50);
+  fixScrollbar(); 
 }
 
   window.addEventListener('resize', () => { measureHeader(); fixScrollbar(); });
