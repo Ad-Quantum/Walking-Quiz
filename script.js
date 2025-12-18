@@ -14,10 +14,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // измеряем высоту прогресс-бара в хедере
   function measureHeader() {
     if (globalHeader && !globalHeader.classList.contains('hidden')) {
       const height = globalHeader.offsetHeight;
-      document.documentElement.style.setProperty('--header-h', (height + 10) + 'px');
+      document.documentElement.style.setProperty('--header-h', height + 'px');
     }
   }
 
