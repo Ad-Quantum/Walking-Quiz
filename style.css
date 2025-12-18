@@ -1060,3 +1060,184 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
     padding: 20px 16px !important;
   }
 }
+
+/* ЭКРАН 33 */
+.summary-flex {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.summary-column {
+  flex: 1;
+}
+
+.summary-column--chart {
+  background: #f5f8ff;
+  border-radius: 20px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.summary-subtitle {
+  font-size: 18px;
+  line-height: 1.4;
+  color: #111;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Контейнер графика и плашек */
+.chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  margin-top: 20px;
+}
+
+.chart-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.weight-badge {
+  position: absolute;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+/* Цвета плашек */
+.weight-badge--1, .weight-badge--2 { background-color: #485AFF; }
+.weight-badge--3, .weight-badge--4 { background-color: #00D26A; }
+
+/* Позиционирование плашек (примерное под 33.0.png) */
+.weight-badge--1 { top: -10%; left: 10%; }
+.weight-badge--2 { top: 25%; left: 35%; }
+.weight-badge--3 { top: 38%; left: 63%; }
+.weight-badge--4 { top: 38%; left: 90%; }
+
+.chart-dates {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  font-size: 12px;
+  color: #7e7e7e;
+  font-weight: 600;
+}
+
+/* ОТЗЫВЫ */
+/* Контейнер для всех карточек */
+.summary-column--reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 600px; /* Ширина под ваш дизайн */
+  margin: 0 auto;
+}
+
+/* Сама карточка */
+.review-card {
+  background: #ffffff;
+  border-radius: 16px; /* Скругление углов плашки */
+  padding: 13px 10px 10px;
+  display: flex; /* Выстраиваем аватар и контент в ряд */
+  gap: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Мягкая тень плашки */
+  align-items: flex-start;
+}
+
+/* Левая часть (Аватар + Имя) */
+.review-avatar-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.avatar-wrapper {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 1px solid #FFB300; /* Желтый ободок из референса */
+  padding: 3px;
+  margin-bottom: 8px;
+}
+
+.review-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+
+/* Правая часть (Текст отзыва) */
+.review-content {
+  flex: 1;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.review-stars {
+  height: 18px; /* Подгоняем размер картинки со звездами */
+  object-fit: contain;
+}
+
+.review-rating {
+  font-size: 12px;
+  font-weight: 700; /* Жирный рейтинг 4.5 / 5.0 */
+  color: #111;
+  margin: 0;
+}
+
+.review-text {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #111;
+  margin: 0;
+  font-weight: 400;
+}
+.review-names {
+  font-size: 10px;
+  font-weight: 500;
+  font-style: italic; /* Имя Joe_88 под наклоном */
+  color: #111;
+  margin: 0;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 767px) {
+  .summary-flex {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .summary-column--chart {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 24px;
+  }
+  
+  .summary-subtitle {
+    margin-bottom: 40px;
+    font-size: 16px;
+  }
+
+  .weight-badge {
+    font-size: 12px;
+  }
+}
