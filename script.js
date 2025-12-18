@@ -14,15 +14,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-
-
-// Добавляем вызов в обработчик resize
-window.addEventListener('resize', () => { 
+  // Добавляем вызов в обработчик resize
+  window.addEventListener('resize', () => { 
   fixScrollbar(); 
-});
+  });
 
-// Обновляем логику показа экранов
-function showView(index) {
+  // Обновляем логику показа экранов
+  function showView(index) {
   if (index < 0 || index >= views.length) return;
   if (views[currentViewIndex]) views[currentViewIndex].classList.remove("active");
   
@@ -42,6 +40,8 @@ function showView(index) {
   } else {
     globalHeader.classList.add("hidden");
   }
+
+  
 
   fixScrollbar(); 
 }
@@ -78,21 +78,38 @@ function showView(index) {
     }, 30);
   }
 
-  document.body.addEventListener("click", (e) => {
+document.body.addEventListener("click", (e) => {
     const target = e.target;
     const nextBtn = target.closest('[data-trigger="next"]');
+    
     if (nextBtn) {
+      // 1. Сохраняем логику выбора карточек (чтобы они подсвечивались синим)
       if (nextBtn.classList.contains('card') || nextBtn.classList.contains('card-person') || nextBtn.classList.contains('card--small')) {
         const parent = nextBtn.parentElement;
         parent.querySelectorAll('.card, .card-person, .card--small').forEach(card => card.classList.remove('selected'));
         nextBtn.classList.add('selected');
         if (navigator.vibrate) navigator.vibrate(5);
       }
+
+      // 2. ПРОВЕРКА: Если мы уходим с экрана 32 (Date Picker)
+      const currentView = views[currentViewIndex];
+      if (currentView && currentView.id === 'view-32') {
+        const isSkip = target.classList.contains('link'); 
+        if (typeof window.saveUserSelectedDate === 'function') {
+          window.saveUserSelectedDate(isSkip);
+        }
+      }
+
+      // 3. Переход на следующий слайд
       showView(currentViewIndex + 1);
       return;
     }
+
+    // Логика кнопки "Назад"
     const backBtn = target.closest('[data-trigger="back"]');
     if (backBtn) { showView(currentViewIndex - 1); return; }
+
+    // Логика чекбоксов и зон тела (Screen 8)
     const toggleCard = target.closest('[data-action="toggle"]');
     if (toggleCard) {
       toggleCard.classList.toggle("selected");
@@ -100,13 +117,15 @@ function showView(index) {
       if (imgId) {
         const layer = document.getElementById(imgId);
         if (layer) {
-          if (toggleCard.classList.contains("selected")) layer.classList.add("visible"); else layer.classList.remove("visible");
+          if (toggleCard.classList.contains("selected")) layer.classList.add("visible"); 
+          else layer.classList.remove("visible");
         }
       }
       if (navigator.vibrate) navigator.vibrate(5);
       return;
     }
   });
+  
 
   views.forEach((v, i) => v.classList.toggle("active", i === 0));
   globalHeader.classList.add("hidden");
@@ -127,6 +146,48 @@ function showView(index) {
       initSwiperDatePicker();
     }
   }, 300);
+
+  /* --- Логика для Экрана 33 --- */
+function updateView33() {
+    const curW = parseFloat(window.userWeightKg) || 0;
+    const targetW = parseFloat(window.userTargetWeightKg) || 0;
+    const unit = (document.querySelector('#view-27 .toggle-btn.active')?.dataset.unit) || 'kg';
+    
+    // 1. Текст подзаголовка
+    document.getElementById('goal-weight-display').textContent = `${targetW} ${unit}`;
+
+    // 2. Расчет плашек веса
+    const midW = Math.round((curW + targetW) / 2);
+    
+    document.getElementById('w-badge-1').textContent = `${Math.round(curW)} ${unit}`;
+    document.getElementById('w-badge-2').textContent = `${midW} ${unit}`;
+    document.getElementById('w-badge-3').textContent = `${Math.round(targetW)} ${unit}`;
+    document.getElementById('w-badge-4').textContent = `${Math.round(targetW)} ${unit}`;
+
+    // 3. Расчет дат
+    const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    let now = new Date();
+
+    for (let i = 1; i <= 4; i++) {
+        let d = new Date(now.getFullYear(), now.getMonth() + (i - 1), 1);
+        let mName = months[d.getMonth()];
+        let yName = d.getFullYear();
+        document.getElementById(`chart-date-${i}`).textContent = `${mName} ${yName}`;
+    }
+}
+
+// Добавляем вызов в MutationObserver (который мы создали в версии 1.5)
+const v33 = document.getElementById('view-33');
+if (v33) {
+  const observer33 = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.target.id === 'view-33' && mutation.target.classList.contains('active')) {
+        updateView33();
+      }
+    });
+  });
+  observer33.observe(v33, { attributes: true, attributeFilter: ['class'] });
+}
 
 });// Конец DOMContentLoaded
 
@@ -181,6 +242,49 @@ function initSwiperDatePicker() {
   new Swiper('.swiper-month', config);
   new Swiper('.swiper-day', config);
   new Swiper('.swiper-year', config);
+
+  window.userTargetDate = "";
+  /* --- Обновленная логика для обработки даты в Версии 1.6 --- */
+
+function initSwiperDatePicker() {
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  
+  // ... (существующий код генерации HTML для month, day, year остается без изменений)
+
+  const config = {
+    direction: 'vertical',
+    slidesPerView: 5,
+    centeredSlides: true,
+    loop: true,
+    slideToClickedSlide: true
+  };
+
+  // Сохраняем экземпляры в переменные, чтобы обращаться к ним позже
+  const swiperM = new Swiper('.swiper-month', config);
+  const swiperY = new Swiper('.swiper-year', config);
+  new Swiper('.swiper-day', config);
+
+  // Функция для сохранения даты
+  window.saveUserSelectedDate = function(isSkipped = false) {
+    if (isSkipped) {
+      // Если пропущено: берем текущую дату + 6 месяцев
+      const futureDate = new Date();
+      futureDate.setMonth(futureDate.getMonth() + 6);
+      
+      const mName = months[futureDate.getMonth()].substring(0, 3).toUpperCase();
+      const yName = futureDate.getFullYear().toString();
+      window.userTargetDate = `${mName} ${yName}`;
+    } else {
+      // Если выбрано: берем активные слайды из Swiper
+      const activeMonthText = swiperM.slides[swiperM.activeIndex].textContent.trim();
+      const activeYearText = swiperY.slides[swiperY.activeIndex].textContent.trim();
+      
+      const mShort = activeMonthText.substring(0, 3).toUpperCase();
+      window.userTargetDate = `${mShort} ${activeYearText}`;
+    }
+    console.log("Target Date Saved:", window.userTargetDate); // Для отладки
+  };
+}
 }
 
 
