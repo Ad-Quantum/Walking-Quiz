@@ -20,7 +20,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 /* 2. TYPOGRAPHY */
 .h1 { font-size: 48px; font-weight: 800; color: var(--c-primary); line-height: 1.1; margin-bottom: 8px; }
 .h2 { font-size: 36px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
-.h2-wide {font-size: 36px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; margin-left: 150px; margin-right: 150px;}
+.h2-wide {font-size: 36px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; margin: auto; max-width: 450px;}
 .h3 { font-size: 32px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
 .h4 { font-size: 14px; font-weight: 500; line-height: 1.25;}
 .text-subtitle { font-size: 16px; color: var(--c-text-sub); font-weight: 400; margin-bottom: 24px; white-space: normal; overflow-wrap: break-word; }
@@ -318,8 +318,8 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
     font-weight: 700; 
     line-height: 1.25; 
     margin-bottom: 12px; 
-    margin-left: 0px; 
-    margin-right: 0px;
+    margin: auto; 
+    max-width: 350px;
   } 
   
   .text-subtitle { font-size: 16px; margin-bottom: 16px; }
@@ -1087,51 +1087,85 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   line-height: 1.4;
   color: #111;
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 /* Контейнер графика и плашек */
 .chart-container {
-  position: relative;
+  display: flex;
+  flex-direction: column; /* Элементы идут друг за другом вертикально */
+  align-items: center;
   width: 100%;
   max-width: 450px;
-  margin-top: 20px;
 }
 
-.chart-img {
+/* Общий контейнер для бейджей, копируем логику дат */
+.chart-weights {
+  display: flex;
+  justify-content: space-between;
   width: 100%;
-  height: auto;
-  display: block;
+  padding: 0 10px;
+  margin-bottom: 5px; /* Небольшой зазор перед графиком */
+}
+/* Корректировка контейнера дат для симметрии */
+.chart-dates {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 15px;
+  padding: 0 10px;
+  font-size: 12px;
+  color: #7e7e7e;
+  font-weight: 600;
 }
 
+/* Базовый стиль бейджа (убираем старые top/left) */
 .weight-badge {
-  position: absolute;
+  position: relative; /* Позволяет двигать бейдж относительно его места в строке */
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 14px;
   font-weight: 700;
   color: #fff;
   white-space: nowrap;
-  transform: translateX(-50%);
+  z-index: 2;
 }
 
-/* Цвета плашек */
-.weight-badge--1, .weight-badge--2 { background-color: #485AFF; }
-.weight-badge--3, .weight-badge--4 { background-color: #00D26A; }
+/* ТОЧНАЯ НАСТРОЙКА НАД ТОЧКАМИ ГРАФИКА
+   Используем top (отрицательный - вверх, положительный - вниз) 
+   и left для горизонтальной подгонки внутри флекс-блока.
+*/
+.weight-badge--1 { 
+  background-color: #485AFF; 
+  top: 0px; /* Смещаем к самой высокой точке */
+  left: -2px; 
+}
 
-/* Позиционирование плашек (примерное под 33.0.png) */
-.weight-badge--1 { top: -10%; left: 10%; }
-.weight-badge--2 { top: 25%; left: 35%; }
-.weight-badge--3 { top: 38%; left: 63%; }
-.weight-badge--4 { top: 38%; left: 90%; }
+.weight-badge--2 { 
+  background-color: #485AFF; 
+  top: 30px; /* Спускаем ниже ко второй точке */
+  left: 0px; 
+}
 
-.chart-dates {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 15px;
-  font-size: 12px;
-  color: #7e7e7e;
-  font-weight: 600;
+.weight-badge--3 { 
+  background-color: #00D26A; 
+  top: 65px; /* Еще ниже к третьей точке */
+  left: 2px; 
+}
+
+.weight-badge--4 { 
+  background-color: #00D26A; 
+  top: 65px; /* На уровне с третьей точкой */
+  left: 8px; 
+}
+
+.chart-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  z-index: 1;
+  padding-left: 14px;
+  padding-right: 14px;
 }
 
 /* ОТЗЫВЫ */
@@ -1235,9 +1269,14 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   .summary-subtitle {
     margin-bottom: 40px;
     font-size: 16px;
+    max-width: 350px;
   }
 
   .weight-badge {
     font-size: 12px;
+  }
+
+  .review-card {
+    max-width: 500px;
   }
 }
