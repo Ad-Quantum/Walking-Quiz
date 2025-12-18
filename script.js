@@ -997,4 +997,3 @@ if (bmi <= 18.5) {
     observer.observe(v29, { attributes: true, attributeFilter: ['class'] });
   }
 });
-
