@@ -14,34 +14,68 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // измеряем высоту прогресс-бара в хедере
-  function measureHeader() {
-    if (globalHeader && !globalHeader.classList.contains('hidden')) {
-      const height = globalHeader.offsetHeight;
-      document.documentElement.style.setProperty('--header-h', height + 'px');
-    }
+
+  // Функция для замера высоты футера
+  function measureFooter() {
+  const activeView = document.querySelector('.view.active');
+  if (!activeView) return;
+
+  const footer = activeView.querySelector('.layout-footer');
+  // Если в текущем View есть фиксированный футер
+  if (footer && !footer.classList.contains('hidden')) {
+    const height = footer.offsetHeight;
+    document.documentElement.style.setProperty('--footer-h', height + 'px');
+  } else {
+    // Если футера нет (или он инлайновый), обнуляем переменную
+    document.documentElement.style.setProperty('--footer-h', '0px');
+  }
+  }
+  // Обновляем measureHeader, чтобы она была консистентна
+function measureHeader() {
+  if (globalHeader && !globalHeader.classList.contains('hidden')) {
+    const height = globalHeader.offsetHeight;
+    document.documentElement.style.setProperty('--header-h', height + 'px');
+  } else {
+    document.documentElement.style.setProperty('--header-h', '0px');
+  }
+}
+
+// Добавляем вызов в обработчик resize
+window.addEventListener('resize', () => { 
+  measureHeader(); 
+  measureFooter(); // Замеряем футер при ресайзе
+  fixScrollbar(); 
+});
+
+// Обновляем логику показа экранов
+function showView(index) {
+  if (index < 0 || index >= views.length) return;
+  if (views[currentViewIndex]) views[currentViewIndex].classList.remove("active");
+  
+  const nextView = views[index];
+  nextView.classList.add("active");
+  
+  // Скроллим контент вверх при переключении
+  const mainContent = nextView.querySelector('.layout-main');
+  if (mainContent) mainContent.scrollTop = 0;
+
+  currentViewIndex = index;
+
+  // Управление хедером
+  if (currentViewIndex >= QUIZ_START_INDEX) {
+    globalHeader.classList.remove("hidden");
+    updateQuizProgress();
+  } else {
+    globalHeader.classList.add("hidden");
   }
 
-  function showView(index) {
-    if (index < 0 || index >= views.length) return;
-    if (views[currentViewIndex]) views[currentViewIndex].classList.remove("active");
-    const nextView = views[index];
-    nextView.classList.add("active");
-    const mainContent = nextView.querySelector('.layout-main');
-    if (mainContent) mainContent.scrollTop = 0;
-    const splitCenter = nextView.querySelector('.split-layout__center');
-    if (splitCenter) splitCenter.scrollTop = 0;
-    currentViewIndex = index;
-
-    if (currentViewIndex >= QUIZ_START_INDEX) {
-      globalHeader.classList.remove("hidden");
-      updateQuizProgress();
-      setTimeout(() => { measureHeader(); fixScrollbar(); }, 0);
-    } else {
-      globalHeader.classList.add("hidden");
-      setTimeout(fixScrollbar, 0);
-    }
-  }
+  // Замеры высот после отрисовки
+  setTimeout(() => { 
+    measureHeader(); 
+    measureFooter(); // Измеряем футер нового экрана
+    fixScrollbar(); 
+  }, 50);
+}
 
   window.addEventListener('resize', () => { measureHeader(); fixScrollbar(); });
 
