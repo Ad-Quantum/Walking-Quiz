@@ -72,15 +72,39 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 }
 .nav-header__content { display: flex; align-items: center; justify-content: center; gap: 20px; width: 100%; max-width: var(--w-wide); padding: 0 20px; }
 
-.layout-main { position: relative; z-index: 2; flex: 1; overflow-y: auto; width: 100%; padding: 0 20px 0px; display: flex; flex-direction: column; align-items: center; }
-.layout-main--centered { justify-content: center; padding-bottom: 40px; }
+.layout-main { 
+  position: relative; 
+  z-index: 2; 
+  flex: 1; 
+  overflow-y: auto; 
+  width: 100%; 
+  padding: 0 20px 0px; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  /* Добавляем динамический нижний отступ, равный высоте футера + небольшой запас */
+  padding-bottom: calc(var(--footer-h, 100px) + 20px) !important;
+}
+  .layout-main--centered { justify-content: center; padding-bottom: 40px; }
 .layout-main--with-header {
   /* Мы берем высоту хедера из переменной и добавляем к ней ваши 20px */
   padding-top: calc(var(--header-h, 110px) + 10px) !important;
 }
 .bg-image { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; }
 
-.layout-footer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #ffffff; padding: 20px 20px var(--footer-pb); }
+.layout-footer { 
+  position: fixed; 
+  bottom: 0; 
+  left: 0; 
+  right: 0; 
+  z-index: 100; 
+  display: flex; 
+  background: #ffffff; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  padding: 20px 20px var(--footer-pb); 
+}
 .layout-footer--transparent { background: transparent; pointer-events: none; }
 .layout-footer--transparent > * { pointer-events: auto; }
 .inline-footer { margin-top: 40px; width: 100%; display: flex; justify-content: center; }
@@ -307,7 +331,10 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
     /*padding-right: 20px; */
     z-index: 10; 
   }
-  /* .layout-main { padding-bottom: 120px; } */
+  .layout-main { 
+    /* Теперь это значение управляется через JS переменную --footer-h */
+    padding-bottom: calc(var(--footer-h, 120px) + 20px) !important; 
+  }
   .split-layout__bottom { padding-bottom: 16px; }
 
   /* --- 1. ВОЗВРАЩАЕМ РАСТЯГИВАНИЕ ПРОГРЕСС-БАРА --- */
