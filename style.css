@@ -66,11 +66,13 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   left: 0; 
   right: 0; 
   background: #ffffff;
+  box-shadow: 0 10px 10px #ffffff;
 
   display: flex; align-items: center; justify-content: center;
   max-width: 100%; margin: 0 auto; gap: 20px; 
   padding: 40px calc(20px + var(--scrollbar-width, 0px)) 10px 20px;
   z-index: 500;
+
 }
 .nav-header__content { display: flex; align-items: center; justify-content: center; gap: 20px; width: 100%; max-width: var(--w-wide); padding: 0 20px; }
 
@@ -112,6 +114,13 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   align-items: center; 
   justify-content: center; 
   padding: 20px 20px var(--footer-pb); 
+  /* Добавляем тень */
+  box-shadow: 0 -10px 20px #ffffff;
+  border-top: 1px solid var(--c-bg-surface);
+  
+
+  /* Дополнительно: добавим тонкую линию сверху для четкости границ */
+  /* border-top: 1px solid var(--c-bg-surface); */
 }
 .layout-footer--transparent { background: transparent; pointer-events: none; }
 .layout-footer--transparent > * { pointer-events: auto; }
@@ -280,7 +289,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 
 /* MEDIA */
 @media (min-width: 768px) {
-  .nav-header { padding-right: calc(20px + var(--scrollbar-width, 0px)); }
+  .nav-header { padding-right: calc(20px + var(--scrollbar-width, 0px));}
   .grid-age { grid-template-columns: repeat(4, auto); gap: 60px; }
   .grid-2 { grid-template-columns: repeat(2, 1fr); gap: 20px; }
   .card-person__img-wrap { width: 180px; height: 180px; }
@@ -1279,4 +1288,79 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   .review-card {
     max-width: 500px;
   }
+
+  .chart-container {
+  max-width: 400px;
+}
+
+  .chart-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  z-index: 1;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+}
+
+@media (max-width: 940px) {
+
+  .summary-column .summary-column--chart {
+    height: auto;
+  }
+
+  .chart-container {
+  width: 350px;
+  }
+
+  .chart-img {
+    padding-left: 10px;
+    padding-right: 8px;
+  }
+
+  .weight-badge {
+    /* Уменьшаем шрифт и отступы пропорционально ширине экрана */
+    /* Используем clamp, чтобы размер не становился меньше, чем нужно на 320px */
+    font-size: 10px; 
+    padding: clamp(2px, 1vw, 4px) clamp(6px, 2.5vw, 12px);
+  }
+
+   .chart-dates {
+    font-size: 10px; 
+  }
+
+   .summary-subtitle {
+    font-size: 16px; 
+  }
+
+  .weight-badge--1 { top: 2px; }
+  .weight-badge--2 { top: 30px; }
+  .weight-badge--3 { top: 55px; }
+  .weight-badge--4 { top: 55px; }
+
+  }
+
+/* Адаптация плашек веса для мобильных устройств */
+@media (max-width: 500px) {
+
+  .chart-container {
+  width: 290px;
+}
+
+  .weight-badge {
+    /* Уменьшаем шрифт и отступы пропорционально ширине экрана */
+    /* Используем clamp, чтобы размер не становился меньше, чем нужно на 320px */
+    font-size: 10px; 
+    padding: clamp(2px, 1vw, 4px) clamp(6px, 2.5vw, 12px);
+  }
+
+  .chart-dates {
+    font-size: 10px; 
+  }
+  /* При необходимости корректируем вертикальные отступы (top), 
+     так как на мобильных устройствах график может сжиматься по высоте */
+  .weight-badge--1 { top: 0px; }
+  .weight-badge--2 { top: 20px; }
+  .weight-badge--3 { top: 45px; }
+  .weight-badge--4 { top: 45px; }
 }
