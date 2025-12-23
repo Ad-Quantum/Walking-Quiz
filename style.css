@@ -19,11 +19,24 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 
 /* 2. TYPOGRAPHY */
 .h1 { font-size: 48px; font-weight: 800; color: var(--c-primary); line-height: 1.1; margin-bottom: 8px; }
-.h2 { font-size: 36px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
-.h2-wide {font-size: 36px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; margin: auto; max-width: 450px;}
-.h3 { font-size: 32px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
+.h2 { font-size: 36px; font-weight: 700; line-height: 1.25; margin-bottom: 12px;}
+.h2-wide {font-size: 36px; font-weight: 700; line-height: 1.25; margin: 0 auto 24px; max-width: 500px;}
+.h3 { 
+  font-size: 32px;
+  font-weight: 700; 
+  line-height: 1.25; 
+  margin-bottom: 12px; 
+}
 .h4 { font-size: 14px; font-weight: 500; line-height: 1.25;}
-.text-subtitle { font-size: 16px; color: var(--c-text-sub); font-weight: 400; margin-bottom: 24px; white-space: normal; overflow-wrap: break-word; }
+.text-subtitle { 
+  font-size: 16px; 
+  color: var(--c-text-sub); 
+  font-weight: 400; 
+  margin: 0 auto 24px; 
+  max-width: 450px;
+  white-space: normal; 
+  overflow-wrap: break-word; 
+}
 .text-caption { font-size: 14px; color: var(--c-text-light); }
 .text-legal { font-size: 12px; color: #6f6f6f; line-height: 1.5; width: 100%; margin: 0 auto; text-align: center; white-space: normal; overflow-wrap: break-word; }
 .text-highlight { color: var(--c-primary); font-weight: 700; }
@@ -74,7 +87,12 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   z-index: 500;
 
 }
-.nav-header__content { display: flex; align-items: center; justify-content: center; gap: 20px; width: 100%; max-width: var(--w-wide); padding: 0 20px; }
+.nav-header__content { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 20px; width: 100%; 
+  max-width: var(--w-wide); padding: 0 20px; }
 
 .layout-main { 
   position: relative; 
@@ -1113,7 +1131,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   display: flex;
   justify-content: space-between;
   width: 100%;
-  padding: 0 10px;
+  padding: 0 4px;
   margin-bottom: 5px; /* Небольшой зазор перед графиком */
 }
 /* Корректировка контейнера дат для симметрии */
@@ -1364,3 +1382,274 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   .weight-badge--3 { top: 45px; }
   .weight-badge--4 { top: 45px; }
 }
+
+/* ЭКРАН АНАЛИЗА */
+.analysis-icon-wrap { position: relative; width: 80px; height: 80px; margin: 0 auto; }
+
+.analysis-spinner {
+  position: absolute; inset: 0;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--c-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+.analysis-logo-small {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30px; height: auto;
+}
+
+.analysis-list { margin-top: 40px; text-align: left; max-width: 320px; margin-left: auto; margin-right: auto; }
+
+.analysis-item {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+  opacity: 0.3; transition: opacity 0.5s ease;
+}
+
+.analysis-item.completed { opacity: 1; }
+
+.check-circle {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid #e0e0e0; display: flex; align-items: center; justify-content: center;
+  color: transparent; transition: all 0.4s ease;
+}
+
+.analysis-item.completed .check-circle {
+  background-color: var(--c-primary); border-color: var(--c-primary); color: #fff;
+}
+
+.check-circle svg { width: 16px; height: 16px; transform: scale(0.5); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+.analysis-item.completed .check-circle svg { transform: scale(1); }
+
+.analysis-text { font-size: 16px; font-weight: 600; color: #111; }
+
+/* =========================
+   SCREEN 34: ANALYSIS & TIMELINE
+   ========================= */
+
+/* 1. ORBIT LOADER (Ref 5) */
+.loader-orbit-wrap {
+  width: 60px; height: 60px;
+  margin: 0 auto;
+  position: relative;
+  /* Анимация вращения всей конструкции */
+  animation: orbit-spin 2s linear infinite;
+}
+
+.loader-orbit {
+  width: 100%; height: 100%;
+  position: relative;
+}
+
+.orbit-dot {
+  position: absolute;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+}
+/* Расположение точек треугольником */
+.dot-1 { top: 0; left: 50%; transform: translateX(-50%); background-color: #D500F9; } /* Фиолетовый */
+.dot-2 { bottom: 5px; right: 0; background-color: #F50057; } /* Розовый/Красный */
+.dot-3 { bottom: 5px; left: 0; background-color: #651FFF; } /* Темно-фиолетовый */
+
+@keyframes orbit-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 2. TIMELINE LIST */
+.timeline-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 40px; /* Расстояние между пунктами */
+  text-align: left;
+  padding-left: 20px; /* Небольшой отступ */
+  max-width: 350px;
+  margin: auto;
+}
+
+/* Линии (трек) */
+.timeline-track {
+  position: absolute;
+  top: 15px; /* Старт от центра первой точки */
+  bottom: 30px; /* Конец у центра последней (примерно) */
+  left: 35px; /* Центрируем по иконке (10px padding + 15px половина ширины иконки) */
+  width: 2px;
+  z-index: 0;
+}
+
+.timeline-line-dotted {
+  width: 100%; 
+  height: 100%;
+  border-left: 2px dotted #E0E0E0; /* Серая пунктирная */
+  position: absolute; 
+  top: 0; 
+  left: 0;
+}
+
+.timeline-line-fill {
+  width: 2px;
+  background-color: var(--c-primary);
+  height: 0%; /* Будем менять через JS */
+  position: absolute; top: 0;
+  transition: height 3.0s linear;
+}
+
+/* Элемент списка */
+.timeline-item {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  opacity: 1; /* Все видны, но цвет разный */
+}
+
+/* Маркер (Круг) */
+.timeline-marker {
+  position: relative;
+  width: 32px; height: 32px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.marker-circle {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 2px solid #E0E0E0; /* Серый бордюр по дефолту */
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.icon-check {
+  width: 16px; height: 16px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Текст */
+.timeline-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #BDBDBD; /* Серый текст по дефолту */
+  transition: color 0.3s;
+}
+
+/* --- СОСТОЯНИЯ --- */
+
+/* Active (Пульсирующий текущий шаг) */
+.timeline-item.active .timeline-text { color: var(--c-text-main); }
+.timeline-item.active .marker-circle {
+  border-color: var(--c-primary);
+  background: #fff;
+}
+
+/* Pulsing Animation Layer */
+.marker-pulse {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 32px; height: 32px;
+  background: rgba(41, 98, 255, 0.4);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 1;
+  opacity: 0;
+}
+
+.timeline-item.pulsing .marker-pulse {
+  animation: pulse-ring 1s infinite;
+}
+.timeline-item.pulsing .marker-circle {
+  border-color: var(--c-primary);
+}
+.timeline-item.pulsing .timeline-text {
+  color: var(--c-text-main);
+}
+
+@keyframes pulse-ring {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+}
+
+/* Completed (Завершенный шаг) */
+.timeline-item.completed .marker-circle {
+  background-color: var(--c-primary);
+  border-color: var(--c-primary);
+}
+.timeline-item.completed .icon-check {
+  opacity: 1;
+  transform: scale(1);
+}
+.timeline-item.completed .timeline-text {
+  color: var(--c-text-main);
+}
+
+
+/* =========================
+   POPUPS / MODALS (Ref 3 & 4)
+   ========================= */
+.modal-overlay {
+  position: fixed; 
+  inset: 0;
+  /* Убрали блюр, оставили только затемнение */
+  background: rgba(0, 0, 0, 0.6); 
+  /* backdrop-filter: blur(4px); <-- УДАЛЕНО */
+  
+  /* Ставим z-index больше, чем у nav-header (500), чтобы перекрыть меню и лого */
+  z-index: 2000; 
+  
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.modal-overlay.visible {
+  opacity: 1; 
+  visibility: visible;
+  pointer-events: auto;
+  z-index: 999;
+}
+
+.modal-card {
+  background: #fff;
+  width: 100%; max-width: 340px;
+  border-radius: 24px;
+  padding: 40px 24px 24px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 1000;
+}
+.modal-overlay.visible .modal-card { transform: scale(1); }
+
+/* Icons inside modals */
+.modal-loader-icon {
+  display: flex; justify-content: center; gap: 8px; margin-bottom: 24px;
+}
+.dot-static { width: 16px; height: 16px; border-radius: 50%; }
+
+.modal-loader-icon-tri {
+  position: relative; width: 40px; height: 36px; margin: 0 auto 24px;
+}
+.dot-tri { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: #D32F2F; }
+
+/* Buttons inside modals */
+.modal-btn-group { display: flex; flex-direction: column; gap: 12px; }
+.btn-modal {
+  background: #F5F5F5;
+  border: none;
+  border-radius: 16px;
+  padding: 16px;
+  font-size: 16px; font-weight: 600; color: #111;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-modal:active { background: #E0E0E0; transform: scale(0.98); }
