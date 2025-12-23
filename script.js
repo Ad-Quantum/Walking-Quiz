@@ -25,6 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // Обновляем логику показа экранов
   function showView(index) {
     if (index < 0 || index >= views.length) return;
+
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+      modal.classList.remove('visible');
+      modal.classList.add('hidden');
+    });
+
     if (views[currentViewIndex])
       views[currentViewIndex].classList.remove("active");
 
@@ -236,8 +242,12 @@ document.addEventListener("DOMContentLoaded", () => {
    НОВАЯ ЛОГИКА ЭКРАНА 34 (Interactive Analysis)
    ========================= */
 
-  async function startAnalysisScenario() {
+/* script.js */
+
+async function startAnalysisScenario() {
+  const view34 = document.getElementById('view-34');
   const lineFill = document.getElementById('timeline-fill');
+  
   // Элементы шагов
   const items = [
     document.getElementById('tl-item-1'), // Analyzing
@@ -248,38 +258,47 @@ document.addEventListener("DOMContentLoaded", () => {
   
   if (!lineFill || !items[0]) return;
 
+  // --- 1. СБРОС СОСТОЯНИЯ (RESET) ---
+  // Если мы зашли на экран заново, нужно все очистить
+  lineFill.style.transition = 'none'; // Отключаем плавность для мгновенного сброса
+  lineFill.style.height = '0%';
+  items.forEach(item => {
+    item.classList.remove('completed', 'pulsing', 'active');
+  });
+
+  items[0].classList.add('completed'); // сразу же возвращаем галочку первому пункту
+
+  // Возвращаем плавность (немного ждем, чтобы браузер понял сброс)
+  setTimeout(() => { lineFill.style.transition = 'height 1.5s linear'; }, 50);
+
+  // --- ХЕЛПЕРЫ ---
+  
+  // Проверка: мы всё еще на экране 34?
+  const isActive = () => view34.classList.contains('active');
+
   const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-  const animateLineTo = (percent) => {
+  const animateLineTo = async (percent) => {
+    if (!isActive()) return; // Проверка перед стартом
     lineFill.style.height = `${percent}%`;
-    return wait(3000); 
+    await wait(1500); // Ждем пока CSS анимация пройдет
   };
 
-  // --- ИСПРАВЛЕННАЯ ФУНКЦИЯ POPUP ---
   const waitForPopup = (popupId) => {
     return new Promise(resolve => {
+      if (!isActive()) { resolve(); return; } // Если ушли с экрана, сразу выходим
+
       const popup = document.getElementById(popupId);
       if (!popup) { resolve(); return; } 
 
-      // 1. ВАЖНО: Убираем класс hidden, чтобы элемент вернулся в поток (display: flex)
       popup.classList.remove('hidden');
-      
-      // Небольшая задержка, чтобы браузер успел отрисовать display:flex перед запуском анимации прозрачности
-      setTimeout(() => {
-        popup.classList.add('visible');
-      }, 10);
+      setTimeout(() => popup.classList.add('visible'), 10);
       
       const btns = popup.querySelectorAll('.btn-modal');
       
       const handler = () => {
-        // Скрываем: убираем visible (запускается transition opacity)
         popup.classList.remove('visible');
-        
-        // Ждем окончания анимации исчезновения (0.3s) и возвращаем hidden
-        setTimeout(() => {
-            popup.classList.add('hidden');
-        }, 300);
-
+        setTimeout(() => popup.classList.add('hidden'), 300);
         btns.forEach(b => b.removeEventListener('click', handler));
         if (navigator.vibrate) navigator.vibrate(5);
         resolve(); 
@@ -293,65 +312,99 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 0. Старт 
   await wait(500); 
+  if (!isActive()) return; // <--- ВАЖНО: Если ушли, стоп.
 
   // 1. Линия к Пункту 2
   await animateLineTo(33); 
+  if (!isActive()) return;
 
-  // 2. Пульсация
+  // 2. Пульсация (Пункт 2)
   items[1].classList.add('pulsing');
-  await wait(3000); 
+  await wait(3000); // 3 пульсации
   items[1].classList.remove('pulsing');
+  if (!isActive()) return;
 
   // 3. Попап 1
-  await waitForPopup('popup-1');
+  // Проверка внутри waitForPopup не даст ему открыться, если мы ушли,
+  // но добавим проверку и тут для надежности.
+  if (isActive()) {
+      await waitForPopup('popup-1');
+  }
+  if (!isActive()) return;
 
   // 4. Галочка на Пункт 2
   items[1].classList.add('completed');
 
   // 5. Линия к Пункту 3
   await animateLineTo(66);
+  if (!isActive()) return;
 
-  // 6. Пульсация
+  // 6. Пульсация (Пункт 3)
   items[2].classList.add('pulsing');
-  await wait(3000);
+  await wait(3000); 
   items[2].classList.remove('pulsing');
+  if (!isActive()) return;
 
   // 7. Попап 2
-  await waitForPopup('popup-2');
+  if (isActive()) {
+      await waitForPopup('popup-2');
+  }
+  if (!isActive()) return;
 
   // 8. Галочка на Пункт 3
   items[2].classList.add('completed');
 
   // 9. Линия к Пункту 4
   await animateLineTo(100);
+  if (!isActive()) return;
 
-  // 10. Пульсация и Финиш
+  // 10. Пульсация и Финиш (Пункт 4)
   items[3].classList.add('pulsing');
   await wait(3000);
   items[3].classList.remove('pulsing');
+  if (!isActive()) return;
+  
   items[3].classList.add('completed');
 
   // 11. Переход дальше
-  await wait(200);
+  await wait(500);
+  if (!isActive()) return;
   
+  // Ищем следующий экран (35) или делаем другое действие
   const allViews = Array.from(document.querySelectorAll(".view"));
-  const view35Index = allViews.findIndex(v => v.id === 'view-35');
+  const view35Index = allViews.findIndex(v => v.id === 'view-35'); // Убедитесь, что view-35 существует
   
   if (view35Index !== -1 && typeof showView === 'function') {
       showView(view35Index);
   } else {
-      console.log("Сценарий завершен.");
+      console.log("Сценарий завершен, но view-35 не найден.");
   }
 }
   
 
-  // Наблюдатель: запускает сценарий, когда мы попадаем на view-34
+// Наблюдатель: запускает сценарий и видео, когда мы попадаем на view-34
   const v34 = document.getElementById("view-34");
+  const video34 = document.getElementById("video-analysis"); // Получаем видео
+
   if (v34) {
     const observer34 = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
+        // Если экран стал активным
         if (mutation.target.classList.contains("active")) {
+          // Запускаем сценарий таймлайна
           startAnalysisScenario();
+          
+          // Запускаем видео
+          if (video34) {
+            video34.currentTime = 0; // Начинаем с начала
+            video34.play().catch(e => console.log("Autoplay prevented:", e));
+          }
+        } 
+        // Если ушли с экрана
+        else {
+          if (video34) {
+            video34.pause(); // Останавливаем видео для экономии ресурсов
+          }
         }
       });
     });
