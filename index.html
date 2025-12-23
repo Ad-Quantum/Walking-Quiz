@@ -510,7 +510,7 @@
           <img src="assets/19.1.png" alt="Myth of No Time" class="content-img" style="max-height: 200px;">
         </div>
 
-        <h1 class="h2">
+        <h1 class="h2" style="margin-top: 24px;">
           The Myth of <br> “No Time to Walk”
         </h1>
         
@@ -903,24 +903,24 @@
     <main class="layout-main layout-main--with-header">
       <div class="container-narrow text-center" style="width: 500px;">
         
-        <h1 class="h2" style="margin-bottom: 24px;">Твой профиль</h1>
+        <h1 class="h2" style="margin-bottom: 24px;">Here's your wellness profile</h1>
 
         <div id="profile-top-card" class="profile-card profile-card--green">
           
           <div class="profile-stats-row">
             <div class="profile-stat">
-              <span class="profile-stat__label">Рост</span>
+              <span class="profile-stat__label">Height</span>
               <span class="profile-stat__value" id="disp-height">170 см</span>
             </div>
             <div class="profile-stat-divider"></div>
             <div class="profile-stat">
-              <span class="profile-stat__label">Вес</span>
+              <span class="profile-stat__label">Weight</span>
               <span class="profile-stat__value" id="disp-weight">65 кг</span>
             </div>
           </div>
 
           <div class="profile-bmi-row">
-            <span style="font-weight: 400;">Текущий ИМТ </span>
+            <span style="font-weight: 400;">Current BMI </span>
             <span id="disp-bmi" style="font-weight: 800; margin-left: 1px;">22.49</span>
           </div>
 
@@ -936,11 +936,11 @@
                <div id="triangle-gradient" class="scale-triangle"></div>
              </div>
              <div class="scale-labels-grid">
-                <span>Низкий</span>
-                <span>Норма</span>
-                <span>Повышен</span>
-                <span>Высокий</span>
-                <span>Критический</span>
+                <span>Low</span>
+                <span>Normal</span>
+                <span>Slightly high</span>
+                <span>High</span>
+                <span>Severely high</span>
               </div>
           </div>
           <div id="profile-message-box" class="profile-message-box">
@@ -951,7 +951,7 @@
         <div class="profile-gray-card">
           
           <h3 id="weight-status-title" class="h4" style="font-weight: 700; margin-bottom: 16px;">
-            Твой вес находится в пределах нормы
+            Your weight is within the normal range
           </h3>
 
           <div class="css-scale-container">
@@ -964,13 +964,13 @@
           </div>
 
           <div class="profile-info-row">
-            <span class="profile-info-label">Твой диапазон нормы веса</span>
-            <span class="profile-info-val" id="disp-range">53 - 81 кг</span>
+            <span class="profile-info-label">Normal weight for you</span>
+            <span class="profile-info-val" id="disp-range">53 - 81 kg</span>
           </div>
 
           <div id="row-diff" class="profile-info-row hidden">
-            <span class="profile-info-label">До нормального веса</span>
-            <span class="profile-info-val" id="disp-diff">-5 кг</span>
+            <span class="profile-info-label">Up to normal weight</span>
+            <span class="profile-info-val" id="disp-diff">-5 kg</span>
           </div>
 
         </div>
@@ -1171,14 +1171,103 @@
 </div>
       </div>
     </div>
-
-
-  </main>
+</main>
   <footer class="layout-footer">
     <button class="btn btn--primary" data-trigger="next">Next</button>
   </footer>
 </div>
 
+<div class="view" id="view-34">
+  <main class="layout-main layout-main--centered">
+    <div class="container-narrow text-center" style="max-width: 400px;">
+      
+      <div class="loader-orbit-wrap">
+        <div class="loader-orbit">
+          <div class="orbit-dot dot-1"></div>
+          <div class="orbit-dot dot-2"></div>
+          <div class="orbit-dot dot-3"></div>
+        </div>
+      </div>
+
+      <h1 class="h2" style="margin-top: 32px; margin-bottom: 40px;">
+        Picking the right workout routine
+      </h1>
+
+      <div class="timeline-list">
+        <div class="timeline-track">
+           <div class="timeline-line-dotted"></div>
+           <div class="timeline-line-fill" id="timeline-fill"></div>
+        </div>
+
+        <div class="timeline-item completed" id="tl-item-1">
+          <div class="timeline-marker">
+             <div class="marker-circle">
+               <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10" stroke="white" stroke-width="3" fill="none"/></svg>
+             </div>
+          </div>
+          <div class="timeline-text">Analyzing received data</div>
+        </div>
+
+        <div class="timeline-item" id="tl-item-2">
+          <div class="timeline-marker">
+             <div class="marker-circle">
+               <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10" stroke="white" stroke-width="3" fill="none"/></svg>
+             </div>
+             <div class="marker-pulse"></div>
+          </div>
+          <div class="timeline-text">Searching for the perfect plan</div>
+        </div>
+
+        <div class="timeline-item" id="tl-item-3">
+          <div class="timeline-marker">
+             <div class="marker-circle">
+               <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10" stroke="white" stroke-width="3" fill="none"/></svg>
+             </div>
+             <div class="marker-pulse"></div>
+          </div>
+          <div class="timeline-text">Tally up daily calories intake</div>
+        </div>
+
+        <div class="timeline-item" id="tl-item-4">
+          <div class="timeline-marker">
+             <div class="marker-circle">
+               <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10" stroke="white" stroke-width="3" fill="none"/></svg>
+             </div>
+             <div class="marker-pulse"></div>
+          </div>
+          <div class="timeline-text">Calculating needed water intake</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+  <div class="modal-overlay hidden" id="popup-1">
+    <div class="modal-card">
+      <h2 class="h3 text-center" style="font-size: 24px; margin-bottom: 24px;">
+        When do you prefer to do walking exercises?
+      </h2>
+      <div class="modal-btn-group">
+        <button class="btn-modal" data-action="close-popup-1">In the morning</button>
+        <button class="btn-modal" data-action="close-popup-1">During the day</button>
+        <button class="btn-modal" data-action="close-popup-1">In the evening</button>
+        <button class="btn-modal" data-action="close-popup-1">I’m not sure</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="popup-2">
+    <div class="modal-card">
+      <h2 class="h3 text-center" style="font-size: 24px; margin-bottom: 24px;">
+        Are you ready to change your body and lifestyle?
+      </h2>
+      <div class="modal-btn-group">
+        <button class="btn-modal" data-action="close-popup-2">Yes</button>
+        <button class="btn-modal" data-action="close-popup-2">No</button>
+      </div>
+    </div>
+  </div>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="script.js"></script>
