@@ -65,13 +65,6 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   margin-top: 12px;      
 }
 
-/* В мобильной версии скрываем логотип (как договаривались ранее) */
-@media (max-width: 767px) {
-  .header-logo {
-    display: none;
-  }
-}
-
 /* NAV-HEADER */
 .nav-header {
   position: fixed; 
@@ -79,7 +72,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   left: 0; 
   right: 0; 
   background: #ffffff;
-  box-shadow: 0 10px 10px #ffffff;
+  /*box-shadow: 0 10px 10px #ffffff;*/
 
   display: flex; align-items: center; justify-content: center;
   max-width: 100%; margin: 0 auto; gap: 20px; 
@@ -237,8 +230,8 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 
 /* Screen 8 */
 .zones-layout { display: grid; grid-template-columns: 0.8fr 1fr; gap: 12px; width: 100%; margin-top: 20px; align-items: stretch; }
-.zones-layout__image { position: relative; width: 100%; height: 300px; min-height: 100%; }
-.zones-stack { position: relative; width: 100%; height: 100%; }
+.zones-layout__image { position: relative; width: 100%; height: 300px; min-height: 100%;}
+.zones-stack { position: relative; width: 100%; height: 100%; width: auto;}
 .zones-base, .zones-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; object-position: center top; }
 .zones-layer { opacity: 0; transition: opacity 0.2s; z-index: 2; }
 .zones-layer.visible { opacity: 1; }
@@ -327,21 +320,42 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
     --header-height: 80px; 
     --footer-height: 140px;
   }
+  /* В мобильной версии скрываем логотип (как договаривались ранее) */
+  .header-logo {
+    display: none;
+  }
+
+  /* Синяя рамка выбора */
+  .date-highlight {
+  left: 0px;
+  right: 0px;
+  }
   
   /* Типографика */
   .text-display { font-size: 36px; }
   .text-h1 { font-size: 26px; }
   .text-h1-large { font-size: 30px; }
+
+  .swiper-slide {
+  font-size: 14px;
+  height: 20px !important; /* Фиксируем высоту слайда */
+  }
+
+  /* Активный элемент (по центру) */
+  .swiper-slide-active {
+  font-weight: 700;
+  font-size: 18px;
+  }
   
   /* 2. ВОЗВРАЩАЕМ ПРАВКУ ДЛЯ H2 */
   .h2 { 
-    font-size: 22px; 
+    font-size: 24px; 
     font-weight: 700; 
     line-height: 1.25; 
     margin-bottom: 12px; 
   } 
   .h2-wide { 
-    font-size: 22px; 
+    font-size: 24px; 
     font-weight: 700; 
     line-height: 1.25; 
     margin-bottom: 12px; 
@@ -389,8 +403,9 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   /* Переносим отступы во внутренний контейнер (чтобы совпадало с контентом) */
   .nav-header__content { 
     width: 100%; 
-    padding: 0 20px; 
+    padding: 0 14px; 
     box-sizing: border-box; 
+    gap: 5px;
   }
   
   /* Заставляем бар занимать все свободное место */
@@ -403,10 +418,139 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   
   /* Точки поменьше для мобильного */
   .step-dot {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
   }
+  
+  .result-split {
+    flex-direction: column; /* Переключаем в колонку */
+    align-items: center;
+    margin-top: 0;
+    padding-top: 10px;
+    gap: 24px;
+  }
+
+  .result-animation-wrap {
+    width: 100%; /* На мобильном фото во всю ширину */
+    flex: none;  /* Отключаем гибкость flex */
+  }
+
+  .review-block {
+    width: 100%; /* На мобильном текст во всю ширину */
+    flex: none;
+  }
+
+  /* =========================
+   ИСПРАВЛЕННЫЙ ГИБКИЙ АДАПТИВ ЭКРАНА 29
+   ========================= */
+
+.scale-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto 20px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
+  /* Перебиваем фиксированную ширину из HTML и CSS */
+  #view-29 .container-narrow {
+    width: 100% !important; 
+    max-width: 100% !important;
+    padding: 0px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Заставляем карточки занимать 100% ширины родителя */
+  .profile-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .profile-gray-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    box-sizing: border-box !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Адаптивные шрифты через clamp */
+  #view-29 .h2 {
+    font-size: clamp(22px, 6vw, 28px) !important;
+  }
+
+  /* Исправляем сетки шкал: теперь они будут сжиматься */
+  .scale-labels-grid, 
+  .scale-numbers-grid {
+    display: grid !important;
+    width: 100% !important;
+    gap: 0 !important;
+  }
+
+  .scale-labels-grid span, 
+  .scale-numbers-grid span {
+    /* Шрифт будет уменьшаться до 8px на очень узких экранах */
+    font-size: clamp(8px, 2.2vw, 11px) !important;
+    white-space: nowrap;
+  }
+
+  /* Внутренняя плашка Рост/Вес */
+  .profile-stats-row {
+    margin: 8px 8px 20px 8px !important;
+    width: auto !important;
+  }
+
+  /* Серая карточка: убираем боковой отступ 60px, который ломал вид */
+  .profile-gray-card {
+    padding: 20px 16px !important;
+  }
+
+  /* Мобильная адаптация */
+  .summary-flex {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .summary-column--chart {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 24px;
+  }
+  
+  .summary-subtitle {
+    margin-bottom: 40px;
+    font-size: 16px;
+    max-width: 350px;
+  }
+
+  .weight-badge {
+    font-size: 12px;
+  }
+
+  .review-card {
+    max-width: 500px;
+  }
+
+  .chart-container {
+  max-width: 400px;
+}
+
+  .chart-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  z-index: 1;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+}
+
+
 
 /* =========================
    DATE PICKER (SWIPER)
@@ -573,27 +717,6 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   color: #FFD600;
   font-size: 20px;
   letter-spacing: 2px;
-}
-
-/* 2. АДАПТИВ ДЛЯ МОБИЛЬНЫХ (Уже 767px) */
-@media (max-width: 767px) {
-  .result-split {
-    flex-direction: column; /* Переключаем в колонку */
-    align-items: center;
-    margin-top: 0;
-    padding-top: 10px;
-    gap: 24px;
-  }
-
-  .result-animation-wrap {
-    width: 100%; /* На мобильном фото во всю ширину */
-    flex: none;  /* Отключаем гибкость flex */
-  }
-
-  .review-block {
-    width: 100%; /* На мобильном текст во всю ширину */
-    flex: none;
-  }
 }
 
 /* --- Переключатель (Toggle) --- */
@@ -1016,78 +1139,6 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   color: #111;
 }
 
-/* =========================
-   ИСПРАВЛЕННЫЙ ГИБКИЙ АДАПТИВ ЭКРАНА 29
-   ========================= */
-@media (max-width: 767px) {
-
-.scale-wrapper {
-  position: relative;
-  width: 100%;
-  max-width: 360px;
-  margin: 0 auto 20px;
-  padding-left: 16px;
-  padding-right: 16px;
-}
-  /* Перебиваем фиксированную ширину из HTML и CSS */
-  #view-29 .container-narrow {
-    width: 100% !important; 
-    max-width: 100% !important;
-    padding: 0px !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Заставляем карточки занимать 100% ширины родителя */
-  .profile-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-
-  .profile-gray-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-    box-sizing: border-box !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-
-  /* Адаптивные шрифты через clamp */
-  #view-29 .h2 {
-    font-size: clamp(22px, 6vw, 28px) !important;
-  }
-
-  /* Исправляем сетки шкал: теперь они будут сжиматься */
-  .scale-labels-grid, 
-  .scale-numbers-grid {
-    display: grid !important;
-    width: 100% !important;
-    gap: 0 !important;
-  }
-
-  .scale-labels-grid span, 
-  .scale-numbers-grid span {
-    /* Шрифт будет уменьшаться до 8px на очень узких экранах */
-    font-size: clamp(8px, 2.2vw, 11px) !important;
-    white-space: nowrap;
-  }
-
-  /* Внутренняя плашка Рост/Вес */
-  .profile-stats-row {
-    margin: 8px 8px 20px 8px !important;
-    width: auto !important;
-  }
-
-  /* Серая карточка: убираем боковой отступ 60px, который ломал вид */
-  .profile-gray-card {
-    padding: 20px 16px !important;
-  }
-}
-
 /* ЭКРАН 33 */
 .summary-flex {
   display: flex;
@@ -1280,47 +1331,6 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   margin: 0;
 }
 
-/* Мобильная адаптация */
-@media (max-width: 767px) {
-  .summary-flex {
-    flex-direction: column;
-    gap: 0;
-  }
-  
-  .summary-column--chart {
-    background: transparent;
-    padding: 0;
-    margin-bottom: 24px;
-  }
-  
-  .summary-subtitle {
-    margin-bottom: 40px;
-    font-size: 16px;
-    max-width: 350px;
-  }
-
-  .weight-badge {
-    font-size: 12px;
-  }
-
-  .review-card {
-    max-width: 500px;
-  }
-
-  .chart-container {
-  max-width: 400px;
-}
-
-  .chart-img {
-  width: 100%;
-  height: auto;
-  display: block;
-  z-index: 1;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-}
-
 @media (max-width: 940px) {
 
   .summary-column .summary-column--chart {
@@ -1383,6 +1393,67 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   .weight-badge--4 { top: 45px; }
 }
 
+@media (max-width: 330px) {
+
+  .nav-header__content {
+    gap: 2px;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+  .layout-footer {
+    padding-bottom: 25px;
+  }
+  .link {
+    font-size: 14px;
+  }
+
+  .split-layout__center {
+    padding-bottom: auto !important;
+  }
+
+  .card-checkbox__title {
+    font-size: 16px;
+  }
+  .card-zone__title {
+    font-size: 14px;
+  }
+  .card__title {
+    font-size: 16px;
+  }
+  .card-zone {
+    gap: 4px;
+  }
+
+
+  .card {
+    height: 90px !important;
+  }
+  .h3 {font-size: 28px;}
+  .card-person__img-wrap { width: 95px; height: 95px; }
+  .btn--age { font-size: 12px; padding: 3px 8px; margin-top: -15px; }
+  .btn { width: 100%; padding: 12px 18px; }
+  .card-person{width: 120px;}
+  
+  /* Сетки */
+  /*.grid-age { margin-top: 30px; gap: 16px; width: auto;}*/
+  .grid-system { display: grid; width: auto; gap: 8px; } 
+  .grid-age { grid-template-columns: repeat(2, auto); justify-content: center; gap: 16px; margin-top: 30px; }
+
+  .h2 {font-size: 20px;}
+  .h2-wide {font-size: 20px;}
+  .text-subtitle {font-size: 14px;}
+  .image-container-card { 
+    border-radius: 12px; 
+    width: 100%; 
+    padding: 12px; 
+    margin: 12px 0; 
+ }
+  .content-img {
+    border-radius: 12px;
+  }
+
+}
+
 /* ЭКРАН АНАЛИЗА */
 .analysis-icon-wrap { position: relative; width: 80px; height: 80px; margin: 0 auto; }
 
@@ -1427,38 +1498,6 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 
 .analysis-text { font-size: 16px; font-weight: 600; color: #111; }
 
-/* =========================
-   SCREEN 34: ANALYSIS & TIMELINE
-   ========================= */
-
-/* 1. ORBIT LOADER (Ref 5) */
-.loader-orbit-wrap {
-  width: 60px; height: 60px;
-  margin: 0 auto;
-  position: relative;
-  /* Анимация вращения всей конструкции */
-  animation: orbit-spin 2s linear infinite;
-}
-
-.loader-orbit {
-  width: 100%; height: 100%;
-  position: relative;
-}
-
-.orbit-dot {
-  position: absolute;
-  width: 18px; height: 18px;
-  border-radius: 50%;
-}
-/* Расположение точек треугольником */
-.dot-1 { top: 0; left: 50%; transform: translateX(-50%); background-color: #D500F9; } /* Фиолетовый */
-.dot-2 { bottom: 5px; right: 0; background-color: #F50057; } /* Розовый/Красный */
-.dot-3 { bottom: 5px; left: 0; background-color: #651FFF; } /* Темно-фиолетовый */
-
-@keyframes orbit-spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
 
 /* 2. TIMELINE LIST */
 .timeline-list {
