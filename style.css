@@ -14,7 +14,14 @@
   --footer-height: 160px;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-text-main); overflow: hidden; height: 100vh; }
+body { 
+  font-family: var(--font-main); 
+  background-color: #ffffff; 
+  color: var(--c-text-main); 
+  overflow: hidden; 
+  height: 100vh;  /* Для старых телефонов */
+  height: 100dvh; /* Dynamic Viewport Height: вычитает панели браузера! */
+}
 .hidden { display: none !important; }
 
 /* 2. TYPOGRAPHY */
@@ -106,7 +113,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   flex-direction: column; 
   align-items: center; 
   /* Добавляем динамический нижний отступ, равный высоте футера + небольшой запас */
-  padding-bottom: calc(var(--footer-h, 100px) + 20px) !important;
+  padding-bottom: calc(var(--footer-h, 120px) + 20px + env(safe-area-inset-bottom)) !important;
 }
 .layout-main--centered { justify-content: center; padding-bottom: 40px; }
 .layout-main--with-header {
@@ -1262,7 +1269,8 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   }
   .layout-main { 
     /* Теперь это значение управляется через JS переменную --footer-h */
-    padding-bottom: calc(var(--footer-h, 120px) + 20px) !important; 
+    /* padding-bottom: calc(var(--footer-h, 120px) + 20px) !important; */
+    padding-bottom: calc(var(--footer-h, 120px) + 20px + env(safe-area-inset-bottom)) !important;
   }
   .split-layout__bottom { padding-bottom: 16px; }
 
@@ -1426,6 +1434,24 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   z-index: 1;
   padding-left: 10px;
   padding-right: 10px;
+  }
+
+
+  /* ЭКРАНЫ 26-28 */
+  /* Убираем лишний воздух под заголовками на экранах ввода */
+  #view-26 .h2, 
+  #view-27 .h2, 
+  #view-28 .h2 {
+    margin-bottom: 20px !important; /* Было 60px в HTML */
+  }
+  .units-toggle-wrapper {
+    margin: 0 auto 0px auto; 
+  }
+
+  /* Чуть приподнимаем кнопку Done */
+  .inline-footer {
+    margin-top: 20px !important;
+    padding-bottom: 20px; /* Доп. воздух снизу */
   }
 }
 
