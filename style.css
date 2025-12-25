@@ -1179,9 +1179,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
     display: none;
   }
 
-/* 1. ЭКРАН 32 */
-
-@media (max-width: 767px) {
+    /* 1. ЭКРАН 32 */
   /* ... ваши предыдущие стили ... */
 
   /* 1. Уменьшаем общую высоту контейнера (5 строк * 25px = 125px) */
@@ -1211,7 +1209,6 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
     margin-top: -20px !important; /* Ровно половина от 25px, чтобы встать по центру */
     border-radius: 6px;             /* Чуть уменьшим скругление для аккуратности */
   }
-}
 
   /* Увеличим активный шрифт, чтобы смотрелось красиво */
   .swiper-slide-active {
@@ -1285,6 +1282,10 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
     box-sizing: border-box; 
     gap: 5px;
   }
+
+  .nav-header.nav-header--final {
+    display: none !important;
+  }
   
   /* Заставляем бар занимать все свободное место */
   .step-progress {
@@ -1322,14 +1323,14 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
    ИСПРАВЛЕННЫЙ ГИБКИЙ АДАПТИВ ЭКРАНА 29
    ========================= */
 
-.scale-wrapper {
+  .scale-wrapper {
   position: relative;
   width: 100%;
   max-width: 360px;
   margin: 0 auto 20px;
   padding-left: 16px;
   padding-right: 16px;
-}
+  }
   /* Перебиваем фиксированную ширину из HTML и CSS */
   #view-29 .container-narrow {
     width: 100% !important; 
@@ -1416,7 +1417,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 
   .chart-container {
   max-width: 400px;
-}
+  }
 
   .chart-img {
   width: 100%;
@@ -1425,7 +1426,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   z-index: 1;
   padding-left: 10px;
   padding-right: 10px;
-}
+  }
 }
 
 /* Адаптация плашек веса для мобильных устройств */
@@ -1452,6 +1453,9 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   .weight-badge--3 { top: 45px; }
   .weight-badge--4 { top: 45px; }
 }
+
+.content-img { height: 150px; width: auto; border-radius: 20px; object-fit: contain; }
+.content-image-wrap { display: flex; justify-content: center; margin-top: 10px !important; margin-bottom: 0px !important;}
 
 @media (max-width: 330px) {
 
@@ -1486,7 +1490,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 
 
   .card {
-    height: 90px !important;
+    height: 80px !important;
   }
   .card-person__img-wrap { width: 95px; height: 95px; }
   .btn--age { font-size: 12px; padding: 3px 8px; margin-top: -15px; }
@@ -1500,7 +1504,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 
   .h2 {font-size: 20px;}
   .h2-wide {font-size: 20px;}
-  .h3 {font-size: 22px;}
+  .h3 {font-size: 22px; margin-top: 12px !important;}
   .text-subtitle {font-size: 14px;}
   .image-container-card { 
     border-radius: 12px; 
