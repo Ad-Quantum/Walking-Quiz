@@ -17,6 +17,64 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+/* --- ИСПРАВЛЕННАЯ ФУНКЦИЯ (ВЕРСИЯ 1.4) --- */
+  function updateQuizProgress() {
+    const bar = document.querySelector(".step-progress__fill");
+    const dots = document.querySelectorAll(".step-dot");
+    
+    if (!bar) return;
+
+    // Настройки диапазона квиза
+    // QUIZ_START_INDEX = 3 (View 4). 
+    // Последний вопрос = 33 (View 33).
+    const quizStart = 3; 
+    const quizEnd = 36;
+    
+    // 1. Вычисляем текущий шаг
+    let currentStep = currentViewIndex - quizStart;
+    
+    // Если мы еще до начала квиза, обнуляем
+    if (currentStep < 0) currentStep = 0;
+    
+    const totalSteps = quizEnd - quizStart; // 30 шагов
+    
+    // 2. Считаем процент заполнения
+    let percent = (currentStep / totalSteps) * 100;
+    
+    // ХАК: Чтобы полоска не казалась "мертвой" на первых шагах (с 3 на 4),
+    // если шаг > 0, но процент очень маленький, ставим минимум 2%.
+    // Это чисто визуальная правка, чтобы глаз заметил движение.
+    if (currentStep > 0 && percent < 2) {
+       percent = 2;
+    }
+
+    if (percent > 100) percent = 100;
+
+    // 3. Применяем ширину
+    bar.style.width = `${percent}%`;
+
+    // 4. Логика точек (Строгая)
+    // Точки стоят на: 0%, 25%, 50%, 75%, 100%
+    if (dots.length > 0) {
+      const stepPerDot = 100 / (dots.length - 1); // 25
+
+      dots.forEach((dot, index) => {
+        const dotPosition = index * stepPerDot;
+
+        // СТРОГОЕ УСЛОВИЕ:
+        // Точка загорается, только если линия (percent) доползла до позиции точки.
+        // Используем (dotPosition - 0.5), чтобы компенсировать микро-неточности браузера,
+        // но визуально это будет выглядеть как "ровно в момент касания".
+        if (percent >= (dotPosition - 0.5)) {
+          dot.classList.add("active");
+        } else {
+          dot.classList.remove("active");
+        }
+      });
+    }
+  }
+
+
   // Добавляем вызов в обработчик resize
   window.addEventListener("resize", () => {
     fixScrollbar();
@@ -59,20 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fixScrollbar();
   });
 
-  function updateQuizProgress() {
-    const progressBar = globalHeader.querySelector(".step-progress");
-    if (!progressBar) return;
-    const currentStep = currentViewIndex - QUIZ_START_INDEX + 1;
-    const fill = progressBar.querySelector(".step-progress__fill");
-    const dots = progressBar.querySelectorAll(".step-dot");
-    const totalSteps = dots.length;
-    const percent = Math.min((currentStep / totalSteps) * 100, 100);
-    if (fill) fill.style.width = `${percent}%`;
-    dots.forEach((dot, index) => {
-      if (index < currentStep) dot.classList.add("active");
-      else dot.classList.remove("active");
-    });
-  }
+
 
   function startLoader() {
     const bar = document.getElementById("loading-bar-fill");
@@ -537,9 +582,94 @@ function initSwiperDatePicker() {
   }
 }
 
-// --- ЭКРАН 26 ---
+// --- ЭКРАН 25-26 ---
 
 document.addEventListener("DOMContentLoaded", () => {
+
+  /* =========================
+     ЛОГИКА ЭКРАНА 25 (PROGRESS BAR BUTTON)
+     ========================= */
+     
+  const view25 = document.getElementById("view-25");
+  
+  if (view25) {
+    const btnContainer = document.getElementById("btn-progress-container");
+    const btnFill = document.getElementById("btn-progress-fill");
+    const btnText = document.getElementById("btn-progress-text");
+    
+    // Переменная, чтобы не запускать анимацию дважды, если пользователь вернется назад
+    let hasAnimated25 = false; 
+
+    const observer25 = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.target.classList.contains("active")) {
+          // Если зашли на экран - запускаем анимацию
+          runProgressButtonAnimation();
+        } else {
+          // Если ушли с экрана - сбрасываем (опционально, если хотите, чтобы каждый раз проигрывалось)
+          resetProgressButton();
+        }
+      });
+    });
+
+    observer25.observe(view25, { attributes: true, attributeFilter: ["class"] });
+
+    function runProgressButtonAnimation() {
+      // Сброс перед стартом
+      btnFill.style.width = '0%';
+      btnText.textContent = 'Progress 0%';
+      btnContainer.classList.remove('ready');
+      // Удаляем триггер перехода, пока не дойдет до 100%
+      btnContainer.removeAttribute('data-trigger'); 
+      
+      let startTime = null;
+      const duration = 4000; // 4 секунды
+
+      function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = timestamp - startTime;
+        
+        // Вычисляем процент (от 0 до 100)
+        let percent = Math.min((progress / duration) * 100, 100);
+        
+        // Обновляем UI
+        btnFill.style.width = `${percent}%`;
+        btnText.textContent = `Progress ${Math.floor(percent)}%`;
+
+        if (progress < duration) {
+          // Продолжаем анимацию
+          window.requestAnimationFrame(step);
+        } else {
+          // Финиш
+          finishAnimation();
+        }
+      }
+
+      window.requestAnimationFrame(step);
+    }
+
+    function finishAnimation() {
+      btnFill.style.width = '100%';
+      btnText.textContent = 'Continue'; // Или оставить 'Progress 100%', как решите
+      btnContainer.classList.add('ready');
+      
+      // Делаем кнопку активной для глобального обработчика кликов
+      btnContainer.setAttribute('data-trigger', 'next');
+      
+      // Небольшая вибрация на мобильном, если поддерживается
+      if (navigator.vibrate) navigator.vibrate(50);
+    }
+
+    function resetProgressButton() {
+       // Если нужно сбрасывать состояние при уходе со слайда
+       btnFill.style.width = '0%';
+       btnText.textContent = 'Progress 0%';
+       btnContainer.classList.remove('ready');
+       btnContainer.removeAttribute('data-trigger');
+    }
+  }
+
+
   const view26 = document.getElementById("view-26");
   if (!view26) return;
 
@@ -1083,6 +1213,39 @@ document.addEventListener("DOMContentLoaded", () => {
       currentUnit = newUnit;
       updateState();
     });
+
+    /* --- ЛОГИКА ЭКРАНА 35 (Email Validation) --- */
+  const emailInput = document.getElementById("email-input");
+  const emailBtn = document.getElementById("btn-email-next");
+
+  if (emailInput && emailBtn) {
+    // Регулярное выражение для проверки email (стандартный паттерн)
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    emailInput.addEventListener("input", function() {
+      const val = this.value.trim();
+      
+      // Проверка: строка не пустая И соответствует формату email
+      if (val.length > 0 && emailPattern.test(val)) {
+        emailBtn.disabled = false; // Включаем кнопку
+      } else {
+        emailBtn.disabled = true;  // Выключаем кнопку
+      }
+    });
+    
+    // Дополнительно: Обработка нажатия Enter
+    emailInput.addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        // Если кнопка активна, кликаем по ней
+        if (!emailBtn.disabled) {
+          emailBtn.click();
+        }
+      }
+    });
+  }
+
+
   });
 
   /* =========================
