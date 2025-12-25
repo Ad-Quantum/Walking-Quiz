@@ -53,7 +53,7 @@
   <div class="view" id="view-2">
     <div class="split-layout">
       <div class="split-layout__top">
-        <h1 class="h3 text-center">Walk to Lose Weight</h1>
+        <h1 class="h2 text-center">Walk to Lose Weight</h1>
         <p class="text-subtitle text-center" style="margin-bottom: 0;">ACCORDING TO YOUR AGE</p>
       </div>
       <div class="split-layout__center">
@@ -303,7 +303,7 @@
           <img src="assets/12.1.png" alt="Your body is one of a kind" class="content-img" style="max-height: 200px;">
         </div>
 
-        <h1 class="h2" style="margin-top: 24px;">
+        <h1 class="h3" style="margin-top: 24px;">
           Your body is one of a kind
         </h1>
         
@@ -427,7 +427,7 @@
           <img src="assets/16.1.png" alt="Mayo Clinic Research" class="content-img" style="max-height: 200px;">
         </div>
 
-        <h1 class="h2" style="margin-top: 24px;">
+        <h1 class="h3" style="margin-top: 24px;">
           Mayo Clinic Research: <br> Power of Walking
         </h1>
         
@@ -510,7 +510,7 @@
           <img src="assets/19.1.png" alt="Myth of No Time" class="content-img" style="max-height: 200px;">
         </div>
 
-        <h1 class="h2" style="margin-top: 24px;">
+        <h1 class="h3" style="margin-top: 24px;">
           The Myth of <br> “No Time to Walk”
         </h1>
         
@@ -741,9 +741,12 @@
       </div>
     </main>
 
-    <footer class="layout-footer">
-      <button class="btn btn--primary" data-trigger="next">Continue</button>
-    </footer>
+<footer class="layout-footer">
+  <div id="btn-progress-container" class="btn-progress-wrapper">
+    <div class="btn-progress-fill" id="btn-progress-fill"></div>
+    <span class="btn-progress-text" id="btn-progress-text">Progress 0%</span>
+  </div>
+</footer>
   </div>
 
 <div class="view" id="view-26">
@@ -789,13 +792,11 @@
       </div>
 
     </div>
-
-    <div class="layout-footer">
-      <button id="btn-next" class="btn btn--primary" data-trigger="next" disabled>
-        Done
-      </button>
-    </div>
-
+        <div class="inline-footer">
+          <button id="btn-next" class="btn btn--primary" data-trigger="next" disabled>
+           Done
+          </button>
+        </div>
   </main>
 </div>
 
@@ -839,7 +840,7 @@
 
     </div>
 
-    <div class="layout-footer">
+    <div class="inline-footer">
       <button id="btn-next-weight" class="btn btn--primary" data-trigger="next" disabled>
         Done
       </button>
@@ -887,7 +888,7 @@
 
     </div>
 
-    <div class="layout-footer">
+    <div class="inline-footer">
       <button id="btn-next-target" class="btn btn--primary" data-trigger="next" disabled>
         Done
       </button>
@@ -1269,6 +1270,64 @@
       </div>
     </div>
   </div>
+
+<div class="view" id="view-35">
+    <main class="layout-main layout-main--with-header layout-main--centered">
+      <div class="container-narrow">
+        
+        <div class="email-content-card text-center">
+          
+          <h1 class="h2">Your <span class="text-highlight">improve life</span> plan<br> is ready!</h1>
+          <p class="text-subtitle">Enter your email to get started</p>
+
+          <div class="email-container">
+            <input type="email" id="email-input" class="input-email" placeholder="Enter your email">
+          </div>
+
+          <div class="secure-note">
+            <div class="secure-icon-wrap">
+               <img src="assets/35.1.png" alt="Secure" class="secure-img">
+            </div>
+            <p class="text-legal text-legal--left">
+              We don't share your personal information. We will send you email with your personal plan.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+
+    <footer class="layout-footer">
+      <button id="btn-email-next" class="btn btn--primary" data-trigger="next" disabled>Continue</button>
+    </footer>
+  </div>
+
+
+  <div class="view" id="view-36">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+
+        <h1 class="h2">Do you want to receive emails with <span class="text-highlight">Walking</span> tips and our product updates?</h1>
+        
+        <div class="text-center">
+          <div class="content-image-wrap" style="margin-top: 40px;">
+            <img src="assets/36.1.png" alt="Image" class="content-img" style="max-height: 200px;">
+          </div>
+        </div>
+
+      </div>
+    </main>
+      <footer class="layout-footer">
+        <button class="btn btn--primary" data-trigger="next">Sure, I'm in!</button>
+        <div style="margin-top: 20px;">
+            <a href="#" class="link" onclick="document.querySelector('[data-trigger=next]').click(); return false;">I don't want to receive tips or updates</a>
+        </div>
+      </footer>
+
+  </div>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="script.js"></script>
