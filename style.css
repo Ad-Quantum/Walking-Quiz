@@ -87,6 +87,14 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   gap: 20px; width: 100%; 
   max-width: var(--w-wide); padding: 0 20px; }
 
+  /* БЛОКИРОВКА СТРЕЛКИ */
+.btn-arrow.disabled,
+.btn.disabled {
+  opacity: 0.3 !important;
+  pointer-events: none !important; /* Физически запрещает клик */
+  cursor: default !important;
+}
+
 .layout-main { 
   position: relative; 
   z-index: 2; 
@@ -163,6 +171,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 .btn--primary { background: linear-gradient(90deg, #1e40ff, #437bff); color: var(--c-accent); box-shadow: 0 10px 24px rgba(0,0,0,0.25); width: auto; min-width: 160px; }
 .btn-arrow { background: transparent; border: none; cursor: pointer; color: var(--c-primary); display: flex; padding: 8px; }
 .btn-arrow svg { width: 28px; height: 28px; }
+
 
 .loader-wrap { width: 300px; max-width: 100%; height: 26px; background: rgba(0,0,0,0.6); border-radius: 999px; padding: 4px; margin: 24px auto 0; position: relative; z-index: 10; }
 .loader-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #0d6efd, #5b3bff); border-radius: 999px; transition: width 0.1s linear; }
@@ -296,258 +305,6 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 
 .toggle-switch.active::after {
   transform: translateX(20px);
-}
-
-/* MEDIA */
-@media (min-width: 768px) {
-  .nav-header { padding-right: calc(20px + var(--scrollbar-width, 0px));}
-  .grid-age { grid-template-columns: repeat(4, auto); gap: 60px; }
-  .grid-2 { grid-template-columns: repeat(2, 1fr); gap: 20px; }
-  .card-person__img-wrap { width: 180px; height: 180px; }
-  .text-h1 { font-size: 40px; }
-  .zones-layout { gap: 40px; }
-  .zones-layout__image { height: auto; }
-  .zones-stack { position: sticky; top: 90px; height: auto; min-height: 400px; }
-}
-
-/* =========================
-   7. MEDIA QUERIES (MOBILE)
-   ========================= */
-@media (max-width: 767px) {
-  :root { 
-    --header-py: 30px;
-    --footer-pb: 20px; 
-    --header-height: 80px; 
-    --footer-height: 140px;
-  }
-  /* В мобильной версии скрываем логотип (как договаривались ранее) */
-  .header-logo {
-    display: none;
-  }
-
-  /* Синяя рамка выбора */
-  .date-highlight {
-  left: 0px;
-  right: 0px;
-  }
-  
-  /* Типографика */
-  .text-display { font-size: 36px; }
-  .text-h1 { font-size: 26px; }
-  .text-h1-large { font-size: 30px; }
-
-  .swiper-slide {
-  font-size: 14px;
-  height: 20px !important; /* Фиксируем высоту слайда */
-  }
-
-  /* Активный элемент (по центру) */
-  .swiper-slide-active {
-  font-weight: 700;
-  font-size: 18px;
-  }
-  
-  /* 2. ВОЗВРАЩАЕМ ПРАВКУ ДЛЯ H2 */
-  .h2 { 
-    font-size: 24px; 
-    font-weight: 700; 
-    line-height: 1.25; 
-    margin-bottom: 12px; 
-  } 
-  .h2-wide { 
-    font-size: 24px; 
-    font-weight: 700; 
-    line-height: 1.25; 
-    margin-bottom: 12px; 
-    margin: auto; 
-    max-width: 350px;
-  } 
-  
-  .text-subtitle { font-size: 16px; margin-bottom: 16px; }
-  .card__subtitle { font-size: 12px; color: var(--c-text-sub); font-weight: 400; margin-top: 4px; line-height: 1.4; }
-  
-  /* Карточки */
-  .card-person__img-wrap { width: 120px; height: 120px; }
-  .image-container-card { margin: 22px 0; }
-  .btn--age { font-size: 14px; padding: 6px 12px; margin-top: -15px; }
-  .btn { width: 100%; padding: 14px 20px; }
-  
-  /* Сетки */
-  .grid-age { margin-top: 30px; gap: 16px; }
-  
-  /* Отступы контента */
-  .split-layout__top { 
-    flex: 0 0 auto; 
-    width: 100%; 
-    text-align: center; 
-    padding-top: 40px; 
-    padding-left: 20px; 
-    /*padding-right: 20px; */
-    z-index: 10; 
-  }
-  .layout-main { 
-    /* Теперь это значение управляется через JS переменную --footer-h */
-    padding-bottom: calc(var(--footer-h, 120px) + 20px) !important; 
-  }
-  .split-layout__bottom { padding-bottom: 16px; }
-
-  /* --- 1. ВОЗВРАЩАЕМ РАСТЯГИВАНИЕ ПРОГРЕСС-БАРА --- */
-  
-  /* Убираем отступы у самого блока хедера */
-  .nav-header { 
-    padding-top: 40px; 
-    padding-left: 0; 
-    padding-right: 0; 
-  }
-
-  /* Переносим отступы во внутренний контейнер (чтобы совпадало с контентом) */
-  .nav-header__content { 
-    width: 100%; 
-    padding: 0 14px; 
-    box-sizing: border-box; 
-    gap: 5px;
-  }
-  
-  /* Заставляем бар занимать все свободное место */
-  .step-progress {
-    max-width: none; 
-    flex: 1; 
-    width: auto; 
-    margin: 0 10px; 
-  }
-  
-  /* Точки поменьше для мобильного */
-  .step-dot {
-    width: 10px;
-    height: 10px;
-  }
-  
-  .result-split {
-    flex-direction: column; /* Переключаем в колонку */
-    align-items: center;
-    margin-top: 0;
-    padding-top: 10px;
-    gap: 24px;
-  }
-
-  .result-animation-wrap {
-    width: 100%; /* На мобильном фото во всю ширину */
-    flex: none;  /* Отключаем гибкость flex */
-  }
-
-  .review-block {
-    width: 100%; /* На мобильном текст во всю ширину */
-    flex: none;
-  }
-
-  /* =========================
-   ИСПРАВЛЕННЫЙ ГИБКИЙ АДАПТИВ ЭКРАНА 29
-   ========================= */
-
-.scale-wrapper {
-  position: relative;
-  width: 100%;
-  max-width: 360px;
-  margin: 0 auto 20px;
-  padding-left: 16px;
-  padding-right: 16px;
-}
-  /* Перебиваем фиксированную ширину из HTML и CSS */
-  #view-29 .container-narrow {
-    width: 100% !important; 
-    max-width: 100% !important;
-    padding: 0px !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Заставляем карточки занимать 100% ширины родителя */
-  .profile-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-
-  .profile-gray-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-    box-sizing: border-box !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-
-  /* Адаптивные шрифты через clamp */
-  #view-29 .h2 {
-    font-size: clamp(22px, 6vw, 28px) !important;
-  }
-
-  /* Исправляем сетки шкал: теперь они будут сжиматься */
-  .scale-labels-grid, 
-  .scale-numbers-grid {
-    display: grid !important;
-    width: 100% !important;
-    gap: 0 !important;
-  }
-
-  .scale-labels-grid span, 
-  .scale-numbers-grid span {
-    /* Шрифт будет уменьшаться до 8px на очень узких экранах */
-    font-size: clamp(8px, 2.2vw, 11px) !important;
-    white-space: nowrap;
-  }
-
-  /* Внутренняя плашка Рост/Вес */
-  .profile-stats-row {
-    margin: 8px 8px 20px 8px !important;
-    width: auto !important;
-  }
-
-  /* Серая карточка: убираем боковой отступ 60px, который ломал вид */
-  .profile-gray-card {
-    padding: 20px 16px !important;
-  }
-
-  /* Мобильная адаптация */
-  .summary-flex {
-    flex-direction: column;
-    gap: 0;
-  }
-  
-  .summary-column--chart {
-    background: transparent;
-    padding: 0;
-    margin-bottom: 24px;
-  }
-  
-  .summary-subtitle {
-    margin-bottom: 40px;
-    font-size: 16px;
-    max-width: 350px;
-  }
-
-  .weight-badge {
-    font-size: 12px;
-  }
-
-  .review-card {
-    max-width: 500px;
-  }
-
-  .chart-container {
-  max-width: 400px;
-}
-
-  .chart-img {
-  width: 100%;
-  height: auto;
-  display: block;
-  z-index: 1;
-  padding-left: 10px;
-  padding-right: 10px;
-}
 }
 
 
@@ -1374,6 +1131,282 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 
   }
 
+/* MEDIA */
+@media (min-width: 768px) {
+  .nav-header { padding-right: calc(20px + var(--scrollbar-width, 0px));}
+  .grid-age { grid-template-columns: repeat(4, auto); gap: 60px; }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .card-person__img-wrap { width: 180px; height: 180px; }
+  .text-h1 { font-size: 40px; }
+  .zones-layout { gap: 40px; }
+  .zones-layout__image { height: auto; }
+  .zones-stack { position: sticky; top: 90px; height: auto; min-height: 400px; }
+}
+
+/* =========================
+   7. MEDIA QUERIES (MOBILE)
+   ========================= */
+@media (max-width: 767px) {
+  :root { 
+    --header-py: 30px;
+    --footer-pb: 20px; 
+    --header-height: 80px; 
+    --footer-height: 140px;
+  }
+  /* В мобильной версии скрываем логотип (как договаривались ранее) */
+  .header-logo {
+    display: none;
+  }
+
+/* 1. ЭКРАН 32 */
+
+@media (max-width: 767px) {
+  /* ... ваши предыдущие стили ... */
+
+  /* 1. Уменьшаем общую высоту контейнера (5 строк * 25px = 125px) */
+  .date-selector-wrapper {
+    width: 90%;
+    height: 200px !important; 
+  }
+
+  /* 2. Настраиваем высоту строк */
+  .swiper-slide {
+    height: 40px !important;     /* Ваша желаемая высота */
+    font-size: 14px !important;  /* Шрифт тоже нужно уменьшить, чтобы влез */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* 3. Активный шрифт чуть крупнее */
+  .swiper-slide-active {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+  }
+
+  /* 4. Настраиваем синюю рамку */
+  .date-highlight {
+    height: 40px !important;        /* Рамка должна быть высотой со строку */
+    margin-top: -20px !important; /* Ровно половина от 25px, чтобы встать по центру */
+    border-radius: 6px;             /* Чуть уменьшим скругление для аккуратности */
+  }
+}
+
+  /* Увеличим активный шрифт, чтобы смотрелось красиво */
+  .swiper-slide-active {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+  }
+
+  /* Типографика */
+  .text-display { font-size: 36px; }
+  .text-h1 { font-size: 26px; }
+  .text-h1-large { font-size: 30px; }
+  
+  /* 2. ВОЗВРАЩАЕМ ПРАВКУ ДЛЯ H2 */
+  .h2 { 
+    font-size: 24px; 
+    font-weight: 700; 
+    line-height: 1.25; 
+    margin-bottom: 12px; 
+  } 
+  .h2-wide { 
+    font-size: 24px; 
+    font-weight: 700; 
+    line-height: 1.25; 
+    margin-bottom: 12px; 
+    margin: auto; 
+    max-width: 350px;
+  } 
+  .h3 {font-size: 24px;}
+  
+  .text-subtitle { font-size: 16px; margin-bottom: 16px; }
+  .card__subtitle { font-size: 12px; color: var(--c-text-sub); font-weight: 400; margin-top: 4px; line-height: 1.4; }
+  
+  /* Карточки */
+  .card-person__img-wrap { width: 120px; height: 120px; }
+  .image-container-card { margin: 22px 0; }
+  .btn--age { font-size: 14px; padding: 6px 12px; margin-top: -15px; }
+  .btn { width: 100%; padding: 14px 20px; }
+  
+  /* Сетки */
+  .grid-age { margin-top: 30px; gap: 16px; }
+  
+  /* Отступы контента */
+  .split-layout__top { 
+    flex: 0 0 auto; 
+    width: 100%; 
+    text-align: center; 
+    padding-top: 40px; 
+    padding-left: 20px; 
+    /*padding-right: 20px; */
+    z-index: 10; 
+  }
+  .layout-main { 
+    /* Теперь это значение управляется через JS переменную --footer-h */
+    padding-bottom: calc(var(--footer-h, 120px) + 20px) !important; 
+  }
+  .split-layout__bottom { padding-bottom: 16px; }
+
+  /* --- 1. ВОЗВРАЩАЕМ РАСТЯГИВАНИЕ ПРОГРЕСС-БАРА --- */
+  
+  /* Убираем отступы у самого блока хедера */
+  .nav-header { 
+    padding-top: 40px; 
+    padding-left: 0; 
+    padding-right: 0; 
+  }
+
+  /* Переносим отступы во внутренний контейнер (чтобы совпадало с контентом) */
+  .nav-header__content { 
+    width: 100%; 
+    padding: 0 14px; 
+    box-sizing: border-box; 
+    gap: 5px;
+  }
+  
+  /* Заставляем бар занимать все свободное место */
+  .step-progress {
+    max-width: none; 
+    flex: 1; 
+    width: auto; 
+    margin: 0 10px; 
+  }
+  
+  /* Точки поменьше для мобильного */
+  .step-dot {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .result-split {
+    flex-direction: column; /* Переключаем в колонку */
+    align-items: center;
+    margin-top: 0;
+    padding-top: 10px;
+    gap: 24px;
+  }
+
+  .result-animation-wrap {
+    width: 100%; /* На мобильном фото во всю ширину */
+    flex: none;  /* Отключаем гибкость flex */
+  }
+
+  .review-block {
+    width: 100%; /* На мобильном текст во всю ширину */
+    flex: none;
+  }
+
+  /* =========================
+   ИСПРАВЛЕННЫЙ ГИБКИЙ АДАПТИВ ЭКРАНА 29
+   ========================= */
+
+.scale-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto 20px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+  /* Перебиваем фиксированную ширину из HTML и CSS */
+  #view-29 .container-narrow {
+    width: 100% !important; 
+    max-width: 100% !important;
+    padding: 0px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Заставляем карточки занимать 100% ширины родителя */
+  .profile-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .profile-gray-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    box-sizing: border-box !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Адаптивные шрифты через clamp */
+  #view-29 .h2 {
+    font-size: clamp(22px, 6vw, 28px) !important;
+  }
+
+  /* Исправляем сетки шкал: теперь они будут сжиматься */
+  .scale-labels-grid, 
+  .scale-numbers-grid {
+    display: grid !important;
+    width: 100% !important;
+    gap: 0 !important;
+  }
+
+  .scale-labels-grid span, 
+  .scale-numbers-grid span {
+    /* Шрифт будет уменьшаться до 8px на очень узких экранах */
+    font-size: clamp(8px, 2.2vw, 11px) !important;
+    white-space: nowrap;
+  }
+
+  /* Внутренняя плашка Рост/Вес */
+  .profile-stats-row {
+    margin: 8px 8px 20px 8px !important;
+    width: auto !important;
+  }
+
+  /* Серая карточка: убираем боковой отступ 60px, который ломал вид */
+  .profile-gray-card {
+    padding: 20px 16px !important;
+  }
+
+  /* Мобильная адаптация */
+  .summary-flex {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .summary-column--chart {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 24px;
+  }
+  
+  .summary-subtitle {
+    margin-bottom: 40px;
+    font-size: 16px;
+    max-width: 350px;
+  }
+
+  .weight-badge {
+    font-size: 12px;
+  }
+
+  .review-card {
+    max-width: 500px;
+  }
+
+  .chart-container {
+  max-width: 400px;
+}
+
+  .chart-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  z-index: 1;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+}
+
 /* Адаптация плашек веса для мобильных устройств */
 @media (max-width: 500px) {
 
@@ -1434,7 +1467,6 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   .card {
     height: 90px !important;
   }
-  .h3 {font-size: 28px;}
   .card-person__img-wrap { width: 95px; height: 95px; }
   .btn--age { font-size: 12px; padding: 3px 8px; margin-top: -15px; }
   .btn { width: 100%; padding: 12px 18px; }
@@ -1447,6 +1479,7 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
 
   .h2 {font-size: 20px;}
   .h2-wide {font-size: 20px;}
+  .h3 {font-size: 22px;}
   .text-subtitle {font-size: 14px;}
   .image-container-card { 
     border-radius: 12px; 
@@ -1698,3 +1731,160 @@ body { font-family: var(--font-main); background-color: #ffffff; color: var(--c-
   transition: background 0.2s;
 }
 .btn-modal:active { background: #E0E0E0; transform: scale(0.98); }
+
+/* =========================
+   SCREEN 35: EMAIL INPUT STYLES
+   ========================= */
+
+.email-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 20px;
+}
+
+.input-email {
+  width: 100%;
+  height: 60px;
+  border-radius: 12px; /* Скругление как на референсах */
+  padding: 0 24px;
+  font-size: 18px;
+  font-weight: 400;
+  outline: none;
+  font-family: var(--font-main);
+  transition: all 0.2s ease;
+  
+  /* Состояние 3.1: По умолчанию (Ref 3) - Белый фон, синяя рамка */
+  background-color: #ffffff;
+  border: 1px solid var(--c-primary); /* Синий цвет рамки */
+  color: var(--c-text-main);
+}
+
+.input-email::placeholder {
+  color: #9E9E9E; /* Серый плейсхолдер */
+}
+
+/* Состояние 3.2: Фокус, но еще пусто (Ref 4) - Голубой фон */
+.input-email:focus {
+  background-color: #E8F0FE; /* Светло-голубой фон */
+  border-color: var(--c-primary);
+}
+
+/* Состояние 3.3: Введено значение (Ref 5) - Голубой фон сохраняется */
+/* :not(:placeholder-shown) срабатывает, когда в поле есть текст */
+.input-email:not(:placeholder-shown) {
+  background-color: #E8F0FE;
+  border-color: var(--c-primary);
+}
+
+/* Блок с замком */
+.secure-note {
+  display: flex;
+  align-items: flex-start; /* Выравнивание по верху */
+  justify-content: center;
+  gap: 12px;
+  max-width: 380px;
+  margin: 0 auto;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.secure-icon-wrap {
+  flex-shrink: 0;
+  margin-top: 2px; /* Небольшая коррекция, чтобы иконка была ровно с текстом */
+}
+
+.secure-img {
+  width: 16px; /* Размер иконки замка */
+  height: auto;
+  display: block;
+}
+
+/* Модификатор для text-legal, чтобы выровнять текст слева */
+.text-legal--left {
+  text-align: left !important;
+  margin: 0 !important;
+  color: #888888; /* Чуть темнее серого для читаемости */
+  line-height: 1.4;
+}
+
+/* =========================
+   SCREEN 35: DESKTOP CARD
+   ========================= */
+
+/* Базовые стили (Мобильный - Ref 2) */
+.email-content-card {
+  width: 100%;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Настройки только для ДЕСКТОПА (Ref 1) */
+@media (min-width: 768px) {
+  .email-content-card {
+    background-color: var(--c-bg-surface); /* Испольуем глобальный голубой цвет #f5f8ff */
+    border-radius: 24px;
+    padding: 60px 80px; /* Внутренние отступы плашки */
+    margin: 0 auto;
+    
+    /* Центрируем контент внутри */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Немного увеличим ширину контейнера на этом экране, чтобы плашка смотрелась просторнее */
+  #view-35 .container-narrow {
+    max-width: 650px;
+  }
+}
+
+/* =========================
+   PROGRESS BUTTON (Screen 25)
+   ========================= */
+
+.btn-progress-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 320px; /* Ширина обычной кнопки */
+  height: 56px;
+  background-color: #C7D2FE; /* Светло-сиреневый фон трека (как на рефе) */
+  border-radius: 99px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  cursor: default; /* Курсор обычный, пока не заполнится */
+  transition: transform 0.1s ease;
+  user-select: none;
+}
+
+.btn-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 0%; /* Будет меняться через JS */
+  background-color: var(--c-primary); /* Ваш основной синий #2962ff */
+  z-index: 1;
+  /* transition: width 0.1s linear; -> Убираем transition здесь, так как будем анимировать через JS requestAnimationFrame для плавности */
+}
+
+.btn-progress-text {
+  position: relative;
+  z-index: 2; /* Текст поверх заливки */
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--c-accent); /* Желтый #ffd600 */
+}
+
+/* Состояние готовности (когда 100%) */
+.btn-progress-wrapper.ready {
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(41, 98, 255, 0.25);
+}
+
+.btn-progress-wrapper.ready:active {
+  transform: scale(0.98);
+}
