@@ -81,9 +81,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Обновляем логику показа экранов
+// Обновляем логику показа экранов
   function showView(index) {
     if (index < 0 || index >= views.length) return;
 
+    // Скрываем все модалки
     document.querySelectorAll('.modal-overlay').forEach(modal => {
       modal.classList.remove('visible');
       modal.classList.add('hidden');
@@ -95,31 +97,37 @@ document.addEventListener("DOMContentLoaded", () => {
     const nextView = views[index];
     nextView.classList.add("active");
 
-    // Скроллим контент вверх при переключении
+    // Скролл вверх
     const mainContent = nextView.querySelector(".layout-main");
     if (mainContent) mainContent.scrollTop = 0;
 
     currentViewIndex = index;
 
-// --- УПРАВЛЕНИЕ ХЕДЕРОМ ---
-    if (currentViewIndex >= QUIZ_START_INDEX) {
-      // 1. Показываем сам хедер
-      globalHeader.classList.remove("hidden");
-      
-      const navContent = globalHeader.querySelector('.nav-header__content');
+    // --- УПРАВЛЕНИЕ ХЕДЕРОМ (ИСПРАВЛЕНО 1.6) ---
+    
+    const navContent = globalHeader.querySelector('.nav-header__content');
 
-      // 2. Логика скрытия контента (стрелки + прогресс)
-      // View-34 имеет индекс 33. Всё, что >= 33, скрывает навигацию.
-      if (currentViewIndex >= 33) {
-        navContent.classList.add("hidden");
-      } else {
-        navContent.classList.remove("hidden");
-        updateQuizProgress();
-      }
+    // Сначала сбрасываем специфические классы, чтобы не "тащить" их с прошлых экранов
+    globalHeader.classList.remove("hidden");
+    globalHeader.classList.remove("nav-header--final");
+    if (navContent) navContent.classList.remove("hidden");
 
-    } else {
-      // Экраны 1-3 (индексы 0-2) — хедер скрыт полностью
-      globalHeader.classList.add("hidden");
+    // ЛОГИКА:
+    if (currentViewIndex < QUIZ_START_INDEX) {
+       // 1. До начала квиза (Экраны 1-3) -> Хедер скрыт совсем
+       globalHeader.classList.add("hidden");
+    } 
+    else if (currentViewIndex >= 33) {
+       // 2. После квиза (Экраны 34-36) -> 
+       // Хедер ВИДЕН (для лого на десктопе), но получает спец. класс
+       globalHeader.classList.add("nav-header--final");
+       
+       // Внутренний контент (стрелки/прогресс) СКРЫВАЕМ
+       if (navContent) navContent.classList.add("hidden");
+    } 
+    else {
+       // 3. Внутри квиза (Экраны 4-33) -> Всё стандартно
+       updateQuizProgress();
     }
 
     fixScrollbar();
