@@ -1478,10 +1478,10 @@ body {
   .weight-badge--2 { top: 20px; }
   .weight-badge--3 { top: 45px; }
   .weight-badge--4 { top: 45px; }
-}
 
-.content-img { height: 150px; width: auto; border-radius: 20px; object-fit: contain; }
-.content-image-wrap { display: flex; justify-content: center; margin-top: 10px !important; margin-bottom: 0px !important;}
+  .content-img { height: 150px; width: auto; border-radius: 20px; object-fit: contain; }
+  .content-image-wrap { display: flex; justify-content: center; margin-top: 10px !important; margin-bottom: 0px !important;}
+}
 
 @media (max-width: 330px) {
 
