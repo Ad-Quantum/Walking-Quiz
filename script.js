@@ -101,11 +101,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     currentViewIndex = index;
 
-    // Управление хедером
+// --- УПРАВЛЕНИЕ ХЕДЕРОМ ---
     if (currentViewIndex >= QUIZ_START_INDEX) {
+      // 1. Показываем сам хедер
       globalHeader.classList.remove("hidden");
-      updateQuizProgress();
+      
+      const navContent = globalHeader.querySelector('.nav-header__content');
+
+      // 2. Логика скрытия контента (стрелки + прогресс)
+      // View-34 имеет индекс 33. Всё, что >= 33, скрывает навигацию.
+      if (currentViewIndex >= 33) {
+        navContent.classList.add("hidden");
+      } else {
+        navContent.classList.remove("hidden");
+        updateQuizProgress();
+      }
+
     } else {
+      // Экраны 1-3 (индексы 0-2) — хедер скрыт полностью
       globalHeader.classList.add("hidden");
     }
 
