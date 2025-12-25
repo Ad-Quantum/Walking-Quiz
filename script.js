@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // QUIZ_START_INDEX = 3 (View 4). 
     // Последний вопрос = 33 (View 33).
     const quizStart = 3; 
-    const quizEnd = 36;
+    const quizEnd = 33;
     
     // 1. Вычисляем текущий шаг
     let currentStep = currentViewIndex - quizStart;
