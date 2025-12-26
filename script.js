@@ -307,47 +307,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }, 300);
 
-  /* --- Логика для Экрана 33 --- */
+/* --- Логика для Экрана 33 (График веса) --- */
   function updateView33() {
-    const curW = parseFloat(window.userWeightKg) || 0;
-    const targetW = parseFloat(window.userTargetWeightKg) || 0;
-    const unit =
-      document.querySelector("#view-27 .toggle-btn.active")?.dataset.unit ||
-      "kg";
+    // 1. Получаем сохраненные данные (в глобальных переменных они всегда в КГ)
+    const curW_kg = parseFloat(window.userWeightKg) || 0;
+    const targetW_kg = parseFloat(window.userTargetWeightKg) || 0;
 
-    // 1. Текст подзаголовка
-    document.getElementById(
-      "goal-weight-display"
-    ).textContent = `${targetW} ${unit}`;
+    // 2. Определяем, какая единица выбрана пользователем (смотрим на кнопку экрана 27)
+    const unitToggle = document.querySelector("#view-27 .toggle-btn.active");
+    const unit = unitToggle ? unitToggle.dataset.unit : "kg";
+    const isLb = (unit === "lb");
 
-    // 2. Расчет плашек веса
-    const midW = Math.round((curW + targetW) / 2);
+    // 3. Функция конвертации для отображения
+    // Если выбраны фунты -> умножаем кг на 2.20462
+    const toDisplay = (valKg) => {
+      if (isLb) {
+        return Math.round(valKg * 2.20462);
+      }
+      return Math.round(valKg);
+    };
 
-    document.getElementById("w-badge-1").textContent = `${Math.round(
-      curW
-    )} ${unit}`;
-    document.getElementById("w-badge-2").textContent = `${midW} ${unit}`;
-    document.getElementById("w-badge-3").textContent = `${Math.round(
-      targetW
-    )} ${unit}`;
-    document.getElementById("w-badge-4").textContent = `${Math.round(
-      targetW
-    )} ${unit}`;
+    const startVal = toDisplay(curW_kg);   // Текущий вес в выбранных единицах
+    const targetVal = toDisplay(targetW_kg); // Целевой вес в выбранных единицах
 
-    // 3. Расчет дат
+    // 4. Текст подзаголовка ("reach your goal weight of ...")
+    const goalDisplayElement = document.getElementById("goal-weight-display");
+    if (goalDisplayElement) {
+        goalDisplayElement.textContent = `${targetVal} ${unit}`;
+    }
+
+    // 5. Расчет среднего значения для графика
+    const midVal = Math.round((startVal + targetVal) / 2);
+
+    // 6. Обновление плашек на графике
+    // Badge 1: Текущий вес
+    document.getElementById("w-badge-1").textContent = `${startVal} ${unit}`;
+    
+    // Badge 2: Промежуточный вес
+    document.getElementById("w-badge-2").textContent = `${midVal} ${unit}`;
+    
+    // Badge 3 & 4: Целевой вес
+    document.getElementById("w-badge-3").textContent = `${targetVal} ${unit}`;
+    document.getElementById("w-badge-4").textContent = `${targetVal} ${unit}`;
+
+    // 7. Расчет дат (оставляем без изменений)
     const months = [
-      "JAN",
-      "FEB",
-      "MAR",
-      "APR",
-      "MAY",
-      "JUN",
-      "JUL",
-      "AUG",
-      "SEP",
-      "OCT",
-      "NOV",
-      "DEC",
+      "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+      "JUL", "AUG", "SEP", "OCT", "NOV", "DEC",
     ];
     let now = new Date();
 
@@ -355,9 +361,10 @@ document.addEventListener("DOMContentLoaded", () => {
       let d = new Date(now.getFullYear(), now.getMonth() + (i - 1), 1);
       let mName = months[d.getMonth()];
       let yName = d.getFullYear();
-      document.getElementById(
-        `chart-date-${i}`
-      ).textContent = `${mName} ${yName}`;
+      const dateEl = document.getElementById(`chart-date-${i}`);
+      if (dateEl) {
+          dateEl.textContent = `${mName} ${yName}`;
+      }
     }
   }
 
