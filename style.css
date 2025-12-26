@@ -1122,6 +1122,22 @@ body {
   margin: 0;
 }
 
+/* Состояние disabled для стрелок навигации */
+.btn-arrow.disabled {
+  opacity: 0.2;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* Также убедимся, что кнопки в футере тоже визуально блокируются */
+.btn:disabled {
+  background: #E5E5EA !important; 
+  color: #8E8E93 !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
 @media (max-width: 940px) {
 
   .summary-column .summary-column--chart {
