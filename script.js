@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const views = Array.from(document.querySelectorAll(".view"));
   const globalHeader = document.getElementById("global-header");
   let currentViewIndex = 0;
+  let maxReachedIndex = 0; //чтобы стрелки перелистывались
   const QUIZ_START_INDEX = 3;
 
   function fixScrollbar() {
@@ -17,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-/* --- ИСПРАВЛЕННАЯ ФУНКЦИЯ (ВЕРСИЯ 1.4) --- */
+    /* --- ИСПРАВЛЕННАЯ ФУНКЦИЯ (ВЕРСИЯ 1.4) --- */
   function updateQuizProgress() {
     const bar = document.querySelector(".step-progress__fill");
     const dots = document.querySelectorAll(".step-dot");
@@ -80,8 +81,67 @@ document.addEventListener("DOMContentLoaded", () => {
     fixScrollbar();
   });
 
+  /* --- ФУНКЦИЯ ВАЛИДАЦИИ (ВЕРСИЯ 2.1 - С ИСТОРИЕЙ) --- */
+  function checkNavState() {
+    const currentView = views[currentViewIndex];
+    if (!currentView) return;
+
+    const nextArrow = globalHeader.querySelector('.btn-arrow[data-trigger="next"]');
+    const footerBtn = currentView.querySelector('.layout-footer .btn, .inline-footer .btn'); 
+    
+    let isArrowEnabled = true; 
+    let isFooterBtnEnabled = true;
+
+    const multiSelectItems = currentView.querySelectorAll('.card-checkbox, .card-zone, .card[data-action="toggle"]');
+    
+    // 1. Логика Multi-select
+    if (multiSelectItems.length > 0) {
+      const selected = currentView.querySelectorAll('.card-checkbox.selected, .card-zone.selected, .card.selected[data-action="toggle"]');
+      const hasSelection = selected.length > 0;
+      isArrowEnabled = hasSelection;
+      isFooterBtnEnabled = hasSelection;
+    } 
+    // 2. Логика Инпутов
+    else if (footerBtn && footerBtn.disabled) {
+       isArrowEnabled = false;
+    }
+    // 3. Логика Одиночного выбора
+    else {
+      const singleChoiceCards = currentView.querySelectorAll('[data-trigger="next"]:not(.btn)');
+      if (singleChoiceCards.length > 0) {
+        isArrowEnabled = false; // Блокируем, требуем клик по карточке
+      }
+    }
+
+    // 4. Логика Экрана 25
+    if (currentView.id === 'view-25') {
+       const progBtn = document.getElementById('btn-progress-container');
+       if (progBtn && !progBtn.classList.contains('ready')) {
+         isArrowEnabled = false;
+       }
+    }
+
+    // === НОВОЕ: ПРОВЕРКА ИСТОРИИ ===
+    // Если мы вернулись назад (текущий индекс меньше максимального), 
+    // то разрешаем идти вперед стрелкой, даже если выбор визуально сбросился
+    if (currentViewIndex < maxReachedIndex) {
+       isArrowEnabled = true;
+    }
+    // ===============================
+
+    // --- ПРИМЕНЕНИЕ ---
+    if (isArrowEnabled) {
+      nextArrow.classList.remove('disabled');
+    } else {
+      nextArrow.classList.add('disabled');
+    }
+
+    if (footerBtn && multiSelectItems.length > 0) {
+       footerBtn.disabled = !isFooterBtnEnabled;
+    }
+  }
+
   // Обновляем логику показа экранов
-// Обновляем логику показа экранов
   function showView(index) {
     if (index < 0 || index >= views.length) return;
 
@@ -102,6 +162,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (mainContent) mainContent.scrollTop = 0;
 
     currentViewIndex = index;
+
+    // Запоминаем, как далеко зашел пользователь
+    if (currentViewIndex > maxReachedIndex) {
+      maxReachedIndex = currentViewIndex;
+    }
 
     // --- УПРАВЛЕНИЕ ХЕДЕРОМ (ИСПРАВЛЕНО 1.6) ---
     
@@ -131,6 +196,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     fixScrollbar();
+
+    // === НОВОЕ: ЗАПУСКАЕМ ПРОВЕРКУ ПРИ ВХОДЕ НА ЭКРАН ===
+    checkNavState();
   }
 
   window.addEventListener("resize", () => {
@@ -196,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Логика чекбоксов и зон тела (Screen 8)
+// Логика чекбоксов и зон тела (Screen 8)
     const toggleCard = target.closest('[data-action="toggle"]');
     if (toggleCard) {
       toggleCard.classList.toggle("selected");
@@ -210,8 +278,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
       if (navigator.vibrate) navigator.vibrate(5);
+      
+      // === НОВОЕ: ПРОВЕРЯЕМ ВАЛИДАЦИЮ ПОСЛЕ КЛИКА ===
+      checkNavState();
+      
       return;
     }
+
   });
 
   views.forEach((v, i) => v.classList.toggle("active", i === 0));
@@ -476,6 +549,45 @@ async function startAnalysisScenario() {
     });
     observer34.observe(v34, { attributes: true, attributeFilter: ["class"] });
   }
+   /* =========================================
+     ЛОГИКА ЭКРАНА 35 (EMAIL)
+     Вставьте это в самый конец script.js,
+     перед последней скобкой });
+     ========================================= */
+  const emailInput = document.getElementById("email-input");
+  const emailBtn = document.getElementById("btn-email-next");
+
+  if (emailInput && emailBtn) {
+    // Регулярное выражение для email
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    // Функция проверки, которую будем вызывать при вводе
+    function validateEmail() {
+      const val = emailInput.value.trim();
+      const isValid = val.length > 0 && emailPattern.test(val);
+
+      // 1. Управляем кнопкой "Continue" внизу (Footer Button)
+      // Если email валидный -> false (активна), иначе -> true (выключена)
+      emailBtn.disabled = !isValid;
+
+      // 2. Обновляем состояние стрелки в хедере
+      checkNavState();
+    }
+
+    // Слушаем каждый ввод символа
+    emailInput.addEventListener("input", validateEmail);
+
+    // Обработка нажатия Enter (для удобства на ПК)
+    emailInput.addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        if (!emailBtn.disabled) {
+          emailBtn.click();
+        }
+      }
+    });
+  }
+
 }); // Конец DOMContentLoaded
 
 /* --- ФУНКЦИЯ ДЛЯ DATE PICKER (SWIPER) --- */
@@ -769,6 +881,7 @@ document.addEventListener("DOMContentLoaded", () => {
       window.userHeightCm = savedHeightCm; // Сохраняем рост глобально для экрана 27
       window.userHeightUnit = currentUnit; // <--- ДОБАВИТЬ ЭТУ СТРОКУ (сохраняем 'cm' или 'ft')
     }
+    checkNavState();
   }
 
   // Управление видом плашки
@@ -985,6 +1098,7 @@ document.addEventListener("DOMContentLoaded", () => {
       bannerDesc.textContent =
         "You have some work ahead of you, but it's great that you're taking this first step. We'll use your BMI to create a program just for you.";
     }
+    checkNavState();
   }
 
   // Хелпер для стилизации плашки
@@ -1186,6 +1300,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "Working out just 5 minutes per day can significantly improve your overall well-being.";
       return;
     }
+    checkNavState();
   }
 
   // Хелпер для стилей
@@ -1234,38 +1349,6 @@ document.addEventListener("DOMContentLoaded", () => {
       currentUnit = newUnit;
       updateState();
     });
-
-    /* --- ЛОГИКА ЭКРАНА 35 (Email Validation) --- */
-  const emailInput = document.getElementById("email-input");
-  const emailBtn = document.getElementById("btn-email-next");
-
-  if (emailInput && emailBtn) {
-    // Регулярное выражение для проверки email (стандартный паттерн)
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-    emailInput.addEventListener("input", function() {
-      const val = this.value.trim();
-      
-      // Проверка: строка не пустая И соответствует формату email
-      if (val.length > 0 && emailPattern.test(val)) {
-        emailBtn.disabled = false; // Включаем кнопку
-      } else {
-        emailBtn.disabled = true;  // Выключаем кнопку
-      }
-    });
-    
-    // Дополнительно: Обработка нажатия Enter
-    emailInput.addEventListener("keypress", function(event) {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        // Если кнопка активна, кликаем по ней
-        if (!emailBtn.disabled) {
-          emailBtn.click();
-        }
-      }
-    });
-  }
-
 
   });
 
