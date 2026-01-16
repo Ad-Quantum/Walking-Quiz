@@ -4,6 +4,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Walking Quiz</title>
+  
+  <!-- ========== AMPLITUDE ANALYTICS ========== -->
+  <script async src="https://cdn.amplitude.com/libs/analytics-browser-2.8.0-min.js.gz"></script>
+  <script>
+  // Инициализация Amplitude с ТЕСТОВЫМ ключом
+  window.amplitude = window.amplitude || {_q: [], _iq: {}};
+  
+  function initAmplitude() {
+    const API_KEY = '04189f7b1d7c1190d933e17faa13b3fc';
+    
+    if (typeof amplitude !== 'undefined' && amplitude.init) {
+      amplitude.init(API_KEY, null, {
+        defaultTracking: {
+          pageViews: false,
+          sessions: true
+        }
+      });
+      
+      amplitude.logEvent('app_loaded', {
+        test_mode: true,
+        timestamp: new Date().toISOString()
+      });
+      
+      console.log('Amplitude initialized');
+    } else {
+      setTimeout(initAmplitude, 100);
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAmplitude);
+  } else {
+    initAmplitude();
+  }
+  </script>
+  <!-- ========== END AMPLITUDE ========== -->
+
   <link rel="preload" as="image" href="assets/1.2.webp">
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
