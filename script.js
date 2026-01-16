@@ -1560,4 +1560,42 @@ document.addEventListener("DOMContentLoaded", () => {
   if (v29) {
     observer.observe(v29, { attributes: true, attributeFilter: ["class"] });
   }
+  
+  // ========== AMPLITUDE MINIMAL TRACKING ==========
+// Базовый трекинг переходов между экранами
+(function() {
+  let currentScreen = '';
+  
+  function trackScreen() {
+    const activeView = document.querySelector('.view.active');
+    if (!activeView || !window.amplitude) return;
+    
+    const screenId = activeView.id;
+    if (screenId === currentScreen) return;
+    
+    currentScreen = screenId;
+    const screenNum = parseInt(screenId.replace('view-', '')) || 0;
+    
+    amplitude.logEvent('funnel_screen_viewed', {
+      screen_id: screenId,
+      screen_number: screenNum,
+      timestamp: new Date().toISOString()
+    });
+    
+    console.log('Amplitude: screen', screenId);
+  }
+  
+  // Проверяем каждые 500мс
+  setInterval(trackScreen, 500);
+  
+  // Трекинг выбора возраста
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('.card-person') && window.amplitude) {
+      const ageText = e.target.closest('.card-person').querySelector('.btn--age').textContent.trim();
+      amplitude.logEvent('age_selected', { age_range: ageText });
+    }
+  });
+})();
+// ========== END TRACKING ==========
+
 });
