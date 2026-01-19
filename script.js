@@ -1245,11 +1245,11 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 /* =========================
-   РЕДИРЕКТ - МИНИМАЛЬНЫЙ РАБОЧИЙ
+   РЕДИРЕКТ НА КЛИЕНТСКУЮ ЧАСТЬ (после экрана 34)
    ========================= */
 
 function redirectToClient() {
-  // 1. Быстро собираем данные
+  // Собираем данные пользователя (без email, так как его сбор удален)
   const userData = {
     height_cm: window.userHeightCm || 0,
     weight_kg: window.userWeightKg || 0,
@@ -1261,31 +1261,41 @@ function redirectToClient() {
     session_id: window.amplitude ? amplitude.getSessionId() : Date.now()
   };
 
-  // 2. Amplitude (быстро)
+  // Логируем завершение воронки в Amplitude
   if (window.amplitude) {
-    amplitude.logEvent('redirect_started', { ts: Date.now() });
+    amplitude.logEvent('funnel_completed_to_client', {
+      ...userData,
+      screen_number: 34,
+      transition_type: 'redirect'
+    });
+    
     amplitude.flush();
   }
 
-  // 3. Сразу редирект с данными в URL
+  // Сохраняем данные в localStorage
+  localStorage.setItem('slimkit_user_data', JSON.stringify(userData));
+
+  // Создаем URL с параметрами
   const baseUrl = 'https://slimkit.health/walking/survey/';
   const params = new URLSearchParams({
     config: 'V3',
     stripeV64: 'true',
-    h: userData.height_cm,
-    w: userData.weight_kg,
-    tw: userData.target_weight_kg,
+    height: userData.height_cm,
+    weight: userData.weight_kg,
+    target_weight: userData.target_weight_kg,
     bmi: userData.bmi,
-    ts: Date.now()
+    timestamp: userData.timestamp
   });
 
-  // 4. Мгновенный редирект
-  window.location.href = baseUrl + '?' + params.toString();
+  const redirectUrl = `${baseUrl}?${params.toString()}`;
   
-  // 5. Фолбэк (если что-то пошло не так)
+  console.log('Redirecting to:', redirectUrl);
+  
+  // Редирект
   setTimeout(() => {
-    window.location.replace(baseUrl);
-  }, 100);
+    window.location.href = redirectUrl;
+  }, 300);
 }
 
+// Экспортируем функцию в глобальную область видимости
 window.redirectToClient = redirectToClient;
