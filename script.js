@@ -1561,36 +1561,57 @@ document.addEventListener("DOMContentLoaded", () => {
     observer.observe(v29, { attributes: true, attributeFilter: ["class"] });
   }
   
-// ========== AMPLITUDE FUNNEL TRACKING ==========
-// Базовый трекинг переходов между экранами 1–36
+// ========== AMPLITUDE TRACKING (FUNNEL) ==========
 (function() {
-  let currentScreen = '';
-
-  function trackScreen() {
-    const activeView = document.querySelector('.view.active');
-    if (!activeView || !window.amplitude) return;
-
-    const screenId = activeView.id;
-    if (!screenId || screenId === currentScreen) return;
-
-    const screenNum = parseInt(screenId.replace('view-', ''), 10);
-    // логируем только нормальные шаги 1–36
-    if (!Number.isFinite(screenNum) || screenNum < 1 || screenNum > 36) return;
-
-    currentScreen = screenId;
-
-    amplitude.logEvent('funnel_screen_viewed', {
-      screen_id: screenId,
-      screen_number: screenNum,
-      timestamp: new Date().toISOString()
-    });
-
-    console.log('Amplitude: screen', screenId, screenNum);
+  let lastTrackedScreen = '';
+  
+  function trackScreenView(screenId) {
+    if (!window.amplitude || !screenId) return;
+    
+    // Извлекаем номер экрана из ID (например "view-1" → 1)
+    const screenNum = parseInt(screenId.replace('view-', '')) || 0;
+    
+    // Отправляем только если экран изменился
+    if (screenId !== lastTrackedScreen) {
+      lastTrackedScreen = screenId;
+      
+      amplitude.logEvent('funnel_screen_viewed', {
+        screen_id: screenId,
+        screen_number: screenNum,
+        timestamp: new Date().toISOString()
+      });
+      
+      console.log(`Amplitude: ${screenId} (screen ${screenNum})`);
+    }
   }
-
-  // Проверяем каждые 500мс
-  setInterval(trackScreen, 500);
+  
+  // Наблюдатель за сменой экранов
+  function initScreenTracking() {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          const activeView = document.querySelector('.view.active');
+          if (activeView) {
+            // Небольшая задержка для уверенности, что экран полностью показан
+            setTimeout(() => trackScreenView(activeView.id), 100);
+          }
+        }
+      });
+    });
+    
+    // Наблюдаем за всеми .view элементами
+    document.querySelectorAll('.view').forEach(view => {
+      observer.observe(view, { attributes: true });
+    });
+  }
+  
+  // Инициализируем трекинг после загрузки DOM
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScreenTracking);
+  } else {
+    initScreenTracking();
+  }
 })();
- // ========== END TRACKING ==========
+// ========== END AMPLITUDE TRACKING ==========
 
 });
