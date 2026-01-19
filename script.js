@@ -1599,75 +1599,34 @@ document.addEventListener("DOMContentLoaded", () => {
 // ========== END TRACKING ==========
 
 /* =========================
-   РЕДИРЕКТ НА КЛИЕНТСКУЮ ЧАСТЬ (Экран 37+)
+   РЕДИРЕКТ НА КЛИЕНТСКУЮ ЧАСТЬ
    ========================= */
 
 function redirectToClient() {
-  // Собираем все данные пользователя для передачи клиенту
-  const userData = {
-    // Основные данные
-    height_cm: window.userHeightCm || 0,
-    weight_kg: window.userWeightKg || 0,
-    target_weight_kg: window.userTargetWeightKg || 0,
-    bmi: window.userBMI || 0,
-    
-    // Рост в нужных единицах
-    height_unit: window.userHeightUnit || 'cm',
-    
-    // Дата (если была выбрана)
-    target_date: window.userTargetDate || '',
-    
-    // Email (с экрана 35)
-    email: document.getElementById('email-input') ? 
-           document.getElementById('email-input').value.trim() : '',
-    
-    // Время прохождения воронки
-    timestamp: new Date().toISOString(),
-    
-    // Идентификатор сессии (если есть)
-    session_id: window.amplitude ? amplitude.getSessionId() : Date.now()
-  };
-
-  // Логируем переход к клиенту в Amplitude
+  // Логируем переход в Amplitude
   if (window.amplitude) {
     amplitude.logEvent('funnel_completed_to_client', {
-      ...userData,
-      screen_number: 36,
-      transition_type: 'redirect'
+      screens_completed: 35, // Теперь 35 экранов
+      timestamp: new Date().toISOString(),
+      last_screen: 'view-35'
     });
     
-    // Отправляем события немедленно
+    // Принудительно отправляем события
     amplitude.flush();
   }
-
-  // Сохраняем данные в localStorage (на случай если нужно передать)
-  localStorage.setItem('slimkit_user_data', JSON.stringify(userData));
-
-  // Создаем URL с параметрами
-  const baseUrl = 'https://slimkit.health/walking/survey/';
-  const params = new URLSearchParams({
-    config: 'V3',
-    stripeV64: 'true',
-    // Добавляем данные как параметры (если клиент принимает)
-    height: userData.height_cm,
-    weight: userData.weight_kg,
-    target_weight: userData.target_weight_kg,
-    bmi: userData.bmi,
-    email: userData.email,
-    timestamp: userData.timestamp
-  });
-
-  const redirectUrl = `${baseUrl}?${params.toString()}`;
   
-  console.log('Redirecting to:', redirectUrl);
+  console.log('Redirecting to client survey...');
   
-  // Редирект с небольшой задержкой, чтобы Amplitude успел отправить
+  // Простой редирект на клиентскую часть
+  const clientUrl = 'https://slimkit.health/walking/survey/?config=V3&stripeV64=true';
+  
+  // Даем время Amplitude отправить события
   setTimeout(() => {
-    window.location.href = redirectUrl;
+    window.location.href = clientUrl;
   }, 300);
 }
 
-// Экспортируем функцию в глобальную область видимости
+// Делаем функцию доступной глобально
 window.redirectToClient = redirectToClient;
   
 });
