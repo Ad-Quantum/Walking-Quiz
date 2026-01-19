@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
        globalHeader.classList.add("hidden");
     } 
     else if (currentViewIndex >= 33) {
-       // 2. После квиза (Экраны 34-36) -> 
+       // 2. После квиза (Экраны 34-35) -> 
        // Хедер ВИДЕН (для лого на десктопе), но получает спец. класс
        globalHeader.classList.add("nav-header--final");
        
@@ -516,9 +516,9 @@ async function startAnalysisScenario() {
   await wait(500);
   if (!isActive()) return;
   
-  // Ищем следующий экран (35) или делаем другое действие
+  // Ищем следующий экран (35)
   const allViews = Array.from(document.querySelectorAll(".view"));
-  const view35Index = allViews.findIndex(v => v.id === 'view-35'); // Убедитесь, что view-35 существует
+  const view35Index = allViews.findIndex(v => v.id === 'view-35');
   
   if (view35Index !== -1 && typeof showView === 'function') {
       showView(view35Index);
@@ -556,12 +556,7 @@ async function startAnalysisScenario() {
     });
     observer34.observe(v34, { attributes: true, attributeFilter: ["class"] });
   }
-   /* =========================================
-     ЛОГИКА ЭКРАНА 35 (EMAIL)
-     Вставьте это в самый конец script.js,
-     перед последней скобкой });
-     ========================================= */
-
+   
 }); // Конец DOMContentLoaded
 
 /* --- ФУНКЦИЯ ДЛЯ DATE PICKER (SWIPER) --- */
@@ -660,7 +655,349 @@ function initSwiperDatePicker() {
     // Сохраняем экземпляры в переменные, чтобы обращаться к ним позже
     const swiperM = new Swiper(".swiper-month", config);
     const swiperY = new Swiper(".swiper-year", config);
-    new Swiper(".swiper-day"...(truncated 10909 characters)...dWeightKg < 20 && savedWeightKg > 0) {
+    new Swiper(".swiper-day", config);
+
+    // Функция для сохранения даты
+    window.saveUserSelectedDate = function (isSkipped = false) {
+      if (isSkipped) {
+        // Если пропущено: берем текущую дату + 6 месяцев
+        const futureDate = new Date();
+        futureDate.setMonth(futureDate.getMonth() + 6);
+
+        const mName = months[futureDate.getMonth()]
+          .substring(0, 3)
+          .toUpperCase();
+        const yName = futureDate.getFullYear().toString();
+        window.userTargetDate = `${mName} ${yName}`;
+      } else {
+        // Если выбрано: берем активные слайды из Swiper
+        const activeMonthText =
+          swiperM.slides[swiperM.activeIndex].textContent.trim();
+        const activeYearText =
+          swiperY.slides[swiperY.activeIndex].textContent.trim();
+
+        const mShort = activeMonthText.substring(0, 3).toUpperCase();
+        window.userTargetDate = `${mShort} ${activeYearText}`;
+      }
+      console.log("Target Date Saved:", window.userTargetDate); // Для отладки
+    };
+  }
+}
+
+// --- ЭКРАН 25-26 ---
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* =========================
+     ЛОГИКА ЭКРАНА 25 (PROGRESS BAR BUTTON)
+     ========================= */
+     
+  const view25 = document.getElementById("view-25");
+  
+  if (view25) {
+    const btnContainer = document.getElementById("btn-progress-container");
+    const btnFill = document.getElementById("btn-progress-fill");
+    const btnText = document.getElementById("btn-progress-text");
+    
+    // Переменная, чтобы не запускать анимацию дважды, если пользователь вернется назад
+    let hasAnimated25 = false; 
+
+    const observer25 = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.target.classList.contains("active")) {
+          // Если зашли на экран - запускаем анимацию
+          runProgressButtonAnimation();
+        } else {
+          // Если ушли с экрана - сбрасываем (опционально, если хотите, чтобы каждый раз проигрывалось)
+          resetProgressButton();
+        }
+      });
+    });
+
+    observer25.observe(view25, { attributes: true, attributeFilter: ["class"] });
+
+    function runProgressButtonAnimation() {
+      // Сброс перед стартом
+      btnFill.style.width = '0%';
+      btnText.textContent = 'Progress 0%';
+      btnContainer.classList.remove('ready');
+      // Удаляем триггер перехода, пока не дойдет до 100%
+      btnContainer.removeAttribute('data-trigger'); 
+      
+      let startTime = null;
+      const duration = 4000; // 4 секунды
+
+      function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = timestamp - startTime;
+        
+        // Вычисляем процент (от 0 до 100)
+        let percent = Math.min((progress / duration) * 100, 100);
+        
+        // Обновляем UI
+        btnFill.style.width = `${percent}%`;
+        btnText.textContent = `Progress ${Math.floor(percent)}%`;
+
+        if (progress < duration) {
+          // Продолжаем анимацию
+          window.requestAnimationFrame(step);
+        } else {
+          // Финиш
+          finishAnimation();
+        }
+      }
+
+      window.requestAnimationFrame(step);
+    }
+
+    function finishAnimation() {
+      btnFill.style.width = '100%';
+      btnText.textContent = 'Continue'; // Или оставить 'Progress 100%', как решите
+      btnContainer.classList.add('ready');
+      
+      // Делаем кнопку активной для глобального обработчика кликов
+      btnContainer.setAttribute('data-trigger', 'next');
+      
+      // Небольшая вибрация на мобильном, если поддерживается
+      if (navigator.vibrate) navigator.vibrate(50);
+    }
+
+    function resetProgressButton() {
+       // Если нужно сбрасывать состояние при уходе со слайда
+       btnFill.style.width = '0%';
+       btnText.textContent = 'Progress 0%';
+       btnContainer.classList.remove('ready');
+       btnContainer.removeAttribute('data-trigger');
+    }
+  }
+
+
+  const view26 = document.getElementById("view-26");
+  if (!view26) return;
+
+  // --- ЭЛЕМЕНТЫ ---
+  const btns = view26.querySelectorAll(".toggle-btn");
+  const groupCm = view26.querySelector("#input-cm-group");
+  const groupFt = view26.querySelector("#input-ft-group");
+  const btnNext = view26.querySelector("#btn-next");
+
+  // Поля ввода
+  const inputCm = view26.querySelector("#val-cm");
+  const inputFt = view26.querySelector("#val-ft");
+  const inputIn = view26.querySelector("#val-in");
+  const inputs = view26.querySelectorAll(".input-huge");
+
+  // Плашка и ее содержимое
+  const banner = view26.querySelector("#info-banner");
+  const iconInfo = view26.querySelector("#icon-info");
+  const iconError = view26.querySelector("#icon-error");
+  const bannerTitle = view26.querySelector("#banner-title");
+  const bannerDesc = view26.querySelector("#banner-desc");
+
+  // Переменные состояния
+  let currentUnit = "cm"; // 'cm' или 'ft'
+  let savedHeightCm = 0; // Здесь храним актуальный рост в см
+
+  // --- ФУНКЦИИ КОНВЕРТАЦИИ ---
+
+  // Из СМ в Футы/Дюймы
+  function cmToFtIn(cm) {
+    const realFeet = cm / 30.48;
+    let ft = Math.floor(realFeet);
+    let inches = Math.round((realFeet - ft) * 12);
+
+    if (inches === 12) {
+      ft += 1;
+      inches = 0;
+    }
+    return { ft, in: inches };
+  }
+
+  // Из Футов/Дюймов в СМ
+  function ftInToCm(ft, inches) {
+    const f = parseFloat(ft) || 0;
+    const i = parseFloat(inches) || 0;
+    return Math.round(f * 30.48 + i * 2.54);
+  }
+
+  // --- ВАЛИДАЦИЯ И ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ---
+
+  function updateState() {
+    // 1. Определяем текущий рост в сантиметрах
+    if (currentUnit === "cm") {
+      savedHeightCm = parseInt(inputCm.value) || 0;
+    } else {
+      savedHeightCm = ftInToCm(inputFt.value, inputIn.value);
+    }
+
+    // 2. Логика отображения
+
+    // Если поле пустое -> Сброс в исходное состояние (Info), кнопка выключена
+    if (savedHeightCm === 0) {
+      setBanner("info");
+      btnNext.disabled = true;
+      return;
+    }
+
+    // Если значение недопустимое (<100 или >300) -> Ошибка
+    if (savedHeightCm < 100 || savedHeightCm > 300) {
+      setBanner("error");
+      btnNext.disabled = true; // Кнопка неактивна
+    } else {
+      // Значение валидное -> Успех
+      setBanner("info");
+      btnNext.disabled = false; // Кнопка активна
+      window.userHeightCm = savedHeightCm; // Сохраняем рост глобально для экрана 27
+      window.userHeightUnit = currentUnit; // <--- ДОБАВИТЬ ЭТУ СТРОКУ (сохраняем 'cm' или 'ft')
+    }
+    checkNavState();
+  }
+
+  // Управление видом плашки
+  function setBanner(state) {
+    if (state === "error") {
+      banner.classList.add("error");
+
+      iconInfo.classList.add("hidden");
+      iconError.classList.remove("hidden");
+
+      bannerTitle.textContent = "Please double-check and enter valid height";
+      bannerDesc.classList.add("hidden"); // Скрываем описание в ошибке
+    } else {
+      banner.classList.remove("error");
+
+      iconError.classList.add("hidden");
+      iconInfo.classList.remove("hidden");
+
+      bannerTitle.textContent = "Calculating your BMI";
+      bannerDesc.textContent =
+        "Body mass index (BMI) is a metric of body fat percentage commonly used to estimate risk levels of potential health problems.";
+      bannerDesc.classList.remove("hidden");
+    }
+  }
+
+  // --- ОБРАБОТЧИКИ СОБЫТИЙ ---
+
+  // 1. Ввод цифр
+  inputs.forEach((input) => {
+    input.addEventListener("input", function () {
+      this.value = this.value.replace(/[^0-9]/g, ""); // Только цифры
+      updateState();
+    });
+  });
+
+  // 2. Переключение вкладок
+  btns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      // Не делаем ничего, если кликнули на уже активную кнопку
+      if (btn.classList.contains("active")) return;
+
+      const newUnit = btn.dataset.unit;
+
+      // Конвертация значений ПЕРЕД переключением
+      if (newUnit === "ft") {
+        // Переход CM -> FT
+        const cmVal = parseInt(inputCm.value);
+        if (cmVal) {
+          const res = cmToFtIn(cmVal);
+          inputFt.value = res.ft;
+          inputIn.value = res.in;
+        } else {
+          inputFt.value = "";
+          inputIn.value = "";
+        }
+
+        groupCm.classList.add("hidden");
+        groupFt.classList.remove("hidden");
+      } else {
+        // Переход FT -> CM
+        const ftVal = inputFt.value;
+        const inVal = inputIn.value;
+
+        if (ftVal || inVal) {
+          inputCm.value = ftInToCm(ftVal, inVal);
+        } else {
+          inputCm.value = "";
+        }
+
+        groupFt.classList.add("hidden");
+        groupCm.classList.remove("hidden");
+      }
+
+      // Переключаем визуальный стиль кнопок
+      btns.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      // Обновляем состояние
+      currentUnit = newUnit;
+      updateState();
+    });
+  });
+});
+
+// --- ЭКРАН 27 ---
+document.addEventListener("DOMContentLoaded", () => {
+  const view27 = document.getElementById("view-27");
+  if (!view27) return;
+
+  // --- ЭЛЕМЕНТЫ ---
+  const btns = view27.querySelectorAll(".toggle-btn");
+  const groupKg = view27.querySelector("#input-weight-kg-group");
+  const groupLb = view27.querySelector("#input-weight-lb-group");
+  const btnNext = view27.querySelector("#btn-next-weight");
+
+  const inputKg = view27.querySelector("#val-weight-kg");
+  const inputLb = view27.querySelector("#val-weight-lb");
+  const inputs = view27.querySelectorAll(".input-huge");
+
+  // Плашка
+  const banner = view27.querySelector("#info-banner-weight");
+  const iconInfo = view27.querySelector("#icon-info-weight");
+  const iconError = view27.querySelector("#icon-error-weight");
+  const iconSuccess = view27.querySelector("#icon-success-weight");
+  const bannerTitle = view27.querySelector("#banner-title-weight");
+  const bannerDesc = view27.querySelector("#banner-desc-weight");
+
+  // Состояние
+  let currentUnit = "kg"; // 'kg' или 'lb'
+  let savedWeightKg = 0;
+
+  // --- КОНВЕРТАЦИЯ ---
+  const KG_TO_LB = 2.20462;
+
+  function kgToLb(kg) {
+    return Math.round(kg * KG_TO_LB);
+  }
+  function lbToKg(lb) {
+    return Math.round(lb / KG_TO_LB);
+  }
+
+  // --- РАСЧЕТ BMI ---
+  function calculateBMI(weightKg, heightCm) {
+    if (!heightCm || heightCm <= 0) return 0;
+    const heightM = heightCm / 100;
+    return (weightKg / (heightM * heightM)).toFixed(1); // Округляем до 1 знака (напр. 24.5)
+  }
+
+  // --- ЛОГИКА ОТОБРАЖЕНИЯ (STATES) ---
+  function updateState() {
+    // 1. Читаем вес
+    if (currentUnit === "kg") {
+      savedWeightKg = parseFloat(inputKg.value) || 0;
+    } else {
+      const lbVal = parseFloat(inputLb.value) || 0;
+      savedWeightKg = lbToKg(lbVal);
+    }
+
+    // Сброс классов плашки
+    banner.classList.remove("error", "success");
+    iconError.classList.add("hidden");
+    iconInfo.classList.remove("hidden"); // По умолчанию показываем info (синюю/зеленую иконку)
+    btnNext.disabled = false; // По умолчанию активна, выключим если ошибка
+
+    // 2. Проверки лимитов (Error State 1 & 6)
+    // 4.1 Вес < 20 кг
+    if (savedWeightKg < 20 && savedWeightKg > 0) {
       setBannerStyle("error");
       bannerTitle.textContent = "Your weight is too low for this program.";
       bannerDesc.classList.add("hidden"); // Текст не указан в ТЗ для этого кейса, скрываем или оставляем пустым
@@ -1212,19 +1549,10 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Проверяем каждые 500мс
   setInterval(trackScreen, 500);
-  
-  // УБРАТЬ age_selected (комментируем или удаляем)
-  // document.addEventListener('click', function(e) {
-  //   if (e.target.closest('.card-person') && window.amplitude) {
-  //     const ageText = e.target.closest('.card-person').querySelector('.btn--age').textContent.trim();
-  //     amplitude.logEvent('age_selected', { age_range: ageText });
-  //   }
-  // });
 })();
-// ========== END TRACKING ==========
 
 /* =========================
-   РЕДИРЕКТ НА КЛИЕНТСКУЮ ЧАСТЬ (Экран 37+)
+   РЕДИРЕКТ НА КЛИЕНТСКУЮ ЧАСТЬ (Экран 35)
    ========================= */
 
 function redirectToClient() {
@@ -1242,9 +1570,8 @@ function redirectToClient() {
     // Дата (если была выбрана)
     target_date: window.userTargetDate || '',
     
-    // Email (с экрана 35)
-    email: document.getElementById('email-input') ? 
-           document.getElementById('email-input').value.trim() : '',
+    // Email - больше нет email поля, поэтому пустая строка
+    email: '',
     
     // Время прохождения воронки
     timestamp: new Date().toISOString(),
@@ -1257,4 +1584,41 @@ function redirectToClient() {
   if (window.amplitude) {
     amplitude.logEvent('funnel_completed_to_client', {
       ...userData,
-      screen_number: 35
+      screen_number: 35,
+      transition_type: 'redirect'
+    });
+    
+    // Отправляем события немедленно
+    amplitude.flush();
+  }
+
+  // Сохраняем данные в localStorage (на случай если нужно передать)
+  localStorage.setItem('slimkit_user_data', JSON.stringify(userData));
+
+  // Создаем URL с параметрами
+  const baseUrl = 'https://slimkit.health/walking/survey/';
+  const params = new URLSearchParams({
+    config: 'V3',
+    stripeV64: 'true',
+    // Добавляем данные как параметры (если клиент принимает)
+    height: userData.height_cm,
+    weight: userData.weight_kg,
+    target_weight: userData.target_weight_kg,
+    bmi: userData.bmi,
+    timestamp: userData.timestamp
+  });
+
+  const redirectUrl = `${baseUrl}?${params.toString()}`;
+  
+  console.log('Redirecting to:', redirectUrl);
+  
+  // Редирект с небольшой задержкой, чтобы Amplitude успел отправить
+  setTimeout(() => {
+    window.location.href = redirectUrl;
+  }, 300);
+}
+
+// Экспортируем функцию в глобальную область видимости
+window.redirectToClient = redirectToClient;
+  
+});
