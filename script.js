@@ -1,50 +1,9 @@
-[file name]: script.js
-[file content begin]
-// ========== AMPLITUDE INITIALIZATION (ИСПРАВЛЕННЫЙ) ==========
-window.amplitude = window.amplitude || {_q: [], _iq: {}};
-
-function initAmplitude() {
-  const API_KEY = '04189f7b1d7c1190d933e17faa13b3fc';
-  
-  if (typeof amplitude !== 'undefined' && amplitude.init) {
-    amplitude.init(API_KEY, null, {
-      defaultTracking: {
-        pageViews: false,
-        sessions: true
-      },
-      // ВАЖНО: Отправляем события сразу, без буфера
-      uploadBatchSize: 1,
-      eventUploadPeriodMillis: 0,
-      eventUploadThreshold: 1
-    });
-    
-    amplitude.logEvent('app_loaded', {
-      test_mode: true,
-      timestamp: new Date().toISOString()
-    });
-    
-    console.log('Amplitude initialized');
-  } else {
-    setTimeout(initAmplitude, 100);
-  }
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initAmplitude);
-} else {
-  initAmplitude();
-}
-// ========== END AMPLITUDE ==========
-
 document.addEventListener("DOMContentLoaded", () => {
   const views = Array.from(document.querySelectorAll(".view"));
   const globalHeader = document.getElementById("global-header");
   let currentViewIndex = 0;
   let maxReachedIndex = 0; //чтобы стрелки перелистывались
   const QUIZ_START_INDEX = 3;
-
-  // Глобальная переменная для Amplitude
-  window.currentViewIndex = 0;
 
   function fixScrollbar() {
     const activeMain = document.querySelector(".view.active .layout-main");
@@ -203,7 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (mainContent) mainContent.scrollTop = 0;
 
     currentViewIndex = index;
-    window.currentViewIndex = index; // Обновляем для Amplitude
 
     // Запоминаем, как далеко зашел пользователь
     if (currentViewIndex > maxReachedIndex) {
@@ -241,14 +199,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // === НОВОЕ: ЗАПУСКАЕМ ПРОВЕРКУ ПРИ ВХОДЕ НА ЭКРАН ===
     checkNavState();
-    
-    // === AMPLITUDE TRACKING ===
-    if (window.trackScreenView) {
-      window.trackScreenView(nextView.id);
-    }
   }
 
   window.addEventListener("resize", () => {
+    measureHeader();
     fixScrollbar();
   });
 
@@ -434,6 +388,8 @@ document.addEventListener("DOMContentLoaded", () => {
    НОВАЯ ЛОГИКА ЭКРАНА 34 (Interactive Analysis)
    ========================= */
 
+/* script.js */
+
 async function startAnalysisScenario() {
   const view34 = document.getElementById('view-34');
   const lineFill = document.getElementById('timeline-fill');
@@ -602,6 +558,8 @@ async function startAnalysisScenario() {
   }
    /* =========================================
      ЛОГИКА ЭКРАНА 35 (EMAIL)
+     Вставьте это в самый конец script.js,
+     перед последней скобкой });
      ========================================= */
   const emailInput = document.getElementById("email-input");
   const emailBtn = document.getElementById("btn-email-next");
@@ -638,86 +596,6 @@ async function startAnalysisScenario() {
   }
 
 }); // Конец DOMContentLoaded
-
-/* ========== AMPLITUDE FUNNEL TRACKING (ИСПРАВЛЕННЫЙ) ========== */
-(function() {
-  let lastTrackedScreen = '';
-  let eventSequence = 0;
-  let isTrackingInitialized = false;
-  
-  function initAmplitudeTracking() {
-    if (!window.amplitude) {
-      setTimeout(initAmplitudeTracking, 100);
-      return;
-    }
-    isTrackingInitialized = true;
-    console.log('Amplitude tracking ready');
-  }
-  
-  window.trackScreenView = function(screenId) {
-    if (!window.amplitude || !screenId || !isTrackingInitialized) {
-      // Если Amplitude еще не готов, пробуем позже
-      setTimeout(() => window.trackScreenView(screenId), 50);
-      return;
-    }
-    
-    const screenNum = parseInt(screenId.replace('view-', '')) || 0;
-    
-    if (screenId !== lastTrackedScreen) {
-      lastTrackedScreen = screenId;
-      eventSequence++;
-      
-      // Создаем уникальный timestamp для каждого события
-      const eventTimestamp = Date.now();
-      
-      try {
-        // Пробуем использовать logEventWithTimestamp если доступен
-        if (amplitude.getInstance && amplitude.getInstance().logEventWithTimestamp) {
-          amplitude.getInstance().logEventWithTimestamp(
-            'funnel_screen_viewed',
-            {
-              screen_id: screenId,
-              screen_number: screenNum,
-              sequence: eventSequence,
-              view_index: window.currentViewIndex || 0,
-              absolute_timestamp: eventTimestamp
-            },
-            null,
-            null,
-            eventTimestamp
-          );
-        } else {
-          // Fallback на обычный logEvent
-          amplitude.logEvent('funnel_screen_viewed', {
-            screen_id: screenId,
-            screen_number: screenNum,
-            sequence: eventSequence,
-            view_index: window.currentViewIndex || 0,
-            timestamp: new Date(eventTimestamp).toISOString(),
-            event_time_ms: eventTimestamp
-          });
-        }
-        
-        // Принудительно отправляем
-        if (amplitude.getInstance && amplitude.getInstance().uploadEvents) {
-          amplitude.getInstance().uploadEvents();
-        }
-        
-        console.log(`📡 Amplitude: ${screenId} (screen ${screenNum}, seq: ${eventSequence})`);
-      } catch (e) {
-        console.error('Amplitude send error:', e);
-      }
-    }
-  };
-  
-  // Инициализируем когда DOM готов
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAmplitudeTracking);
-  } else {
-    initAmplitudeTracking();
-  }
-})();
-/* ========== END AMPLITUDE TRACKING ========== */
 
 /* --- ФУНКЦИЯ ДЛЯ DATE PICKER (SWIPER) --- */
 function initSwiperDatePicker() {
@@ -779,39 +657,69 @@ function initSwiperDatePicker() {
   };
 
   // Создаем экземпляры
-  const swiperM = new Swiper(".swiper-month", config);
-  const swiperY = new Swiper(".swiper-year", config);
+  new Swiper(".swiper-month", config);
   new Swiper(".swiper-day", config);
+  new Swiper(".swiper-year", config);
 
   window.userTargetDate = "";
-  
-  const monthsShort = [
-    "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
-    "JUL", "AUG", "SEP", "OCT", "NOV", "DEC",
-  ];
+  /* --- Обновленная логика для обработки даты в Версии 1.6 --- */
 
-  // Функция для сохранения даты
-  window.saveUserSelectedDate = function (isSkipped = false) {
-    if (isSkipped) {
-      // Если пропущено: берем текущую дату + 6 месяцев
-      const futureDate = new Date();
-      futureDate.setMonth(futureDate.getMonth() + 6);
+  function initSwiperDatePicker() {
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
 
-      const mName = monthsShort[futureDate.getMonth()];
-      const yName = futureDate.getFullYear().toString();
-      window.userTargetDate = `${mName} ${yName}`;
-    } else {
-      // Если выбрано: берем активные слайды из Swiper
-      const activeMonthText =
-        swiperM.slides[swiperM.activeIndex].textContent.trim();
-      const activeYearText =
-        swiperY.slides[swiperY.activeIndex].textContent.trim();
+    // ... (существующий код генерации HTML для month, day, year остается без изменений)
 
-      const mShort = monthsShort[months.indexOf(activeMonthText)];
-      window.userTargetDate = `${mShort} ${activeYearText}`;
-    }
-    console.log("Target Date Saved:", window.userTargetDate);
-  };
+    const config = {
+      direction: "vertical",
+      slidesPerView: 5,
+      centeredSlides: true,
+      loop: true,
+      slideToClickedSlide: true,
+    };
+
+    // Сохраняем экземпляры в переменные, чтобы обращаться к ним позже
+    const swiperM = new Swiper(".swiper-month", config);
+    const swiperY = new Swiper(".swiper-year", config);
+    new Swiper(".swiper-day", config);
+
+    // Функция для сохранения даты
+    window.saveUserSelectedDate = function (isSkipped = false) {
+      if (isSkipped) {
+        // Если пропущено: берем текущую дату + 6 месяцев
+        const futureDate = new Date();
+        futureDate.setMonth(futureDate.getMonth() + 6);
+
+        const mName = months[futureDate.getMonth()]
+          .substring(0, 3)
+          .toUpperCase();
+        const yName = futureDate.getFullYear().toString();
+        window.userTargetDate = `${mName} ${yName}`;
+      } else {
+        // Если выбрано: берем активные слайды из Swiper
+        const activeMonthText =
+          swiperM.slides[swiperM.activeIndex].textContent.trim();
+        const activeYearText =
+          swiperY.slides[swiperY.activeIndex].textContent.trim();
+
+        const mShort = activeMonthText.substring(0, 3).toUpperCase();
+        window.userTargetDate = `${mShort} ${activeYearText}`;
+      }
+      console.log("Target Date Saved:", window.userTargetDate); // Для отладки
+    };
+  }
 }
 
 // --- ЭКРАН 25-26 ---
@@ -1652,5 +1560,58 @@ document.addEventListener("DOMContentLoaded", () => {
   if (v29) {
     observer.observe(v29, { attributes: true, attributeFilter: ["class"] });
   }
+  
+// ========== AMPLITUDE TRACKING (FUNNEL) ==========
+(function() {
+  let lastTrackedScreen = '';
+  
+  function trackScreenView(screenId) {
+    if (!window.amplitude || !screenId) return;
+    
+    // Извлекаем номер экрана из ID (например "view-1" → 1)
+    const screenNum = parseInt(screenId.replace('view-', '')) || 0;
+    
+    // Отправляем только если экран изменился
+    if (screenId !== lastTrackedScreen) {
+      lastTrackedScreen = screenId;
+      
+      amplitude.logEvent('funnel_screen_viewed', {
+        screen_id: screenId,
+        screen_number: screenNum,
+        timestamp: new Date().toISOString()
+      });
+      
+      console.log(`Amplitude: ${screenId} (screen ${screenNum})`);
+    }
+  }
+  
+  // Наблюдатель за сменой экранов
+  function initScreenTracking() {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          const activeView = document.querySelector('.view.active');
+          if (activeView) {
+            // Небольшая задержка для уверенности, что экран полностью показан
+            setTimeout(() => trackScreenView(activeView.id), 100);
+          }
+        }
+      });
+    });
+    
+    // Наблюдаем за всеми .view элементами
+    document.querySelectorAll('.view').forEach(view => {
+      observer.observe(view, { attributes: true });
+    });
+  }
+  
+  // Инициализируем трекинг после загрузки DOM
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScreenTracking);
+  } else {
+    initScreenTracking();
+  }
+})();
+// ========== END AMPLITUDE TRACKING ==========
+
 });
-[file content end]
