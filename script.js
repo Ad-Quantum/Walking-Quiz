@@ -1245,11 +1245,11 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 /* =========================
-   РЕДИРЕКТ НА КЛИЕНТСКУЮ ЧАСТЬ (после экрана 34) - С ЛОАДЕРОМ
+   РЕДИРЕКТ - МИНИМАЛЬНЫЙ РАБОЧИЙ
    ========================= */
 
 function redirectToClient() {
-  // 1. Собираем данные пользователя
+  // 1. Быстро собираем данные
   const userData = {
     height_cm: window.userHeightCm || 0,
     weight_kg: window.userWeightKg || 0,
@@ -1261,213 +1261,31 @@ function redirectToClient() {
     session_id: window.amplitude ? amplitude.getSessionId() : Date.now()
   };
 
-  // 2. Логируем в Amplitude
+  // 2. Amplitude (быстро)
   if (window.amplitude) {
-    amplitude.logEvent('funnel_completed_to_client', {
-      ...userData,
-      screen_number: 34,
-      transition_type: 'seamless_loader'
-    });
-    
-    // Форсируем отправку данных
+    amplitude.logEvent('redirect_started', { ts: Date.now() });
     amplitude.flush();
   }
 
-  // 3. Сохраняем данные в sessionStorage (временное хранилище)
-  sessionStorage.setItem('slimkit_transition_data', JSON.stringify(userData));
+  // 3. Сразу редирект с данными в URL
+  const baseUrl = 'https://slimkit.health/walking/survey/';
+  const params = new URLSearchParams({
+    config: 'V3',
+    stripeV64: 'true',
+    h: userData.height_cm,
+    w: userData.weight_kg,
+    tw: userData.target_weight_kg,
+    bmi: userData.bmi,
+    ts: Date.now()
+  });
 
-  // 4. Показываем красивый лоадер-экрана
-  document.body.innerHTML = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Preparing Your Plan</title>
-      <style>
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-        
-        body {
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          height: 100vh;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          color: white;
-          overflow: hidden;
-          animation: fadeIn 0.3s ease;
-        }
-        
-        .transition-container {
-          text-align: center;
-          max-width: 400px;
-          padding: 40px;
-          animation: slideUp 0.5s ease;
-        }
-        
-        .loader-wrapper {
-          position: relative;
-          width: 80px;
-          height: 80px;
-          margin: 0 auto 30px;
-        }
-        
-        .loader-circle {
-          width: 100%;
-          height: 100%;
-          border: 4px solid rgba(255, 255, 255, 0.2);
-          border-top: 4px solid white;
-          border-radius: 50%;
-          animation: spin 1.2s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
-        }
-        
-        .loader-inner {
-          position: absolute;
-          top: 20px;
-          left: 20px;
-          width: 40px;
-          height: 40px;
-          border: 2px solid rgba(255, 255, 255, 0.1);
-          border-top: 2px solid rgba(255, 255, 255, 0.5);
-          border-radius: 50%;
-          animation: spinReverse 1.5s linear infinite;
-        }
-        
-        h1 {
-          font-size: 24px;
-          font-weight: 600;
-          margin-bottom: 12px;
-          opacity: 0.95;
-        }
-        
-        .subtitle {
-          font-size: 16px;
-          font-weight: 400;
-          opacity: 0.8;
-          line-height: 1.5;
-          margin-bottom: 20px;
-        }
-        
-        .progress-text {
-          margin-top: 25px;
-          font-size: 14px;
-          opacity: 0.7;
-          font-weight: 500;
-          animation: pulse 2s infinite;
-        }
-        
-        .progress-bar {
-          width: 200px;
-          height: 4px;
-          background: rgba(255, 255, 255, 0.2);
-          border-radius: 2px;
-          margin: 20px auto;
-          overflow: hidden;
-        }
-        
-        .progress-fill {
-          height: 100%;
-          background: white;
-          width: 0%;
-          border-radius: 2px;
-          animation: progressLoad 2s ease-in-out forwards;
-        }
-        
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        
-        @keyframes spinReverse {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(-360deg); }
-        }
-        
-        @keyframes pulse {
-          0%, 100% { opacity: 0.7; }
-          50% { opacity: 1; }
-        }
-        
-        @keyframes progressLoad {
-          0% { width: 0%; }
-          30% { width: 40%; }
-          70% { width: 80%; }
-          100% { width: 100%; }
-        }
-      </style>
-    </head>
-    <body>
-      <div class="transition-container">
-        <div class="loader-wrapper">
-          <div class="loader-circle"></div>
-          <div class="loader-inner"></div>
-        </div>
-        
-        <h1>Preparing Your Walking Plan</h1>
-        
-        <div class="subtitle">
-          Analyzing your answers and creating a personalized walking program
-        </div>
-        
-        <div class="progress-bar">
-          <div class="progress-fill"></div>
-        </div>
-        
-        <div class="progress-text">
-          Redirecting to your plan...
-        </div>
-      </div>
-      
-      <script>
-        // Сохраняем данные для передачи
-        const userData = ${JSON.stringify(userData)};
-        
-        // Функция редиректа
-        function performRedirect() {
-          const baseUrl = 'https://slimkit.health/walking/survey/';
-          const params = new URLSearchParams({
-            config: 'V3',
-            stripeV64: 'true',
-            session_id: userData.session_id,
-            ts: Date.now(),
-            // Можно добавить данные в hash (не видно в URL)
-            // #data: encodeURIComponent(JSON.stringify(userData))
-          });
-          
-          // Редирект через 2 секунды
-          setTimeout(() => {
-            window.location.href = baseUrl + '?' + params.toString();
-          }, 2000);
-        }
-        
-        // Запускаем редирект после небольшой задержки
-        setTimeout(performRedirect, 300);
-      </script>
-    </body>
-    </html>
-  `;
+  // 4. Мгновенный редирект
+  window.location.href = baseUrl + '?' + params.toString();
+  
+  // 5. Фолбэк (если что-то пошло не так)
+  setTimeout(() => {
+    window.location.replace(baseUrl);
+  }, 100);
 }
 
-// Экспортируем функцию в глобальную область видимости
 window.redirectToClient = redirectToClient;
