@@ -1561,28 +1561,63 @@ document.addEventListener("DOMContentLoaded", () => {
     observer.observe(v29, { attributes: true, attributeFilter: ["class"] });
   }
   
-// ========== AMPLITUDE TRACKING (FUNNEL) ==========
+// ========== AMPLITUDE TRACKING (FUNNEL) - ИСПРАВЛЕННЫЙ ==========
 (function() {
   let lastTrackedScreen = '';
+  let amplitudeReady = false;
+  let pendingEvents = []; // Очередь событий, если Amplitude еще не готов
+  
+  // Функция проверки, что Amplitude готов
+  function waitForAmplitude(callback) {
+    if (window.amplitude && amplitude.logEvent) {
+      amplitudeReady = true;
+      callback();
+    } else {
+      setTimeout(() => waitForAmplitude(callback), 100);
+    }
+  }
   
   function trackScreenView(screenId) {
-    if (!window.amplitude || !screenId) return;
+    if (!screenId) return;
     
-    // Извлекаем номер экрана из ID (например "view-1" → 1)
     const screenNum = parseInt(screenId.replace('view-', '')) || 0;
     
-    // Отправляем только если экран изменился
     if (screenId !== lastTrackedScreen) {
       lastTrackedScreen = screenId;
       
-      amplitude.logEvent('funnel_screen_viewed', {
-        screen_id: screenId,
-        screen_number: screenNum,
-        timestamp: new Date().toISOString()
-      });
-      
-      console.log(`Amplitude: ${screenId} (screen ${screenNum})`);
+      // Если Amplitude готов - отправляем сразу
+      if (amplitudeReady && window.amplitude) {
+        amplitude.logEvent('funnel_screen_viewed', {
+          screen_id: screenId,
+          screen_number: screenNum,
+          timestamp: new Date().toISOString(),
+          session_id: amplitude.getSessionId()
+        });
+        
+        console.log(`📡 Amplitude: ${screenId} (screen ${screenNum})`);
+      } else {
+        // Иначе сохраняем в очередь
+        pendingEvents.push({ screenId, screenNum, timestamp: new Date().toISOString() });
+        console.log(`⏳ Queued: ${screenId} (waiting for Amplitude)...`);
+      }
     }
+  }
+  
+  // Функция отправки всех событий из очереди
+  function flushPendingEvents() {
+    if (!window.amplitude) return;
+    
+    console.log(`📤 Flushing ${pendingEvents.length} pending events...`);
+    pendingEvents.forEach(event => {
+      amplitude.logEvent('funnel_screen_viewed', {
+        screen_id: event.screenId,
+        screen_number: event.screenNum,
+        timestamp: event.timestamp,
+        session_id: amplitude.getSessionId(),
+        was_queued: true
+      });
+    });
+    pendingEvents = [];
   }
   
   // Наблюдатель за сменой экранов
@@ -1592,25 +1627,23 @@ document.addEventListener("DOMContentLoaded", () => {
         if (mutation.attributeName === 'class') {
           const activeView = document.querySelector('.view.active');
           if (activeView) {
-            // Небольшая задержка для уверенности, что экран полностью показан
             setTimeout(() => trackScreenView(activeView.id), 100);
           }
         }
       });
     });
     
-    // Наблюдаем за всеми .view элементами
     document.querySelectorAll('.view').forEach(view => {
       observer.observe(view, { attributes: true });
     });
   }
   
-  // Инициализируем трекинг после загрузки DOM
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initScreenTracking);
-  } else {
+  // ЖДЕМ, пока Amplitude будет готов, ТОЛЬКО ПОТОМ запускаем трекинг
+  waitForAmplitude(function() {
+    console.log('✅ Amplitude ready, starting screen tracking...');
     initScreenTracking();
-  }
+    flushPendingEvents(); // Отправляем события, которые накопились в очереди
+  });
 })();
 // ========== END AMPLITUDE TRACKING ==========
 
