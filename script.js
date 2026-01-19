@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // QUIZ_START_INDEX = 3 (View 4). 
     // Последний вопрос = 33 (View 33).
     const quizStart = 3; 
-    const quizEnd = 33;
+    const quizEnd = 32;
     
     // 1. Вычисляем текущий шаг
     let currentStep = currentViewIndex - quizStart;
@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
        // 1. До начала квиза (Экраны 1-3) -> Хедер скрыт совсем
        globalHeader.classList.add("hidden");
     } 
-    else if (currentViewIndex >= 33) {
+    else if (currentViewIndex >= 32) {
        // 2. После квиза (Экраны 34-36) -> 
        // Хедер ВИДЕН (для лого на десктопе), но получает спец. класс
        globalHeader.classList.add("nav-header--final");
@@ -556,30 +556,6 @@ async function startAnalysisScenario() {
     });
     observer34.observe(v34, { attributes: true, attributeFilter: ["class"] });
   }
-   /* =========================================
-     ЛОГИКА ЭКРАНА 35 (EMAIL)
-     Вставьте это в самый конец script.js,
-     перед последней скобкой });
-     ========================================= */
-  const emailInput = document.getElementById("email-input");
-  const emailBtn = document.getElementById("btn-email-next");
-
-  if (emailInput && emailBtn) {
-    // Регулярное выражение для email
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-    // Функция проверки, которую будем вызывать при вводе
-    function validateEmail() {
-      const val = emailInput.value.trim();
-      const isValid = val.length > 0 && emailPattern.test(val);
-
-      // 1. Управляем кнопкой "Continue" внизу (Footer Button)
-      // Если email валидный -> false (активна), иначе -> true (выключена)
-      emailBtn.disabled = !isValid;
-
-      // 2. Обновляем состояние стрелки в хедере
-      checkNavState();
-    }
 
     // Слушаем каждый ввод символа
     emailInput.addEventListener("input", validateEmail);
