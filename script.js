@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // QUIZ_START_INDEX = 3 (View 4). 
     // Последний вопрос = 33 (View 33).
     const quizStart = 3; 
-    const quizEnd = 32;
+    const quizEnd = 33;
     
     // 1. Вычисляем текущий шаг
     let currentStep = currentViewIndex - quizStart;
@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
        // 1. До начала квиза (Экраны 1-3) -> Хедер скрыт совсем
        globalHeader.classList.add("hidden");
     } 
-    else if (currentViewIndex >= 32) {
+    else if (currentViewIndex >= 33) {
        // 2. После квиза (Экраны 34-36) -> 
        // Хедер ВИДЕН (для лого на десктопе), но получает спец. класс
        globalHeader.classList.add("nav-header--final");
@@ -556,6 +556,30 @@ async function startAnalysisScenario() {
     });
     observer34.observe(v34, { attributes: true, attributeFilter: ["class"] });
   }
+   /* =========================================
+     ЛОГИКА ЭКРАНА 35 (EMAIL)
+     Вставьте это в самый конец script.js,
+     перед последней скобкой });
+     ========================================= */
+  const emailInput = document.getElementById("email-input");
+  const emailBtn = document.getElementById("btn-email-next");
+
+  if (emailInput && emailBtn) {
+    // Регулярное выражение для email
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    // Функция проверки, которую будем вызывать при вводе
+    function validateEmail() {
+      const val = emailInput.value.trim();
+      const isValid = val.length > 0 && emailPattern.test(val);
+
+      // 1. Управляем кнопкой "Continue" внизу (Footer Button)
+      // Если email валидный -> false (активна), иначе -> true (выключена)
+      emailBtn.disabled = !isValid;
+
+      // 2. Обновляем состояние стрелки в хедере
+      checkNavState();
+    }
 
     // Слушаем каждый ввод символа
     emailInput.addEventListener("input", validateEmail);
@@ -1575,34 +1599,75 @@ document.addEventListener("DOMContentLoaded", () => {
 // ========== END TRACKING ==========
 
 /* =========================
-   РЕДИРЕКТ НА КЛИЕНТСКУЮ ЧАСТЬ
+   РЕДИРЕКТ НА КЛИЕНТСКУЮ ЧАСТЬ (Экран 37+)
    ========================= */
 
 function redirectToClient() {
-  // Логируем переход в Amplitude
+  // Собираем все данные пользователя для передачи клиенту
+  const userData = {
+    // Основные данные
+    height_cm: window.userHeightCm || 0,
+    weight_kg: window.userWeightKg || 0,
+    target_weight_kg: window.userTargetWeightKg || 0,
+    bmi: window.userBMI || 0,
+    
+    // Рост в нужных единицах
+    height_unit: window.userHeightUnit || 'cm',
+    
+    // Дата (если была выбрана)
+    target_date: window.userTargetDate || '',
+    
+    // Email (с экрана 35)
+    email: document.getElementById('email-input') ? 
+           document.getElementById('email-input').value.trim() : '',
+    
+    // Время прохождения воронки
+    timestamp: new Date().toISOString(),
+    
+    // Идентификатор сессии (если есть)
+    session_id: window.amplitude ? amplitude.getSessionId() : Date.now()
+  };
+
+  // Логируем переход к клиенту в Amplitude
   if (window.amplitude) {
     amplitude.logEvent('funnel_completed_to_client', {
-      screens_completed: 35, // Теперь 35 экранов
-      timestamp: new Date().toISOString(),
-      last_screen: 'view-35'
+      ...userData,
+      screen_number: 36,
+      transition_type: 'redirect'
     });
     
-    // Принудительно отправляем события
+    // Отправляем события немедленно
     amplitude.flush();
   }
+
+  // Сохраняем данные в localStorage (на случай если нужно передать)
+  localStorage.setItem('slimkit_user_data', JSON.stringify(userData));
+
+  // Создаем URL с параметрами
+  const baseUrl = 'https://slimkit.health/walking/survey/';
+  const params = new URLSearchParams({
+    config: 'V3',
+    stripeV64: 'true',
+    // Добавляем данные как параметры (если клиент принимает)
+    height: userData.height_cm,
+    weight: userData.weight_kg,
+    target_weight: userData.target_weight_kg,
+    bmi: userData.bmi,
+    email: userData.email,
+    timestamp: userData.timestamp
+  });
+
+  const redirectUrl = `${baseUrl}?${params.toString()}`;
   
-  console.log('Redirecting to client survey...');
+  console.log('Redirecting to:', redirectUrl);
   
-  // Простой редирект на клиентскую часть
-  const clientUrl = 'https://slimkit.health/walking/survey/?config=V3&stripeV64=true';
-  
-  // Даем время Amplitude отправить события
+  // Редирект с небольшой задержкой, чтобы Amplitude успел отправить
   setTimeout(() => {
-    window.location.href = clientUrl;
+    window.location.href = redirectUrl;
   }, 300);
 }
 
-// Делаем функцию доступной глобально
+// Экспортируем функцию в глобальную область видимости
 window.redirectToClient = redirectToClient;
   
 });
