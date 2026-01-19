@@ -1561,90 +1561,41 @@ document.addEventListener("DOMContentLoaded", () => {
     observer.observe(v29, { attributes: true, attributeFilter: ["class"] });
   }
   
-// ========== AMPLITUDE TRACKING (FUNNEL) - ИСПРАВЛЕННЫЙ ==========
+// ========== AMPLITUDE MINIMAL TRACKING ==========
+// Базовый трекинг переходов между экранами
 (function() {
-  let lastTrackedScreen = '';
-  let amplitudeReady = false;
-  let pendingEvents = []; // Очередь событий, если Amplitude еще не готов
+  let currentScreen = '';
   
-  // Функция проверки, что Amplitude готов
-  function waitForAmplitude(callback) {
-    if (window.amplitude && amplitude.logEvent) {
-      amplitudeReady = true;
-      callback();
-    } else {
-      setTimeout(() => waitForAmplitude(callback), 100);
-    }
-  }
-  
-  function trackScreenView(screenId) {
-    if (!screenId) return;
+  function trackScreen() {
+    const activeView = document.querySelector('.view.active');
+    if (!activeView || !window.amplitude) return;
     
+    const screenId = activeView.id;
+    if (screenId === currentScreen) return;
+    
+    currentScreen = screenId;
     const screenNum = parseInt(screenId.replace('view-', '')) || 0;
     
-    if (screenId !== lastTrackedScreen) {
-      lastTrackedScreen = screenId;
-      
-      // Если Amplitude готов - отправляем сразу
-      if (amplitudeReady && window.amplitude) {
-        amplitude.logEvent('funnel_screen_viewed', {
-          screen_id: screenId,
-          screen_number: screenNum,
-          timestamp: new Date().toISOString(),
-          session_id: amplitude.getSessionId()
-        });
-        
-        console.log(`📡 Amplitude: ${screenId} (screen ${screenNum})`);
-      } else {
-        // Иначе сохраняем в очередь
-        pendingEvents.push({ screenId, screenNum, timestamp: new Date().toISOString() });
-        console.log(`⏳ Queued: ${screenId} (waiting for Amplitude)...`);
-      }
-    }
-  }
-  
-  // Функция отправки всех событий из очереди
-  function flushPendingEvents() {
-    if (!window.amplitude) return;
-    
-    console.log(`📤 Flushing ${pendingEvents.length} pending events...`);
-    pendingEvents.forEach(event => {
-      amplitude.logEvent('funnel_screen_viewed', {
-        screen_id: event.screenId,
-        screen_number: event.screenNum,
-        timestamp: event.timestamp,
-        session_id: amplitude.getSessionId(),
-        was_queued: true
-      });
-    });
-    pendingEvents = [];
-  }
-  
-  // Наблюдатель за сменой экранов
-  function initScreenTracking() {
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') {
-          const activeView = document.querySelector('.view.active');
-          if (activeView) {
-            setTimeout(() => trackScreenView(activeView.id), 100);
-          }
-        }
-      });
+    amplitude.logEvent('funnel_screen_viewed', {
+      screen_id: screenId,
+      screen_number: screenNum,
+      timestamp: new Date().toISOString()
     });
     
-    document.querySelectorAll('.view').forEach(view => {
-      observer.observe(view, { attributes: true });
-    });
+    console.log('Amplitude: screen', screenId);
   }
   
-  // ЖДЕМ, пока Amplitude будет готов, ТОЛЬКО ПОТОМ запускаем трекинг
-  waitForAmplitude(function() {
-    console.log('✅ Amplitude ready, starting screen tracking...');
-    initScreenTracking();
-    flushPendingEvents(); // Отправляем события, которые накопились в очереди
-  });
+  // Проверяем каждые 500мс
+  setInterval(trackScreen, 500);
+  
+  // УБРАТЬ age_selected (комментируем или удаляем)
+  // document.addEventListener('click', function(e) {
+  //   if (e.target.closest('.card-person') && window.amplitude) {
+  //     const ageText = e.target.closest('.card-person').querySelector('.btn--age').textContent.trim();
+  //     amplitude.logEvent('age_selected', { age_range: ageText });
+  //   }
+  // });
 })();
-// ========== END AMPLITUDE TRACKING ==========
+// ========== END TRACKING ==========
 
 });
