@@ -4,6 +4,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Walking Quiz</title>
+  
+  <!-- ========== AMPLITUDE ANALYTICS ========== -->
+  <script async src="https://cdn.amplitude.com/libs/analytics-browser-2.8.0-min.js.gz"></script>
+  <script>
+  // Инициализация Amplitude с ТЕСТОВЫМ ключом
+  window.amplitude = window.amplitude || {_q: [], _iq: {}};
+  
+  function initAmplitude() {
+    const API_KEY = '04189f7b1d7c1190d933e17faa13b3fc';
+    
+    if (typeof amplitude !== 'undefined' && amplitude.init) {
+      amplitude.init(API_KEY, null, {
+        defaultTracking: {
+          pageViews: false,
+          sessions: true
+        }
+      });
+      
+      amplitude.logEvent('app_loaded', {
+        test_mode: true,
+        timestamp: new Date().toISOString()
+      });
+      
+      console.log('Amplitude initialized');
+    } else {
+      setTimeout(initAmplitude, 100);
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAmplitude);
+  } else {
+    initAmplitude();
+  }
+  </script>
+  <!-- ========== END AMPLITUDE ========== -->
+
   <link rel="preload" as="image" href="assets/1.2.webp">
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -512,11 +549,11 @@
         </div>
 
         <h1 class="h3" style="margin-top: 24px;">
-          The Myth of <br> “No Time to Walk”
+          The Myth of <br> "No Time to Walk"
         </h1>
         
         <p class="text-subtitle"> <!-- style="width: 448px; -->
-          Most women think they need hours of free time to lose weight. The truth? Just 15–30 minutes of smart daily walking is all you need to see real changes — without rearranging your entire life. We’ll build your plan around your real schedule, not the other way around.
+          Most women think they need hours of free time to lose weight. The truth? Just 15–30 minutes of smart daily walking is all you need to see real changes — without rearranging your entire life. We'll build your plan around your real schedule, not the other way around.
         </p>
 
       </div>
@@ -566,7 +603,7 @@
   <div class="view" id="view-21">
     <main class="layout-main layout-main--with-header">
       <div class="container-narrow text-center">
-        <h1 class="h2">What’s your daily water intake?</h1>
+        <h1 class="h2">What's your daily water intake?</h1>
         
         <div class="grid-system grid-1">
           
@@ -635,7 +672,7 @@
   <div class="view" id="view-23">
     <main class="layout-main layout-main--with-header">
       <div class="container-wide text-center">
-        <h1 class="h2">What’s been holding you back?</h1>
+        <h1 class="h2">What's been holding you back?</h1>
         
         <div class="grid-system grid-2">
           
@@ -733,7 +770,7 @@
               <div class="review-stars">★★★★★</div>
             </div>
             <p class="text-subtitle" style="text-align: left; margin-top: 8px; margin-bottom: 0;">
-              For a long time I wasn’t able to maintain healthy weight long-term. I’d lose some pounds but then I’d get like a double back. I was not in the best place. Not until I found this app. It’s far more than just a weight loss app, it’s a change in lifestyle.
+              For a long time I wasn't able to maintain healthy weight long-term. I'd lose some pounds but then I'd get like a double back. I was not in the best place. Not until I found this app. It's far more than just a weight loss app, it's a change in lifestyle.
             </p>
           </div>
 
@@ -1255,7 +1292,7 @@
         <button class="btn-modal" data-action="close-popup-1">In the morning</button>
         <button class="btn-modal" data-action="close-popup-1">During the day</button>
         <button class="btn-modal" data-action="close-popup-1">In the evening</button>
-        <button class="btn-modal" data-action="close-popup-1">I’m not sure</button>
+        <button class="btn-modal" data-action="close-popup-1">I'm not sure</button>
       </div>
     </div>
   </div>
@@ -1271,64 +1308,6 @@
       </div>
     </div>
   </div>
-
-<div class="view" id="view-35">
-    <main class="layout-main layout-main--with-header layout-main--centered">
-      <div class="container-narrow">
-        
-        <div class="email-content-card text-center">
-          
-          <h1 class="h2">Your <span class="text-highlight">improve life</span> plan<br> is ready!</h1>
-          <p class="text-subtitle">Enter your email to get started</p>
-
-          <div class="email-container">
-            <input type="email" id="email-input" class="input-email" placeholder="Enter your email">
-          </div>
-
-          <div class="secure-note">
-            <div class="secure-icon-wrap">
-               <img src="assets/35.1.png" alt="Secure" class="secure-img">
-            </div>
-            <p class="text-legal text-legal--left">
-              We don't share your personal information. We will send you email with your personal plan.
-            </p>
-          </div>
-
-        </div>
-
-      </div>
-    </main>
-
-    <footer class="layout-footer">
-      <button id="btn-email-next" class="btn btn--primary" data-trigger="next" disabled>Continue</button>
-    </footer>
-  </div>
-
-
-  <div class="view" id="view-36">
-    <main class="layout-main layout-main--with-header">
-      <div class="container-narrow text-center">
-
-        <h1 class="h2">Do you want to receive emails with <span class="text-highlight">Walking</span> tips and our product updates?</h1>
-        
-        <div class="text-center">
-          <div class="content-image-wrap" style="margin-top: 40px;">
-            <img src="assets/36.1.png" alt="Image" class="content-img" style="max-height: 200px;">
-          </div>
-        </div>
-
-      </div>
-    </main>
-      <footer class="layout-footer">
-        <button class="btn btn--primary" data-trigger="next">Sure, I'm in!</button>
-        <div style="margin-top: 20px;">
-            <a href="#" class="link" onclick="document.querySelector('[data-trigger=next]').click(); return false;">I don't want to receive tips or updates</a>
-        </div>
-      </footer>
-
-  </div>
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="script.js"></script>
