@@ -1,1 +1,1316 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Walking Quiz</title>
+  
+  <!-- ========== AMPLITUDE ANALYTICS ========== -->
+  <script async src="https://cdn.amplitude.com/libs/analytics-browser-2.8.0-min.js.gz"></script>
+  <script>
+  // Инициализация Amplitude с ТЕСТОВЫМ ключом
+  window.amplitude = window.amplitude || {_q: [], _iq: {}};
+  
+  function initAmplitude() {
+    const API_KEY = '04189f7b1d7c1190d933e17faa13b3fc';
+    
+    if (typeof amplitude !== 'undefined' && amplitude.init) {
+      amplitude.init(API_KEY, null, {
+        defaultTracking: {
+          pageViews: false,
+          sessions: true
+        }
+      });
+      
+      amplitude.logEvent('app_loaded', {
+        test_mode: true,
+        timestamp: new Date().toISOString()
+      });
+      
+      console.log('Amplitude initialized');
+    } else {
+      setTimeout(initAmplitude, 100);
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAmplitude);
+  } else {
+    initAmplitude();
+  }
+  </script>
+  <!-- ========== END AMPLITUDE ========== -->
+
+  <link rel="preload" as="image" href="assets/1.2.webp">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header id="global-header" class="nav-header hidden">
+      <img src="assets/slimkit icon.png" alt="Walking Quiz Logo" class="header-logo" />
+
+     <div class="nav-header__content"> 
+       <button class="btn-arrow" data-trigger="back">
+         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+       </button>
+       
+       <div class="step-progress">
+         <div class="step-progress__track">
+           <div class="step-progress__fill" style="width: 0%;"></div>
+         </div>
+         <div class="step-progress__dots">
+           <div class="step-dot"></div>
+           <div class="step-dot"></div>
+           <div class="step-dot"></div>
+           <div class="step-dot"></div>
+           <div class="step-dot"></div>
+         </div>
+       </div>
+
+       <button class="btn-arrow" data-trigger="next">
+         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+       </button>
+     </div>
+  </header>
+
+  <div class="view active view--no-bg" id="view-1">
+    <div class="bg-image" style="background-image: url('assets/1.2.webp');"></div>
+    <main class="layout-main layout-main--centered">
+      <div class="container-narrow text-center">
+        <h1 class="h1" style="color: #fff; font-size: 36px;">Lose Weight Just by Walking</h1>
+        <p class="text-subtitle" style="color: #fff; opacity: 0.9;">Your personalized weight loss plan</p>
+        <div class="loader-wrap"><div id="loading-bar-fill" class="loader-fill"></div></div>
+        <div id="loading-text" class="text-caption" style="color: #fff; margin-top: 8px;">0%</div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-2">
+    <div class="split-layout">
+      <div class="split-layout__top">
+        <h1 class="h2 text-center">Walk to Lose Weight</h1>
+        <p class="text-subtitle text-center" style="margin-bottom: 0;">ACCORDING TO YOUR AGE</p>
+      </div>
+      <div class="split-layout__center">
+        <div class="split-layout__content-wrapper">
+          <div class="grid-system grid-age" style="margin-top: 0;">
+            <div class="card-person" data-trigger="next"><div class="card-person__img-wrap"><img src="assets/2.1.png" class="card-person__img"></div><div class="btn btn--primary btn--age">25–35 &gt;</div></div>
+            <div class="card-person" data-trigger="next"><div class="card-person__img-wrap"><img src="assets/2.2.png" class="card-person__img"></div><div class="btn btn--primary btn--age">36–45 &gt;</div></div>
+            <div class="card-person" data-trigger="next"><div class="card-person__img-wrap"><img src="assets/2.3.png" class="card-person__img"></div><div class="btn btn--primary btn--age">46–55 &gt;</div></div>
+            <div class="card-person" data-trigger="next"><div class="card-person__img-wrap"><img src="assets/2.4.png" class="card-person__img"></div><div class="btn btn--primary btn--age">56+ &gt;</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="split-layout__bottom">
+        <div class="container-narrow">
+          <p class="text-legal">
+             By continuing, you confirm and guarantee that you have read, understood, and agreed to our <a href="#" class="link">Terms of Use</a>, <a href="#" class="link">Privacy Policy</a>, and <a href="#" class="link">Refund Policy</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="view view--gradient" id="view-3">
+    <div class="split-layout">
+      <div class="split-layout__top">
+        <h1 class="h1 text-center">27 million</h1>
+        <p class="text-subtitle text-center" style="margin-bottom: 0;">users have chosen walking</p>
+      </div>
+      <div class="split-layout__center">
+        <div class="split-img-container"><img src="assets/2.png" class="split-img"></div>
+      </div>
+      <div class="split-layout__bottom">
+        <div class="container-narrow">
+           <p class="text-legal" style="margin-bottom: 12px;">By pressing "Continue" I hereby agree to processing of my personal data. Nothing is shared without my permission. <a href="#" class="link">Privacy Policy</a> and <a href="#" class="link">Terms</a> apply.</p>
+        </div>
+        <button class="btn btn--primary" data-trigger="next">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-4">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-wide  text-center">
+        <h1 class="h2">What is your goal?</h1>
+        <p class="text-subtitle">Select multiple goals</p>
+        <div class="grid-system grid-2">
+          <div class="card-checkbox" data-action="toggle"><div class="card-checkbox__check">✓</div><span class="card-checkbox__title">Lose weight</span><img src="assets/4.1.png" class="card-checkbox__img"></div>
+          <div class="card-checkbox" data-action="toggle"><div class="card-checkbox__check">✓</div><span class="card-checkbox__title">Boost heart health</span><img src="assets/4.2.png" class="card-checkbox__img"></div>
+          <div class="card-checkbox" data-action="toggle"><div class="card-checkbox__check">✓</div><span class="card-checkbox__title">Tone up</span><img src="assets/4.3.png" class="card-checkbox__img"></div>
+          <div class="card-checkbox" data-action="toggle"><div class="card-checkbox__check">✓</div><span class="card-checkbox__title">Calm stress</span><img src="assets/4.4.png" class="card-checkbox__img"></div>
+          <div class="card-checkbox" data-action="toggle"><div class="card-checkbox__check">✓</div><span class="card-checkbox__title">Sleep better</span><img src="assets/4.5.png" class="card-checkbox__img"></div>
+        </div>
+      </div>
+    </main>
+    <footer class="layout-footer"><button class="btn btn--primary" data-trigger="next">Next</button></footer>
+  </div>
+
+  <div class="view" id="view-5">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">Without vs With Walking app</h1>
+        <p class="text-subtitle">Walking gives you long-term results through creating a natural process of losing weight adapted to <span class="text-highlight">individual characteristics of your health</span></p>
+        <div class="image-container-card"><img src="assets/5.1.png" class="content-img" alt="Graph"></div>
+        <p class="text-subtitle">Another great benefit is that <span class="text-highlight">you will start feeling better after working out with Walking app for a couple of days</span></p>
+      </div>
+    </main>
+    <footer class="layout-footer" style="padding-bottom: 24px;"><button class="btn btn--primary" data-trigger="next">Next</button></footer>
+  </div>
+
+  <div class="view" id="view-6">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">What’s your body type?</h1>
+        <div class="grid-system grid-1">
+          <div class="card" data-trigger="next"><span class="card__title">Regular</span><img src="assets/6.3.png" class="card__img"></div>
+          <div class="card" data-trigger="next"><span class="card__title">Flabby</span><img src="assets/6.2.png" class="card__img"></div>
+          <div class="card" data-trigger="next"><span class="card__title">Extra</span><img src="assets/6.1.png" class="card__img"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-7">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">What's your target body type?</h1>
+        <div class="grid-system grid-1">
+          <div class="card" data-trigger="next"><span class="card__title">A few pounds lighter</span><img src="assets/7.1.png" class="card__img"></div>
+          <div class="card" data-trigger="next"><span class="card__title">Fit</span><img src="assets/7.2.png" class="card__img"></div>
+          <div class="card" data-trigger="next"><span class="card__title">Shapely</span><img src="assets/7.3.png" class="card__img"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-8">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">Choose your target zones</h1>
+        <div class="zones-layout">
+          <div class="zones-layout__image">
+             <div class="zones-stack">
+               <img src="assets/8.0.png" class="zones-layer visible" style="z-index: 1;">
+               <img src="assets/8.1.png" class="zones-layer" id="img-8-1" style="z-index: 2;">
+               <img src="assets/8.2.png" class="zones-layer" id="img-8-2" style="z-index: 3;">
+               <img src="assets/8.3.png" class="zones-layer" id="img-8-3" style="z-index: 4;">
+               <img src="assets/8.4.png" class="zones-layer" id="img-8-4" style="z-index: 5;">
+               <img src="assets/8.5.png" class="zones-layer" id="img-8-5" style="z-index: 6;">
+               <img src="assets/8.6.png" class="zones-layer" id="img-8-6" style="z-index: 7;">
+               <img src="assets/8.7.png" class="zones-layer" id="img-8-7" style="z-index: 8;">
+             </div>
+          </div>
+          <div class="zones-layout__list">
+            <div class="card-zone" data-action="toggle" data-img="img-8-1"><div class="card-zone__check">✓</div><span class="card-zone__title">Lower back</span></div>
+            <div class="card-zone" data-action="toggle" data-img="img-8-2"><div class="card-zone__check">✓</div><span class="card-zone__title">Belly</span></div>
+            <div class="card-zone" data-action="toggle" data-img="img-8-3"><div class="card-zone__check">✓</div><span class="card-zone__title">Buttocks</span></div>
+            <div class="card-zone" data-action="toggle" data-img="img-8-4"><div class="card-zone__check">✓</div><span class="card-zone__title">Hips</span></div>
+            <div class="card-zone" data-action="toggle" data-img="img-8-5"><div class="card-zone__check">✓</div><span class="card-zone__title">Knees</span></div>
+            <div class="card-zone" data-action="toggle" data-img="img-8-6"><div class="card-zone__check">✓</div><span class="card-zone__title">Calves</span></div>
+            <div class="card-zone" data-action="toggle" data-img="img-8-7"><div class="card-zone__check">✓</div><span class="card-zone__title">Whole body</span></div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="layout-footer"><button class="btn btn--primary" data-trigger="next">Next</button></footer>
+  </div>
+
+  <div class="view" id="view-9">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-wide text-center">
+        <h1 class="h2-wide">When was the last time you felt great about your weight?</h1>
+        
+        <div class="grid-system grid-2">
+          <div class="card" data-trigger="next">
+            <span class="card__title">Within the last year</span>
+            <img src="assets/9.1-circle@2x.png" class="card__img--small">
+          </div>
+          <div class="card" data-trigger="next">
+            <span class="card__title">1-2 years ago</span>
+            <img src="assets/9.2-circle@2x.png" class="card__img--small">
+          </div>
+          <div class="card" data-trigger="next">
+            <span class="card__title">More than 3 years ago</span>
+            <img src="assets/9.3-circle@2x.png" class="card__img--small">
+          </div>
+          <div class="card" data-trigger="next">
+            <span class="card__title">I'm happy with my weight now</span>
+            <img src="assets/9.4-circle@2x.png" class="card__img--small">
+          </div>
+          <div class="card" data-trigger="next">
+            <span class="card__title">I've never really felt great about it</span>
+            <img src="assets/9.5-circle@2x.png" class="card__img--small">
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-10">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">What is your activity level?</h1>
+        
+        <div class="grid-system grid-1">
+          
+          <div class="card" data-trigger="next">
+            <div class="card__text-wrap">
+              <span class="card__title">Beginner</span>
+              <span class="card__subtitle">I'm new to fitness</span>
+            </div>
+            <img src="assets/10.1.svg" class="card__img--small card__img--normal">
+            <img src="assets/10.1-active.svg" class="card__img--small card__img--active">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <div class="card__text-wrap">
+              <span class="card__title">Intermediate</span>
+              <span class="card__subtitle">I work out 2-3 times a week</span>
+            </div>
+            <img src="assets/10.2.svg" class="card__img--small card__img--normal">
+            <img src="assets/10.2-active.svg" class="card__img--small card__img--active">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <div class="card__text-wrap">
+              <span class="card__title">Advanced</span>
+              <span class="card__subtitle">I have regular workouts</span>
+            </div>
+            <img src="assets/10.3.svg" class="card__img--small card__img--normal">
+            <img src="assets/10.3-active.svg" class="card__img--small card__img--active">
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-11">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-wide text-center">
+        <h1 class="h2-wide">What motivates you to exercise?</h1>
+        
+        <div class="grid-system grid-2">
+          
+          <div class="card-checkbox" data-action="toggle">
+            <div class="card-checkbox__check">✓</div>
+            <span class="card-checkbox__title">Lose weight</span>
+            <img src="assets/11.1-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card-checkbox" data-action="toggle">
+            <div class="card-checkbox__check">✓</div>
+            <span class="card-checkbox__title">Boosting immune system</span>
+            <img src="assets/11.2-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card-checkbox" data-action="toggle">
+            <div class="card-checkbox__check">✓</div>
+            <span class="card-checkbox__title">Looking better</span>
+            <img src="assets/11.3-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card-checkbox" data-action="toggle">
+            <div class="card-checkbox__check">✓</div>
+            <span class="card-checkbox__title">Building strength and endurance</span>
+            <img src="assets/11.4-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card-checkbox" data-action="toggle">
+            <div class="card-checkbox__check">✓</div>
+            <span class="card-checkbox__title">Boosting libido</span>
+            <img src="assets/11.5-circle.png" class="card__img--small">
+          </div>
+
+        </div>
+
+      </div>
+      <footer class="layout-footer"><button class="btn btn--primary" data-trigger="next">Continue</button></footer>
+    </main>
+  </div>
+
+  <div class="view" id="view-12">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        
+        <div class="content-image-wrap" style="margin-top: 40px;">
+          <img src="assets/12.1.png" alt="Your body is one of a kind" class="content-img" style="max-height: 200px;">
+        </div>
+
+        <h1 class="h3" style="margin-top: 24px;">
+          Your body is one of a kind
+        </h1>
+        
+        <p class="text-subtitle">
+          Every woman loses weight at her own pace. That’s why we create a walking plan that fits exactly your age, goals, and current shape.
+        </p>
+
+      </div>
+    </main>
+
+    <footer class="layout-footer">
+      <button class="btn btn--primary" data-trigger="next">Continue</button>
+    </footer>
+  </div>
+
+  <div class="view" id="view-13">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">What’s your current walking level?</h1>
+        
+        <div class="grid-system grid-1">
+          
+          <div class="card" data-trigger="next">
+            <div class="card__text-wrap">
+              <span class="card__title">Beginner</span>
+              <span class="card__subtitle">You're absolutely new to walking</span>
+            </div>
+            <img src="assets/13.1-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <div class="card__text-wrap">
+              <span class="card__title">Intermediate</span>
+              <span class="card__subtitle">You walk regularly, can walk 1-2 miles per session</span>
+            </div>
+            <img src="assets/13.2-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <div class="card__text-wrap">
+              <span class="card__title">Advanced</span>
+              <span class="card__subtitle">You can walk 3 or more miles per session</span>
+            </div>
+            <img src="assets/13.3-circle.png" class="card__img--small">
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-14">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">How often would you like to walk?</h1>
+        
+        <div class="grid-system grid-1">
+          
+          <div class="card" data-trigger="next">
+            <span class="card__title">2 times a week</span>
+            <img src="assets/14.1-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">3 times a week</span>
+            <img src="assets/14.2-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">4 times a week</span>
+            <img src="assets/14.3-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">I don’t know</span>
+            <img src="assets/14.4-circle.png" class="card__img--small">
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-15">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">How much time would you like to spend on workouts?</h1>
+        
+        <div class="grid-system grid-1">
+          
+          <div class="card" data-trigger="next">
+            <span class="card__title">Less than 10 min</span>
+            <img src="assets/15.1-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">10-20 min</span>
+            <img src="assets/15.2-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">More than 20 min</span>
+            <img src="assets/15.3-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">Let us decide</span>
+            <img src="assets/15.4-circle.png" class="card__img--small">
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-16">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        
+        <div class="content-image-wrap" style="margin-top: 40px;">
+          <img src="assets/16.1.png" alt="Mayo Clinic Research" class="content-img" style="max-height: 200px;">
+        </div>
+
+        <h1 class="h3" style="margin-top: 24px;">
+          Mayo Clinic Research: <br> Power of Walking
+        </h1>
+        
+        <p class="text-subtitle">
+          A study published in the American Journal of Preventive Medicine showed that women who walked 7,000+ steps daily lost up to 9 kg in 6 months — without changing their diet.
+        </p>
+
+      </div>
+    </main>
+
+    <footer class="layout-footer">
+      <button class="btn btn--primary" data-trigger="next">Continue</button>
+    </footer>
+  </div>
+
+  <div class="view" id="view-17">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">Please, describe your typical day</h1>
+        
+        <div class="grid-system grid-1">
+          
+          <div class="card" data-trigger="next">
+            <span class="card__title">At the office</span>
+            <img src="assets/17.1-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">Daily long walks</span>
+            <img src="assets/17.2-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">Physical work</span>
+            <img src="assets/17.3-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">Mostly at home</span>
+            <img src="assets/17.4-circle.png" class="card__img--small">
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-18">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">How active is your job?</h1>
+        
+        <div class="grid-system grid-1">
+          
+          <div class="card" data-trigger="next">
+            <span class="card__title">Sedentary</span>
+            <img src="assets/18.1-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">Moderately active</span>
+            <img src="assets/18.2-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">Very active</span>
+            <img src="assets/18.3-circle.png" class="card__img--small">
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-19">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        
+        <div class="content-image-wrap" style="margin-top: 40px;">
+          <img src="assets/19.1.png" alt="Myth of No Time" class="content-img" style="max-height: 200px;">
+        </div>
+
+        <h1 class="h3" style="margin-top: 24px;">
+          The Myth of <br> "No Time to Walk"
+        </h1>
+        
+        <p class="text-subtitle"> <!-- style="width: 448px; -->
+          Most women think they need hours of free time to lose weight. The truth? Just 15–30 minutes of smart daily walking is all you need to see real changes — without rearranging your entire life. We'll build your plan around your real schedule, not the other way around.
+        </p>
+
+      </div>
+    </main>
+
+    <footer class="layout-footer">
+      <button class="btn btn--primary" data-trigger="next">Continue</button>
+    </footer>
+  </div>
+
+  <div class="view" id="view-20">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">What is your activity level?</h1>
+        
+        <div class="grid-system grid-1">
+          
+          <div class="card" data-trigger="next">
+            <div class="card__text-wrap">
+              <span class="card__title">Beginner</span>
+              <span class="card__subtitle">I'm new to fitness</span>
+            </div>
+            <img src="assets/20.1-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <div class="card__text-wrap">
+              <span class="card__title">Intermediate</span>
+              <span class="card__subtitle">I work out 2-3 times a week</span>
+            </div>
+            <img src="assets/20.2-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <div class="card__text-wrap">
+              <span class="card__title">Advanced</span>
+              <span class="card__subtitle">I have regular workouts</span>
+            </div>
+            <img src="assets/20.3-circle.png" class="card__img--small">
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-21">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">What's your daily water intake?</h1>
+        
+        <div class="grid-system grid-1">
+          
+          <div class="card" data-trigger="next">
+            <span class="card__title">I only have coffee or&nbsp;tea</span>
+            <img src="assets/21.1-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">About 2 glasses (16&nbsp;oz)</span>
+            <img src="assets/21.2-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">2 to 6 glasses (16–48&nbsp;oz)</span>
+            <img src="assets/21.3-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">More than 6 glasses</span>
+            <img src="assets/21.4-circle.png" class="card__img--small">
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-22">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">Choose your diet type</h1>
+        
+        <div class="grid-system grid-1">
+          <div class="card" data-action="toggle">
+            <span class="card__title">All-food diet</span>
+            <img src="assets/22.1-circle.png" class="card__img--small">
+          </div>
+          
+          <div class="card" data-action="toggle">
+            <span class="card__title">Vegetarian</span>
+            <img src="assets/22.2-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-action="toggle">
+            <span class="card__title">Vegan</span>
+            <img src="assets/22.3-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-action="toggle">
+            <span class="card__title">Keto</span>
+            <img src="assets/22.4-circle.png" class="card__img--small">
+          </div>
+        </div>
+
+        <div class="switch-row">
+          <span class="switch-label">Intermittent fasting</span>
+          <div class="toggle-switch" id="fasting-toggle"></div>
+        </div>
+
+      </div>
+    </main>
+     <footer class="layout-footer"><button class="btn btn--primary" data-trigger="next">Next</button></footer>
+  </div>
+
+  <div class="view" id="view-23">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-wide text-center">
+        <h1 class="h2">What's been holding you back?</h1>
+        
+        <div class="grid-system grid-2">
+          
+          <div class="card-checkbox" data-action="toggle">
+            <div class="card-checkbox__check">✓</div>
+            <span class="card-checkbox__title">I love sweets & desserts</span>
+            <img src="assets/23.1-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card-checkbox" data-action="toggle">
+            <div class="card-checkbox__check">✓</div>
+            <span class="card-checkbox__title">I drink soda</span>
+            <img src="assets/23.2-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card-checkbox" data-action="toggle">
+            <div class="card-checkbox__check">✓</div>
+            <span class="card-checkbox__title">I often eat junk food</span>
+            <img src="assets/23.3-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card-checkbox" data-action="toggle">
+            <div class="card-checkbox__check">✓</div>
+            <span class="card-checkbox__title">I drink alcohol</span>
+            <img src="assets/23.4-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card-checkbox" data-action="toggle">
+            <div class="card-checkbox__check">✓</div>
+            <span class="card-checkbox__title">I eat late at night</span>
+            <img src="assets/23.5-circle.png" class="card__img--small">
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <footer class="layout-footer">
+      <button class="btn btn--primary" data-trigger="next">Continue</button>
+    </footer>
+  </div>
+
+  <div class="view" id="view-24">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">Do you experience any allergies?</h1>
+
+        <p class="text-subtitle">
+          Let us know if you have any of the following allergies, so we can tailor your meal plan to your needs
+        </p>
+
+        <div class="grid-system grid-1">
+          
+          <div class="card" data-trigger="next">
+            <span class="card__title">No, I don't have any allergies</span>
+            <img src="assets/21.1-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">Nuts</span>
+            <img src="assets/21.2-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">Eggs</span>
+            <img src="assets/21.3-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">Seafood</span>
+            <img src="assets/21.4-circle.png" class="card__img--small">
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+<div class="view" id="view-25">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-wide text-center">
+        
+        <h1 class="h2">Get visible results in several weeks</h1>
+        
+        <div class="result-split">
+          
+          <div class="result-animation-wrap">
+            <img src="assets/25.1.png" class="result-base-img" alt="Result">
+            <img src="assets/25.2.png" class="result-moving-figure" alt="">
+          </div>
+
+          <div class="review-block">
+            <div class="review-header-row">
+              <span class="review-name">Lisa: -5.2 kg</span>
+              <div class="review-stars">★★★★★</div>
+            </div>
+            <p class="text-subtitle" style="text-align: left; margin-top: 8px; margin-bottom: 0;">
+              For a long time I wasn't able to maintain healthy weight long-term. I'd lose some pounds but then I'd get like a double back. I was not in the best place. Not until I found this app. It's far more than just a weight loss app, it's a change in lifestyle.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+
+<footer class="layout-footer">
+  <div id="btn-progress-container" class="btn-progress-wrapper">
+    <div class="btn-progress-fill" id="btn-progress-fill"></div>
+    <span class="btn-progress-text" id="btn-progress-text">Progress 0%</span>
+  </div>
+</footer>
+  </div>
+
+<div class="view" id="view-26">
+  <main class="layout-main layout-main--with-header">
+    <div class="container-narrow text-center">
+      
+      <h1 class="h2" style="margin-bottom: 60px;">Your height</h1>
+
+      <div class="units-toggle-wrapper">
+        <button class="toggle-btn" data-unit="ft">FT</button>
+        <button class="toggle-btn active" data-unit="cm">CM</button>
+      </div>
+
+      <div class="height-input-area">
+        
+        <div id="input-cm-group" class="input-group-row">
+          <input type="tel" id="val-cm" class="input-huge" placeholder="0" maxlength="3">
+          <span class="unit-text">cm</span>
+        </div>
+
+        <div id="input-ft-group" class="input-group-row hidden">
+          <div class="input-sub-group">
+            <input type="tel" id="val-ft" class="input-huge input-short" placeholder="0" maxlength="1">
+            <span class="unit-text">ft.</span>
+          </div>
+          <div class="input-sub-group">
+            <input type="tel" id="val-in" class="input-huge input-short" placeholder="0" maxlength="2">
+            <span class="unit-text">in.</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="info-banner" class="info-banner">
+        <div class="icon-and-text">
+          <img src="assets/26.1.png" id="icon-info" style="width: 20px;"> 
+          <img src="assets/26.2.png" id="icon-error" class="hidden" style="width: 20px;">
+          
+          <p class="h4" id="banner-title">Calculating your BMI</p>
+        </div>
+        <p class="info-banner-text" id="banner-desc">Body mass index (BMI) is a metric of body fat percentage commonly used to estimate risk levels of potential health problems.
+        </p>
+      </div>
+
+    </div>
+        <div class="inline-footer">
+          <button id="btn-next" class="btn btn--primary" data-trigger="next" disabled>
+           Done
+          </button>
+        </div>
+  </main>
+</div>
+
+<div class="view" id="view-27">
+  <main class="layout-main layout-main--with-header">
+    <div class="container-narrow text-center">
+      
+      <h1 class="h2" style="margin-bottom: 60px;">Your current weight</h1>
+
+      <div class="units-toggle-wrapper">
+        <button class="toggle-btn" data-unit="lb">LB</button>
+        <button class="toggle-btn active" data-unit="kg">KG</button>
+      </div>
+
+      <div class="height-input-area">
+        
+        <div id="input-weight-kg-group" class="input-group-row">
+          <input type="tel" id="val-weight-kg" class="input-huge" placeholder="0" maxlength="3">
+          <span class="unit-text">kg</span>
+        </div>
+
+        <div id="input-weight-lb-group" class="input-group-row hidden">
+          <input type="tel" id="val-weight-lb" class="input-huge" placeholder="0" maxlength="3">
+          <span class="unit-text">lb</span>
+        </div>
+
+      </div>
+
+      <div id="info-banner-weight" class="info-banner">
+        <div class="icon-and-text">
+          <img src="assets/26.1.png" id="icon-info-weight" style="width: 20px;"> 
+          <img src="assets/26.2.png" id="icon-error-weight" class="hidden" style="width: 20px;">
+          <img src="assets/26.3.png" id="icon-success-weight" class="hidden" style="width: 20px;">
+          
+          <p class="h4" id="banner-title-weight">Enter your weight</p>
+        </div>
+        <p class="info-banner-text" id="banner-desc-weight">
+          We need your weight to calculate your BMI and build a personalized plan.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="inline-footer">
+      <button id="btn-next-weight" class="btn btn--primary" data-trigger="next" disabled>
+        Done
+      </button>
+    </div>
+
+  </main>
+</div>
+
+<div class="view" id="view-28">
+  <main class="layout-main layout-main--with-header">
+    <div class="container-narrow text-center">
+      
+      <h1 class="h2" style="margin-bottom: 60px;">Your goal weight</h1>
+
+      <div class="units-toggle-wrapper">
+        <button class="toggle-btn" data-unit="lb">LB</button>
+        <button class="toggle-btn active" data-unit="kg">KG</button>
+      </div>
+
+      <div class="height-input-area">
+        
+        <div id="input-target-kg-group" class="input-group-row">
+          <input type="tel" id="val-target-kg" class="input-huge" placeholder="0" maxlength="3">
+          <span class="unit-text">kg</span>
+        </div>
+
+        <div id="input-target-lb-group" class="input-group-row hidden">
+          <input type="tel" id="val-target-lb" class="input-huge" placeholder="0" maxlength="3">
+          <span class="unit-text">lb</span>
+        </div>
+
+      </div>
+
+      <div id="info-banner-target" class="info-banner">
+        <div class="icon-and-text">
+          <img src="assets/26.1.png" id="icon-info-target" style="width: 20px;"> 
+          <img src="assets/26.2.png" id="icon-error-target" class="hidden" style="width: 20px;">
+          
+          <p class="h4" id="banner-title-target">Target weight</p>
+        </div>
+        <p class="info-banner-text" id="banner-desc-target">
+          Enter your goal weight to see how much you need to lose.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="inline-footer">
+      <button id="btn-next-target" class="btn btn--primary" data-trigger="next" disabled>
+        Done
+      </button>
+    </div>
+
+  </main>
+</div>
+
+<div class="view" id="view-29">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center" style="width: 500px;">
+        
+        <h1 class="h2" style="margin-bottom: 24px;">Here's your wellness profile</h1>
+
+        <div id="profile-top-card" class="profile-card profile-card--green">
+          
+          <div class="profile-stats-row">
+            <div class="profile-stat">
+              <span class="profile-stat__label">Height</span>
+              <span class="profile-stat__value" id="disp-height">170 см</span>
+            </div>
+            <div class="profile-stat-divider"></div>
+            <div class="profile-stat">
+              <span class="profile-stat__label">Weight</span>
+              <span class="profile-stat__value" id="disp-weight">65 кг</span>
+            </div>
+          </div>
+
+          <div class="profile-bmi-row">
+            <span style="font-weight: 400;">Current BMI </span>
+            <span id="disp-bmi" style="font-weight: 800; margin-left: 1px;">22.49</span>
+          </div>
+
+          <div class="scale-wrapper">
+<div class="scale-numbers-grid">
+    <span class="num-18">18.5</span>
+    <span class="num-25">25.0</span>
+    <span class="num-28">28.0</span>
+    <span class="num-32">32.0</span>
+  </div>
+             <div class="scale-track-img-wrap">
+               <img src="assets/29.1.png" class="scale-track-img">
+               <div id="triangle-gradient" class="scale-triangle"></div>
+             </div>
+             <div class="scale-labels-grid">
+                <span>Low</span>
+                <span>Normal</span>
+                <span>Slightly high</span>
+                <span>High</span>
+                <span>Severely high</span>
+              </div>
+          </div>
+          <div id="profile-message-box" class="profile-message-box">
+             </div>
+
+        </div>
+
+        <div class="profile-gray-card">
+          
+          <h3 id="weight-status-title" class="h4" style="font-weight: 700; margin-bottom: 16px;">
+            Your weight is within the normal range
+          </h3>
+
+          <div class="css-scale-container">
+            <div class="css-scale-track">
+              <div id="seg-1" class="css-scale-seg"></div>
+              <div id="seg-2" class="css-scale-seg"></div>
+              <div id="seg-3" class="css-scale-seg"></div>
+            </div>
+            <div id="triangle-css" class="scale-triangle-css"></div>
+          </div>
+
+          <div class="profile-info-row">
+            <span class="profile-info-label">Normal weight for you</span>
+            <span class="profile-info-val" id="disp-range">53 - 81 kg</span>
+          </div>
+
+          <div id="row-diff" class="profile-info-row hidden">
+            <span class="profile-info-label">Up to normal weight</span>
+            <span class="profile-info-val" id="disp-diff">-5 kg</span>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+
+    <footer class="layout-footer">
+      <button class="btn btn--primary" data-trigger="next">Next</button>
+    </footer>
+  </div>
+
+<div class="view" id="view-30">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-wide text-center">
+        <h1 class="h2-wide">Do you have an important event?</h1>
+        
+        <div class="grid-system grid-2">
+          <div class="card" data-trigger="next">
+            <span class="card__title">Vacation</span>
+            <img src="assets/30.1-circle.png" class="card__img--small">
+          </div>
+          <div class="card" data-trigger="next">
+            <span class="card__title">Wedding</span>
+            <img src="assets/30.2-circle.png" class="card__img--small">
+          </div>
+          <div class="card" data-trigger="next">
+            <span class="card__title">Summer</span>
+            <img src="assets/30.3-circle.png" class="card__img--small">
+          </div>
+          <div class="card" data-trigger="next">
+            <span class="card__title">Family gathering</span>
+            <img src="assets/30.4-circle.png" class="card__img--small">
+          </div>
+          <div class="card" data-trigger="next">
+            <span class="card__title">Birthday party</span>
+            <img src="assets/30.5-circle.png" class="card__img--small">
+          </div>
+          <div class="card" data-trigger="next">
+            <span class="card__title">I don't have a specific occasion</span>
+            <img src="assets/30.6-circle.png" class="card__img--small">
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+ <div class="view" id="view-31">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center">
+        <h1 class="h2">Does any of the following apply to you?</h1>
+
+        <div class="grid-system grid-1">
+          
+          <div class="card" data-trigger="next">
+            <span class="card__title">I have diabetes</span>
+            <img src="assets/31.1-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">I have asthma</span>
+            <img src="assets/31.2-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">I have joint diseases</span>
+            <img src="assets/31.3-circle.png" class="card__img--small">
+          </div>
+
+          <div class="card" data-trigger="next">
+            <span class="card__title">None of the above</span>
+            <img src="assets/31.4-circle.png" class="card__img--small">
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="view" id="view-32">
+    <main class="layout-main layout-main--with-header">
+      <div class="container-narrow text-center" style="display: flex; flex-direction: column; height: 100%; margin-bottom: 80px;">
+        
+        <h1 class="h2">When do you want to see results?</h1>
+
+        <div class="date-selector-wrapper" style="margin-top: 40px;">
+          <div class="date-highlight"></div>
+
+          <div class="date-selector">
+            <div class="swiper swiper-month">
+              <div class="swiper-wrapper" id="wrapper-month"></div>
+            </div>
+            <div class="swiper swiper-day">
+              <div class="swiper-wrapper" id="wrapper-day"></div>
+            </div>
+            <div class="swiper swiper-year">
+              <div class="swiper-wrapper" id="wrapper-year"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="layout-footer">
+      <button class="btn btn--primary" data-trigger="next">Done</button>
+      <div style="margin-top: 20px;">
+           <a href="#" class="link" onclick="document.querySelector('[data-trigger=next]').click(); return false;">Skip this question</a>
+      </div>
+    </footer>
+  </div>
+
+  <div class="view" id="view-33">
+  <main class="layout-main layout-main--with-header">
+    <div class="container-wide">
+      <h1 class="h2-wide text-center" style="margin-bottom: 24px;">The only weight loss program you'll ever need</h1>
+      
+      <div class="summary-flex">
+        <div class="summary-column summary-column--chart">
+          <p class="text-subtitle summary-subtitle" id="summary-subtitle-text" style = "margin-bottom: 10px;">
+            Based on your answers and personal goals, you can reach your goal weight of <span class="text-highlight" id="goal-weight-display">--</span> <span class="text-highlight" style="font-weight: 500;">by following our plan</span>
+          </p>
+          
+          <div class="chart-container">
+
+            <div class="chart-weights">
+              <div class="weight-badge weight-badge--1" id="w-badge-1">--</div>
+              <div class="weight-badge weight-badge--2" id="w-badge-2">--</div>
+              <div class="weight-badge weight-badge--3" id="w-badge-3">--</div>
+              <div class="weight-badge weight-badge--4" id="w-badge-4">--</div>
+            </div>
+
+            <picture>
+              <source srcset="assets/33.0.2.png" media="(max-width: 500px)">
+              <img src="assets/33.0.png" class="chart-img" alt="Weight chart">
+            </picture>
+            
+            <div class="chart-dates">
+              <span id="chart-date-1">--</span>
+              <span id="chart-date-2">--</span>
+              <span id="chart-date-3">--</span>
+              <span id="chart-date-4">--</span>
+            </div>
+          </div>
+        </div>
+        <div class="summary-column summary-column--reviews">
+  
+  <div class="review-card">
+    <div class="review-avatar-card">
+      <div class="avatar-wrapper">
+        <img src="assets/33.1.png" class="review-avatar">
+      </div>
+      <p class="review-names">Joe_88</p>
+    </div>
+
+    <div class="review-content">
+      <div class="review-header">
+        <img src="assets/33.4.png" class="review-stars">
+        <p class="review-rating">4.5 / 5.0</p>
+      </div>
+      <p class="review-text">This app is set up perfectly. It&nbsp;sends reminders to&nbsp;update you on&nbsp;your progress. And you can set your fitness level.</p>
+    </div>
+  </div>
+
+  <div class="review-card">
+    <div class="review-avatar-card">
+      <div class="avatar-wrapper">
+        <img src="assets/33.2.png" class="review-avatar">
+      </div>
+      <p class="review-names">T.Porteous</p>
+    </div>
+
+    <div class="review-content">
+      <div class="review-header">
+        <img src="assets/33.5.png" class="review-stars">
+        <p class="review-rating">5.0 / 5.0</p>
+      </div>
+      <p class="review-text">This app has really helped me&nbsp;lose weight and I&nbsp;feel good about myself now. I&nbsp;use my walking app three times a&nbsp;day. Also walking helps me relax my mind.</p>
+    </div>
+  </div>
+
+  <div class="review-card">
+    <div class="review-avatar-card">
+      <div class="avatar-wrapper">
+        <img src="assets/33.3.png" class="review-avatar">
+      </div>
+      <p class="review-names">Vincent Petroni</p>
+    </div>
+
+    <div class="review-content">
+      <div class="review-header">
+        <img src="assets/33.4.png" class="review-stars">
+        <p class="review-rating">4.5 / 5.0</p>
+      </div>
+      <p class="review-text">I&nbsp;love walking to my&nbsp;favorite music. The app tells me when to&nbsp;speed up&nbsp;and reminds me&nbsp;of&nbsp;my successes.</p>
+    </div>
+  </div>
+
+</div>
+      </div>
+    </div>
+</main>
+  <footer class="layout-footer">
+    <button class="btn btn--primary" data-trigger="next">Next</button>
+  </footer>
+</div>
+
+<div class="view" id="view-34">
+  <main class="layout-main layout-main--centered">
+    <div class="container-narrow text-center" style="max-width: 400px;">
+ 
+      <div class="video-container">
+        <video 
+          id="video-analysis" 
+          width="160" 
+          height="auto" 
+          muted 
+          playsinline 
+          loop
+          style="display: block;">
+          <source src="assets/34.1.mp4" type="video/mp4">
+        </video>
+      </div>
+      <h1 class="h2" style="margin-top: 12px; margin-bottom: 40px;">
+        Picking the right workout routine
+      </h1>
+
+      <div class="timeline-list">
+        <div class="timeline-track">
+           <div class="timeline-line-dotted"></div>
+           <div class="timeline-line-fill" id="timeline-fill"></div>
+        </div>
+
+        <div class="timeline-item completed" id="tl-item-1">
+          <div class="timeline-marker">
+             <div class="marker-circle">
+               <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10" stroke="white" stroke-width="3" fill="none"/></svg>
+             </div>
+          </div>
+          <div class="timeline-text">Analyzing received data</div>
+        </div>
+
+        <div class="timeline-item" id="tl-item-2">
+          <div class="timeline-marker">
+             <div class="marker-circle">
+               <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10" stroke="white" stroke-width="3" fill="none"/></svg>
+             </div>
+             <div class="marker-pulse"></div>
+          </div>
+          <div class="timeline-text">Searching for the perfect plan</div>
+        </div>
+
+        <div class="timeline-item" id="tl-item-3">
+          <div class="timeline-marker">
+             <div class="marker-circle">
+               <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10" stroke="white" stroke-width="3" fill="none"/></svg>
+             </div>
+             <div class="marker-pulse"></div>
+          </div>
+          <div class="timeline-text">Tally up daily calories intake</div>
+        </div>
+
+        <div class="timeline-item" id="tl-item-4">
+          <div class="timeline-marker">
+             <div class="marker-circle">
+               <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10" stroke="white" stroke-width="3" fill="none"/></svg>
+             </div>
+             <div class="marker-pulse"></div>
+          </div>
+          <div class="timeline-text">Calculating needed water intake</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+  <div class="modal-overlay hidden" id="popup-1">
+    <div class="modal-card">
+      <h2 class="h3 text-center" style="font-size: 24px; margin-bottom: 24px;">
+        When do you prefer to do walking exercises?
+      </h2>
+      <div class="modal-btn-group">
+        <button class="btn-modal" data-action="close-popup-1">In the morning</button>
+        <button class="btn-modal" data-action="close-popup-1">During the day</button>
+        <button class="btn-modal" data-action="close-popup-1">In the evening</button>
+        <button class="btn-modal" data-action="close-popup-1">I'm not sure</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="popup-2">
+    <div class="modal-card">
+      <h2 class="h3 text-center" style="font-size: 24px; margin-bottom: 24px;">
+        Are you ready to change your body and lifestyle?
+      </h2>
+      <div class="modal-btn-group">
+        <button class="btn-modal" data-action="close-popup-2">Yes</button>
+        <button class="btn-modal" data-action="close-popup-2">No</button>
+      </div>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
 
