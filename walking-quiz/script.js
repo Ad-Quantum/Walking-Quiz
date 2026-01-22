@@ -1249,7 +1249,7 @@ document.addEventListener("DOMContentLoaded", () => {
    ========================= */
 
 function redirectToClient() {
-  // Собираем данные пользователя (без email, так как его сбор удален)
+  // Собираем данные пользователя
   const userData = {
     height_cm: window.userHeightCm || 0,
     weight_kg: window.userWeightKg || 0,
@@ -1275,19 +1275,8 @@ function redirectToClient() {
   // Сохраняем данные в localStorage
   localStorage.setItem('slimkit_user_data', JSON.stringify(userData));
 
-  // Создаем URL с параметрами
-  const baseUrl = 'https://slimkit.health/walking/survey/';
-  const params = new URLSearchParams({
-    config: 'V3',
-    stripeV64: 'true',
-    height: userData.height_cm,
-    weight: userData.weight_kg,
-    target_weight: userData.target_weight_kg,
-    bmi: userData.bmi,
-    timestamp: userData.timestamp
-  });
-
-  const redirectUrl = `${baseUrl}?${params.toString()}`;
+  // ★★★ НОВЫЙ РЕДИРЕКТ ★★★
+  const redirectUrl = 'https://slimkit.health/walking/survey/?config=V3&stripeV64=true&fbpxls[]=walking6_indoor';
   
   console.log('Redirecting to:', redirectUrl);
   
