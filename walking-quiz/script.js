@@ -4,9 +4,50 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentViewIndex = 0;
   let maxReachedIndex = 0;
   const QUIZ_START_INDEX = 3;
+  const LAST_VIEW_INDEX = 33;
   
-  // ДОБАВИТЬ: Определяем последний экран (теперь это 34)
-  const LAST_VIEW_INDEX = 33; // View-34 имеет index 33 (если view-1 index 0)
+  // ★★★ ДОБАВЛЕНО: Функция для сбора UTM-параметров ★★★
+  function collectUtmParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const utmData = {};
+    
+    const utmKeys = [
+      'utm_source', 'utm_medium', 'utm_campaign', 
+      'utm_term', 'utm_content', 'utm_id', 'gclid', 'fbclid'
+    ];
+    
+    utmKeys.forEach(key => {
+      const value = urlParams.get(key);
+      if (value) {
+        utmData[key] = value;
+      }
+    });
+    
+    // Также собираем другие важные параметры
+    const otherParams = ['source', 'ref', 'referrer', 'click_id', 'ad_id'];
+    otherParams.forEach(key => {
+      const value = urlParams.get(key);
+      if (value) {
+        utmData[key] = value;
+      }
+    });
+    
+    // Сохраняем в localStorage для дальнейшего использования
+    if (Object.keys(utmData).length > 0) {
+      localStorage.setItem('utm_params', JSON.stringify(utmData));
+      
+      // ★★★ ДОБАВЛЕНО: Отправляем в Amplitude при старте ★★★
+      if (window.amplitude) {
+        amplitude.logEvent('utm_params_collected', {
+          ...utmData,
+          page_url: window.location.href,
+          timestamp: new Date().toISOString()
+        });
+      }
+    }
+    
+    return utmData;
+  }
 
   function fixScrollbar() {
     const activeMain = document.querySelector(".view.active .layout-main");
@@ -28,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!bar) return;
 
     const quizStart = 3;
-    const quizEnd = 33; // Теперь квиз заканчивается на экране 33
+    const quizEnd = 33;
     
     let currentStep = currentViewIndex - quizStart;
     if (currentStep < 0) currentStep = 0;
@@ -100,7 +141,6 @@ document.addEventListener("DOMContentLoaded", () => {
        isArrowEnabled = true;
     }
 
-    // ИЗМЕНЕНИЕ: На последнем экране скрываем стрелку
     if (currentViewIndex >= LAST_VIEW_INDEX) {
       isArrowEnabled = false;
     }
@@ -116,12 +156,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ИЗМЕНЕНИЕ: Обновленная логика показа экранов
   function showView(index) {
     if (index < 0 || index >= views.length) return;
 
-    // Если пытаемся перейти на удаленные экраны 35-36 - делаем редирект
-    if (index >= 34) { // Экран 34 имеет index 33, экран 35 был бы index 34
+    if (index >= 34) {
       redirectToClient();
       return;
     }
@@ -151,11 +189,10 @@ document.addEventListener("DOMContentLoaded", () => {
     globalHeader.classList.remove("nav-header--final");
     if (navContent) navContent.classList.remove("hidden");
 
-    // ИЗМЕНЕНИЕ: Логика хедера для нового потока
     if (currentViewIndex < QUIZ_START_INDEX) {
        globalHeader.classList.add("hidden");
     } 
-    else if (currentViewIndex >= 33) { // Экран 34 и далее (хотя далее у нас редирект)
+    else if (currentViewIndex >= 33) {
        globalHeader.classList.add("nav-header--final");
        if (navContent) navContent.classList.add("hidden");
     } 
@@ -237,6 +274,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // ★★★ ДОБАВЛЕНО: Собираем UTM-параметры при загрузке ★★★
+  collectUtmParams();
+
   views.forEach((v, i) => v.classList.toggle("active", i === 0));
   globalHeader.classList.add("hidden");
   if (currentViewIndex === 0) startLoader();
@@ -317,9 +357,6 @@ document.addEventListener("DOMContentLoaded", () => {
     observer33.observe(v33, { attributes: true, attributeFilter: ["class"] });
   }
 
-  /* =========================
-   НОВАЯ ЛОГИКА ЭКРАНА 34 (с редиректом вместо перехода на 35)
-   ========================= */
   async function startAnalysisScenario() {
     const view34 = document.getElementById('view-34');
     const lineFill = document.getElementById('timeline-fill');
@@ -375,7 +412,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     };
 
-    // --- СЦЕНАРИЙ АНИМАЦИИ ---
     await wait(500);
     if (!isActive()) return;
 
@@ -419,11 +455,26 @@ document.addEventListener("DOMContentLoaded", () => {
     
     items[3].classList.add('completed');
 
-    // ИЗМЕНЕНИЕ: Вместо перехода на экран 35 - сразу редирект
+    // ★★★ ОБНОВЛЕНО: Отправляем событие завершения квиза перед редиректом ★★★
+    if (window.amplitude) {
+      const utmParams = JSON.parse(localStorage.getItem('utm_params') || '{}');
+      amplitude.logEvent('quiz_completed_before_redirect', {
+        ...utmParams,
+        screen_number: 34,
+        user_data: {
+          height_cm: window.userHeightCm || 0,
+          weight_kg: window.userWeightKg || 0,
+          target_weight_kg: window.userTargetWeightKg || 0,
+          bmi: window.userBMI || 0
+        },
+        timestamp: new Date().toISOString()
+      });
+      amplitude.flush();
+    }
+
     await wait(500);
     if (!isActive()) return;
     
-    // Активируем редирект после завершения анимации
     redirectToClient();
   }
 
@@ -449,7 +500,37 @@ document.addEventListener("DOMContentLoaded", () => {
     observer34.observe(v34, { attributes: true, attributeFilter: ["class"] });
   }
 
-}); // Конец DOMContentLoaded
+  // ========== AMPLITUDE MINIMAL TRACKING ==========
+  (function() {
+    let currentScreen = '';
+    
+    function trackScreen() {
+      const activeView = document.querySelector('.view.active');
+      if (!activeView || !window.amplitude) return;
+      
+      const screenId = activeView.id;
+      if (screenId === currentScreen) return;
+      
+      currentScreen = screenId;
+      const screenNum = parseInt(screenId.replace('view-', '')) || 0;
+      
+      // ★★★ ДОБАВЛЕНО: UTM-параметры в события Amplitude ★★★
+      const utmParams = JSON.parse(localStorage.getItem('utm_params') || '{}');
+      
+      amplitude.logEvent('funnel_screen_viewed', {
+        screen_id: screenId,
+        screen_number: screenNum,
+        timestamp: new Date().toISOString(),
+        ...utmParams // Добавляем UTM-метки к каждому событию
+      });
+      
+      console.log('Amplitude: screen', screenId, 'with UTM:', utmParams);
+    }
+    
+    setInterval(trackScreen, 500);
+  })();
+
+}); // Конец DOMContentLoaded - ТЕПЕРЬ ПРАВИЛЬНО!
 
 /* --- ФУНКЦИЯ ДЛЯ DATE PICKER (SWIPER) --- */
 function initSwiperDatePicker() {
@@ -1218,34 +1299,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// ========== AMPLITUDE MINIMAL TRACKING ==========
-(function() {
-  let currentScreen = '';
-  
-  function trackScreen() {
-    const activeView = document.querySelector('.view.active');
-    if (!activeView || !window.amplitude) return;
-    
-    const screenId = activeView.id;
-    if (screenId === currentScreen) return;
-    
-    currentScreen = screenId;
-    const screenNum = parseInt(screenId.replace('view-', '')) || 0;
-    
-    amplitude.logEvent('funnel_screen_viewed', {
-      screen_id: screenId,
-      screen_number: screenNum,
-      timestamp: new Date().toISOString()
-    });
-    
-    console.log('Amplitude: screen', screenId);
-  }
-  
-  setInterval(trackScreen, 500);
-})();
-
 /* =========================
-   РЕДИРЕКТ НА КЛИЕНТСКУЮ ЧАСТЬ (после экрана 34)
+   ОБНОВЛЕННАЯ ФУНКЦИЯ РЕДИРЕКТА С UTM-МЕТКАМИ
    ========================= */
 
 function redirectToClient() {
@@ -1261,28 +1316,46 @@ function redirectToClient() {
     session_id: window.amplitude ? amplitude.getSessionId() : Date.now()
   };
 
+  // ★★★ ПОЛУЧАЕМ UTM-ПАРАМЕТРЫ ИЗ LOCALSTORAGE ★★★
+  const utmParams = JSON.parse(localStorage.getItem('utm_params') || '{}');
+  
   // Логируем завершение воронки в Amplitude
   if (window.amplitude) {
     amplitude.logEvent('funnel_completed_to_client', {
       ...userData,
+      ...utmParams, // ★★★ Добавляем UTM в событие завершения ★★★
       screen_number: 34,
-      transition_type: 'redirect'
+      transition_type: 'redirect',
+      has_utm_params: Object.keys(utmParams).length > 0
     });
     
     amplitude.flush();
   }
 
   // Сохраняем данные в localStorage
-  localStorage.setItem('slimkit_user_data', JSON.stringify(userData));
+  localStorage.setItem('slimkit_user_data', JSON.stringify({
+    ...userData,
+    utm_params: utmParams // ★★★ Сохраняем UTM вместе с данными пользователя ★★★
+  }));
 
-  // ★★★ НОВЫЙ РЕДИРЕКТ ★★★
-  const redirectUrl = 'https://slimkit.health/walking/survey/?config=V3&stripeV64=true&fbpxls[]=walking6_indoor';
+  // ★★★ СОЗДАЕМ URL С UTM-МЕТКАМИ ★★★
+  const baseUrl = 'https://slimkit.health/walking/survey/?config=V3&stripeV64=true&fbpxls[]=walking6_indoor';
+  const targetUrl = new URL(baseUrl);
   
-  console.log('Redirecting to:', redirectUrl);
+  // Добавляем UTM-параметры к целевому URL
+  Object.entries(utmParams).forEach(([key, value]) => {
+    targetUrl.searchParams.set(key, value);
+  });
+  
+  // Также добавляем user_id для отслеживания
+  const userId = window.amplitude ? amplitude.getDeviceId() : `user_${Date.now()}`;
+  targetUrl.searchParams.set('user_id', userId);
+  
+  console.log('Redirecting to URL with UTM:', targetUrl.toString());
   
   // Редирект
   setTimeout(() => {
-    window.location.href = redirectUrl;
+    window.location.href = targetUrl.toString();
   }, 300);
 }
 
