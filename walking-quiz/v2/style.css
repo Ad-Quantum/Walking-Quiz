@@ -1,1 +1,1959 @@
 
+/* =========================
+   1. DESIGN TOKENS (АТОМЫ)
+   ========================= */
+:root {
+  --c-primary: #2962ff; --c-primary-hover: #1e40ff; --c-accent: #ffd600;
+  --c-text-main: #111111; --c-text-sub: #7e7e7e; --c-text-light: #6f6f6f;
+  --c-bg-white: #ffffff; --c-bg-surface: #f5f8ff;
+  --bg-gradient-main: linear-gradient(180deg, #f3e9ff 0%, #f7f1ff 20%, #ffffff 70%, #ffffff 100%);
+  --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+  --radius-btn: 999px; --radius-card: 20px;
+  --w-wide: 900px; --w-narrow: 528px;
+  --header-py: 70px; --footer-pb: 100px;
+  --header-height: 90px;
+  --footer-height: 160px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+  font-family: var(--font-main); 
+  background-color: #ffffff; 
+  color: var(--c-text-main); 
+  overflow: hidden; 
+  height: 100vh;  /* Для старых телефонов */
+  height: 100dvh; /* Dynamic Viewport Height: вычитает панели браузера! */
+}
+.hidden { display: none !important; }
+
+/* 2. TYPOGRAPHY */
+.h1 { font-size: 48px; font-weight: 800; color: var(--c-primary); line-height: 1.1; margin-bottom: 8px; }
+.h2 { font-size: 36px; font-weight: 700; line-height: 1.25; margin-bottom: 12px;}
+.h2-wide {font-size: 36px; font-weight: 700; line-height: 1.25; margin: 0 auto 24px; max-width: 500px;}
+.h3 { 
+  font-size: 32px;
+  font-weight: 700; 
+  line-height: 1.25; 
+  margin-bottom: 12px; 
+}
+.h4 { font-size: 14px; font-weight: 500; line-height: 1.25;}
+.text-subtitle { 
+  font-size: 16px; 
+  color: var(--c-text-sub); 
+  font-weight: 400; 
+  margin: 0 auto 24px; 
+  max-width: 450px;
+  white-space: normal; 
+  overflow-wrap: break-word; 
+}
+.text-caption { font-size: 14px; color: var(--c-text-light); }
+.text-legal { font-size: 12px; color: #6f6f6f; line-height: 1.5; width: 100%; margin: 0 auto; text-align: center; white-space: normal; overflow-wrap: break-word; }
+.text-highlight { color: var(--c-primary); font-weight: 700; }
+.text-center { text-align: center; }
+.link { color: var(--c-primary); text-decoration: underline; cursor: pointer; }
+.mt-auto { margin-top: auto; }
+
+/* 3. GLOBAL LAYOUT */
+.view { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; visibility: hidden; pointer-events: none; background: var(--c-bg-white); display: flex; flex-direction: column; z-index: 1; }
+.view.active { opacity: 1; visibility: visible; pointer-events: auto; z-index: 10; }
+.view--gradient { background: var(--bg-gradient-main); }
+.view--no-bg { background: transparent !important; }
+
+.layout-header { flex: 0 0 auto; width: 100%; padding-top: var(--header-py); padding-bottom: 36px; z-index: 50; }
+
+
+.header-logo {
+  position: absolute; /* Извлекаем из потока, чтобы не толкал другие элементы */
+  top: 20px;           /* Позиционируем по вертикали по центру хедера */
+  left: 30px;         /* Фиксированный отступ слева */
+  transform: translateY(-50%); /* Корректировка для точного центрирования по вертикали */
+  height: 25px;       /* Высота подбирается под размер стрелок */
+  width: auto;        /* Ширина авто, чтобы не искажать пропорции */
+  object-fit: contain;
+  z-index: 600;       /* Поверх всего */
+  margin-top: 12px;      
+}
+
+/* NAV-HEADER */
+.nav-header {
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  background: #ffffff;
+  /*box-shadow: 0 10px 10px #ffffff;*/
+
+  display: flex; align-items: center; justify-content: center;
+  max-width: 100%; margin: 0 auto; gap: 20px; 
+  padding: 40px calc(20px + var(--scrollbar-width, 0px)) 10px 20px;
+  z-index: 500;
+
+}
+.nav-header__content { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 20px; width: 100%; 
+  max-width: var(--w-wide); padding: 0 20px; }
+
+  /* БЛОКИРОВКА СТРЕЛКИ */
+.btn-arrow.disabled,
+.btn.disabled {
+  opacity: 0.3 !important;
+  pointer-events: none !important; /* Физически запрещает клик */
+  cursor: default !important;
+}
+
+.layout-main { 
+  position: relative; 
+  z-index: 2; 
+  flex: 1; 
+  overflow-y: auto; 
+  width: 100%; 
+  padding: 0 20px 0px; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  /* Добавляем динамический нижний отступ, равный высоте футера + небольшой запас */
+  padding-bottom: calc(var(--footer-h, 120px) + 20px + env(safe-area-inset-bottom)) !important;
+}
+.layout-main--centered { justify-content: center; padding-bottom: 40px; }
+.layout-main--with-header {
+  /* Высота хедера + ваши 20px зазора */
+  padding-top: calc(var(--header-height) + 20px) !important;
+  /* Высота футера + запас, чтобы контент не прилипал */
+  padding-bottom: calc(var(--footer-height) + 20px) !important;
+}
+.view:not(:has(.layout-footer)) .layout-main {
+  padding-bottom: 40px !important;
+}
+
+.bg-image { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; background-color: #555555;}
+
+.layout-footer { 
+  position: fixed; 
+  bottom: 0; 
+  left: 0; 
+  right: 0; 
+  z-index: 100; 
+  display: flex; 
+  background: #ffffff; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  padding: 20px 20px var(--footer-pb); 
+  /* Добавляем тень */
+  box-shadow: 0 -10px 20px #ffffff;
+  border-top: 1px solid var(--c-bg-surface);
+  
+
+  /* Дополнительно: добавим тонкую линию сверху для четкости границ */
+  /* border-top: 1px solid var(--c-bg-surface); */
+}
+.layout-footer--transparent { background: transparent; pointer-events: none; }
+.layout-footer--transparent > * { pointer-events: auto; }
+.inline-footer { margin-top: 40px; width: 100%; display: flex; justify-content: center; }
+
+/* 4. GRIDS */
+.container-wide { width: 100%; max-width: var(--w-wide); margin: 0 auto; }
+.container-narrow { width: 100%; max-width: var(--w-narrow); margin: 0 auto; }
+.grid-system { display: grid; width: 100%; gap: 8px; } 
+.grid-age { grid-template-columns: repeat(2, auto); justify-content: center; gap: 24px; margin-top: 60px; }
+.grid-2 { grid-template-columns: 1fr; gap: 12px; margin-top: 20px; }
+.grid-1 { grid-template-columns: 1fr; gap: 8px; margin-top: 24px; }
+
+/* 5. COMPONENTS */
+.btn { 
+  border: none; 
+  cursor: pointer; 
+  display: inline-flex; 
+  align-items: center; 
+  justify-content: center; 
+  padding: 14px 40px; 
+  padding-left: 60px;
+  padding-right: 60px;
+  border-radius: var(--radius-btn); 
+  font-size: 18px; 
+  font-weight: 600; 
+  transition: transform 0.1s; }
+.btn:active { transform: scale(0.98); }
+.btn--primary { 
+  background: linear-gradient(90deg, #1e40ff, #437bff); 
+  color: var(--c-accent); 
+  /* box-shadow: 0 10px 24px rgba(0,0,0,0.25); */
+  box-shadow: 0 6px 16px rgba(41, 98, 255, 0.25);
+  width: auto; 
+  min-width: 160px; 
+}
+.btn-arrow { background: transparent; border: none; cursor: pointer; color: var(--c-primary); display: flex; padding: 8px; }
+.btn-arrow svg { width: 28px; height: 28px; }
+
+
+.loader-wrap { width: 300px; max-width: 100%; height: 26px; background: rgba(0,0,0,0.6); border-radius: 999px; padding: 4px; margin: 24px auto 0; position: relative; z-index: 10; }
+.loader-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #0d6efd, #5b3bff); border-radius: 999px; transition: width 0.1s linear; }
+
+/* Step Progress */
+.step-progress { position: relative; width: 100%; max-width: 400px; margin: 0; }
+.step-progress__track { 
+  position: absolute; 
+  top: 50%; 
+  left: 0; 
+  right: 0; 
+  height: 3px; 
+  background: #ebf0f5; 
+  border-radius: 999px; 
+  transform: translateY(-50%); 
+  z-index: 1; 
+  padding-left: 8px;
+  padding-right: 8px;
+
+}
+.step-progress__fill { height: 100%; background: var(--c-primary); width: 0%; transition: width 0.3s ease; }
+.step-progress__dots { position: relative; display: flex; justify-content: space-between; z-index: 2; }
+.step-dot { width: 12px; height: 12px; border-radius: 50%; background: #ebf0f5; border: none; transition: 0.3s; }
+.step-dot.active { background: var(--c-primary); transform: scale(1.1); }
+
+/* Cards */
+.card-person { display: flex; flex-direction: column; align-items: center; cursor: pointer; background: none; border: none; width: 150px; }
+.card-person__img-wrap { width: 150px; height: 150px; border-radius: 50%; border: 3px solid #fff; overflow: hidden; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: relative; z-index: 1; }
+.card-person__img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.btn--age { padding: 8px 24px; font-size: 16px; width: 100%; min-width: auto; margin-top: -20px; position: relative; z-index: 2; }
+
+.card-checkbox { background: var(--c-bg-surface); border-radius: var(--radius-card); border: 2px solid transparent; width: 100%; min-height: 100px; cursor: pointer; transition: 0.2s all; overflow: hidden; display: flex; align-items: center; padding: 0 0 0 20px; gap: 16px; }
+.card-checkbox__check { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #ccc; background: #fff; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 14px; flex-shrink: 0; }
+.card-checkbox__title { font-weight: 700; font-size: 16px; color: var(--c-text-main); flex: 1; text-align: left; }
+.card-checkbox__img { height: 100px; width: auto; object-fit: cover; display: block; margin: 0; }
+.card-checkbox.selected { background: #3f51ff; border-color: #3f51ff; } .card-checkbox.selected .card-checkbox__title { color: #fff; } .card-checkbox.selected .card-checkbox__check { border-color: #fff; color: var(--c-primary); }
+
+.card { background: var(--c-bg-surface); border-radius: var(--radius-card); border: 2px solid transparent; width: 100%; min-height: 100px; cursor: pointer; transition: 0.2s all; overflow: hidden; display: flex; align-items: center; justify-content: space-between; padding: 0 0 0 24px; }
+.card--small { background: var(--c-bg-surface); border-radius: var(--radius-card); border: 2px solid transparent; width: 100%; min-height: 80px; cursor: pointer; transition: 0.2s all; overflow: hidden; display: flex; align-items: center; justify-content: space-between; padding: 0 0 0 24px; }
+.card__title { font-weight: 700; font-size: 16px; color: var(--c-text-main); flex: 1; padding-right: 16px; text-align: left; }
+.card__img { height: 100px; width: auto; object-fit: cover; display: block; margin: 0; }
+.card__img--small { height: 48px !important; width: auto; object-fit: contain !important; margin-right: 24px; display: block; }
+
+.card.selected { background: #3f51ff; border-color: #3f51ff; } .card.selected .card__title { color: #fff; }
+.card--small.selected { background: #3f51ff; border-color: #3f51ff; } .card--small.selected .card__title { color: #fff; }
+
+/* НОВЫЕ СТИЛИ ДЛЯ ЭКРАНА 10 (ПОДЗАГОЛОВКИ И СМЕНА КАРТИНОК) */
+.card__text-wrap { flex: 1; display: flex; flex-direction: column; align-items: flex-start; padding-right: 16px; text-align: left; }
+.card__text-wrap .card__title { padding-right: 0; }
+.card__subtitle { font-size: 14px; color: var(--c-text-sub); font-weight: 400; margin-top: 4px; line-height: 1.4; }
+
+.card .card__img--active { display: none; }
+.card.selected .card__img--normal { display: none; }
+.card.selected .card__img--active { display: block; }
+.card--small .card__img--active { display: none; } /* Подстраховка для малых карт */
+
+.card-zone { background: var(--c-bg-surface); border-radius: 16px; border: 2px solid transparent; cursor: pointer; transition: 0.2s all; padding: 10px 8px; min-height: 50px; width: 100%; display: flex; align-items: center; }
+.card-zone__check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #ccc; background: #fff; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 12px; flex-shrink: 0; }
+.card-zone__title { font-size: 16px; font-weight: 700; color: var(--c-text-main); flex: 1; text-align: center; padding-right: 20px; line-height: 1.2; }
+.card-zone.selected { background: #3f51ff; border-color: #3f51ff; } .card-zone.selected .card-zone__title { color: #fff; } .card-zone.selected .card-zone__check { border-color: #fff; color: var(--c-primary); }
+
+.content-image-wrap { display: flex; justify-content: center; margin: 10px 0; }
+.content-img { max-width: 100%; height: auto; border-radius: 20px; object-fit: contain; }
+.image-container-card { background: var(--c-bg-surface); border-radius: var(--radius-card); width: 100%; padding: 24px; margin: 36px 0; display: flex; justify-content: center; align-items: center; }
+
+/* 6. LAYOUT SPECIFICS (SPLIT) */
+.split-layout { display: flex; flex-direction: column; height: 100%; width: 100%; overflow: hidden; }
+.split-layout__top { flex: 0 0 auto; width: 100%; text-align: center; padding-top: 36px; padding-left: 20px; padding-right: 20px; z-index: 10; }
+.split-layout__center { flex: 1; display: flex; align-items: center; justify-content: center; overflow-y: auto; min-height: 0; padding: 20px; width: 100%; }
+.split-layout__content-wrapper { width: 100%; max-width: 900px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.split-img-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+.split-img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.split-layout__bottom { flex: 0 0 auto; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 36px; padding-left: 20px; padding-right: 20px; padding-top: 10px; background: #fff; z-index: 10; }
+
+#view-2 .split-layout__center { padding-bottom: 120px; }
+
+.sticky-footer { position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border: none; backdrop-filter: none; padding: 20px 20px 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; z-index: 100; border-top: 2px solid #f5f8ff; }
+
+/* Screen 8 */
+.zones-layout { display: grid; grid-template-columns: 0.8fr 1fr; gap: 12px; width: 100%; margin-top: 20px; align-items: stretch; }
+.zones-layout__image { position: relative; width: 100%; height: 300px; min-height: 100%;}
+.zones-stack { position: relative; width: 100%; height: 100%; width: auto;}
+.zones-base, .zones-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; object-position: center top; }
+.zones-layer { opacity: 0; transition: opacity 0.2s; z-index: 2; }
+.zones-layer.visible { opacity: 1; }
+.zones-base { z-index: 1; opacity: 1; }
+.zones-layout__list { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+
+.card.selected .card__subtitle {
+  color: #ffffff !important; /* Используем !important, чтобы точно перебить серый цвет */
+}
+
+/* =========================
+   TOGGLE SWITCH (Для Экрана 22)
+   ========================= */
+
+/* Контейнер для строки с переключателем */
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Разъезжаются по краям */
+  width: 100%;
+  padding: 20px 0; /* Отступы сверху и снизу */
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 10px;
+}
+
+.switch-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--c-text-main);
+}
+
+/* Сам переключатель (iOS style) */
+.toggle-switch {
+  position: relative;
+  width: 50px;
+  height: 30px;
+  background-color: #e0e0e0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Кружок внутри */
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 26px;
+  height: 26px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Активное состояние */
+.toggle-switch.active {
+  background-color: var(--c-primary);
+}
+
+.toggle-switch.active::after {
+  transform: translateX(20px);
+}
+
+
+
+/* =========================
+   DATE PICKER (SWIPER)
+   ========================= */
+.date-selector-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  height: 250px; /* Высота всего барабана */
+  margin: 0 auto 0 auto;
+  /* margin: auto;
+  /*margin-top: 0px;
+  margin-bottom: 0px;*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.date-selector {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+}
+
+/* Синяя рамка выбора */
+.date-highlight {
+  position: absolute;
+  top: 50%;
+  left: 0px;
+  right: 0px;
+  height: 50px; /* Высота строки выбора */
+  margin-top: -36px; /* Ровно половина высоты, чтобы центрировать */
+  border-top: 2px solid #2962ff;
+  border-bottom: 2px solid #2962ff;
+  pointer-events: none;
+  z-index: 10;
+  border-radius: 8px;
+}
+
+/* Экран 34 */
+
+.video-container {
+  display: flex; 
+  justify-content: center; 
+  margin-bottom: -20px;
+}
+
+/* Настройки Swiper */
+.swiper {
+  /* width: 32%; убрали */
+  height: 100%;
+  overflow: hidden;
+  /* Маска для красивого исчезновения сверху и снизу */
+  mask-image: linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%);
+}
+
+/* Индивидуальная ширина колонок */
+.swiper-month {
+  width: 45%; /* Месяцам нужно больше места */
+}
+.swiper-day {
+  width: 20%; /* Дням нужно меньше всего */
+}
+.swiper-year {
+  width: 35%; /* Годам средне */
+}
+
+.swiper-slide {
+  display: flex;       /* Включаем Flexbox */
+  align-items: center; /* Центрируем текст по вертикали */
+  justify-content: center; /* Центрируем текст по горизонтали */
+  font-size: 18px;
+  color: #a0a0a0;
+  height: 50px !important; /* Фиксируем высоту слайда */
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+    /* Гарантируем, что текст не переносится */
+  white-space: nowrap; 
+  overflow: visible;
+}
+
+/* Активный элемент (по центру) */
+.swiper-slide-active {
+  color: #111;
+  font-weight: 700;
+  font-size: 22px;
+  transform: scale(1.1);
+  z-index: 100;
+}
+
+/* =========================
+   ЭКРАН 25: RESULT & REVIEW (DESKTOP FIRST)
+   ========================= */
+
+/* 1. БАЗОВЫЕ СТИЛИ (ДЛЯ ДЕСКТОПА) */
+
+/* Общий контейнер */
+
+.result-split {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  width: 100%;
+  max-width: 900px;
+  margin: 60px auto 0;
+} 
+
+/* Контейнер для фото */
+.result-animation-wrap {
+  position: relative;
+  flex: 1;       /* Гибкость: занимает 1 долю места */
+  width: auto;   /* Ширина автоматическая */
+  max-width: 400px; 
+  aspect-ratio: 4 / 3; /* Пропорции фото */
+  border-radius: 20px;
+  overflow: hidden;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+/* Основное фото */
+.result-base-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Бегающая полоска */
+.result-moving-figure {
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  height: 100%;
+  width: auto;
+  animation: moveRight 5s infinite linear;
+}
+
+@keyframes moveRight {
+  0% { left: -20%; }
+  100% { left: 650%; }
+}
+
+/* Блок отзыва */
+.review-block {
+  flex: 1;       /* Гибкость: занимает 1 долю места */
+  width: auto;
+  max-width: 400px;
+  text-align: left;
+}
+
+.review-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.review-name {
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--c-text-main);
+}
+
+.review-stars {
+  color: #FFD600;
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+/* --- Переключатель (Toggle) --- */
+.units-toggle-wrapper {
+  display: flex;
+  background-color: #F2F2F7; /* Светло-серый фон плашки */
+  border-radius: 50px;        /* Скругление как в iOS */
+  padding: 3px;
+  margin: 0 auto 20px auto;  /* Отступы */
+  max-width: 300px;          /* Ограничим ширину переключателя */
+}
+
+.toggle-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px 0;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #000;
+  transition: all 0.2s ease;
+}
+
+/* Активное состояние (синяя кнопка) */
+.toggle-btn.active {
+  background-color: #485AFF; /* Цвет SlimKit */
+  color: #fff;
+  /* box-shadow: 0 2px 4px rgba(0,0,0,0.15);*/ /* старая тень для кнопки */
+  box-shadow: 0 6px 16px rgba(41, 98, 255, 0.25);
+}
+
+
+
+/* --- ЭКРАН 26 --- */
+
+.h4 { font-size: 14px; font-weight: 500; line-height: 1.25;}
+
+/* --- Поля ввода (Inputs) --- */
+.height-input-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
+}
+
+.input-group-row {
+  display: flex;
+  align-items: baseline; 
+  gap: 10px;
+}
+
+.input-sub-group {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 10px;
+}
+
+/* Скрытый элемент */
+.hidden {
+  display: none !important;
+}
+
+/* Стиль самого инпута (огромные цифры) */
+.input-huge {
+  border: none;
+  border-bottom: 2px solid #E5E5E5; 
+  font-size: 28px;
+  font-weight: 500;
+  text-align: center;
+  width: 100px;
+  padding-bottom: 5px;
+  background: transparent;
+  outline: none;
+  color: #000;
+  border-radius: 0;
+}
+
+.input-huge:focus {
+  border-bottom-color: #485AFF;
+}
+
+/* Для футов поля чуть уже */
+.input-short {
+  width: 60px;
+}
+
+.unit-text {
+  font-size: 20px;
+  font-weight: 600;
+  color: #000;
+}
+
+.info-banner {
+  display: flex;
+  flex-direction: column;
+  background: var(--c-bg-surface); /* Или дефолтный цвет */
+  border-radius: var(--radius-card);
+  width: 340px;
+  height: auto;
+  padding: 20px;
+  margin: auto;
+  margin-top: 20px;
+  gap: 10px;
+  justify-content: start;
+  align-items: start;
+  transition: background-color 0.3s ease; /* Плавный переход цвета */
+}
+
+/* Состояние ОШИБКИ */
+.info-banner.error {
+  background-color: #FFF0F0; /* Розовый фон как на референсе */
+}
+
+.icon-and-text {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  text-align: left;
+  align-items: flex-start;
+}
+
+.info-banner-text {
+  display: flex;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--c-text-sub);
+  width: 100%;
+  text-align: left;
+}
+
+/* Состояние SUCCESS для плашки (Зеленая) */
+.info-banner.success {
+  background-color: #E8F5E9; /* Светло-зеленый фон */
+}
+
+/* Стиль неактивной кнопки (серый), когда стоит атрибут disabled */
+/* Когда disabled уберется через JS, кнопка автоматически станет градиентной (btn--primary) */
+.btn--primary:disabled {
+  background: #E5E5EA; 
+  color: #8E8E93;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =========================
+   ЭКРАН 29: ПРОФИЛЬ
+   ========================= */
+
+/* Карточка Профиля (Верхняя) */
+.profile-card {
+  width: 100%;
+  border-radius: 20px;
+  padding: 0px; /* Равномерный отступ со всех сторон для корректного отображения внутренней плашки */
+  margin-bottom: 16px;
+  transition: background-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden; /* Чтобы скругления карточки обрезали вложенную плашку */
+}
+
+/* Цветовые темы верхней карточки */
+.profile-card--green { background-color: #eafbf0; } /* Зеленый (Ref 1) */
+.profile-card--blue  { background-color: #eaf8ff; } /* Синий (Ref 3) */
+.profile-card--red   { background-color: #fff2f6; } /* Красный (Ref 4) */
+
+/* Блок Рост / Вес */
+.profile-stats-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  margin: 8px 8px 20px 8px; /* Задаем внешние отступы от краев карточки */
+  width: auto; /* Позволяем margin работать корректно */
+  align-self: stretch;
+  height: 60;
+  /* Новые стили для соответствия референсу */
+  background-color: rgba(255, 255, 255, 0.5); /* Полупрозрачный белый для наложения цвета */
+  border-radius: 16px;
+  padding: 16px 0;
+  transition: background-color 0.3s ease;
+}
+
+/* Добавляем специфические цвета для внутренней плашки в зависимости от состояния карточки */
+.profile-card--green .profile-stats-row { background-color: #e1f6e9; }
+.profile-card--blue .profile-stats-row  { background-color: #e0f1fa; }
+.profile-card--red .profile-stats-row   { background-color: #fee5eb; }
+
+.profile-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  gap: 6px;
+}
+
+.profile-stat__label { 
+  font-size: 13px; 
+  font-weight: 400; 
+  color: #868686; 
+  margin-bottom: 4px; 
+}
+
+.profile-stat__value { 
+  font-size: 20px; 
+  font-weight: 700; 
+  color: #111; 
+}
+
+.profile-stat-divider {
+  width: 1px;
+  height: 40px;
+  background-color: rgba(0,0,0,0.1);
+  flex-shrink: 0; /* Чтобы черточка не сжималась */
+}
+
+.profile-bmi-row {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* Шкала с картинкой (Верхняя) */
+.scale-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto 20px;
+}
+
+.scale-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15%; /* Отступы примерно подгоняем под картинку 29.1 */
+  font-size: 10px;
+  color: #888;
+  margin-bottom: 4px;
+}
+/* Немного смещаем лейблы, чтобы попадали под деления картинки */
+.scale-labels span:nth-child(1) { margin-left: 5%; }
+.scale-labels span:nth-child(4) { margin-right: 5%; }
+
+.scale-track-img-wrap {
+  position: relative;
+  width: 100%;
+  height: auto; /* Высота полоски на картинке */
+  margin-bottom: 6px;
+}
+
+.scale-track-img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill; 
+  border-radius: 99px;
+  display: block;
+}
+
+.scale-labels-grid {
+  display: grid;
+  /* Создаем 5 абсолютно равных колонок */
+  grid-template-columns: repeat(5, 1fr);
+  width: 100%;
+  margin-top: 8px;
+  /* Убедитесь, что padding совпадает с отступами вашей картинки, если они есть */
+  box-sizing: border-box;
+}
+
+.scale-labels-grid span {
+  text-align: center;
+  color: #333;
+  
+  /* Динамический размер шрифта:
+     12px — минимальный размер
+     2.5vw — шрифт будет расти вместе с шириной экрана
+     16px — (опционально) максимальный предел, чтобы текст не стал огромным
+  */
+  font-size: clamp(8px, 2.5vw, 10px);
+  
+  /* Гарантируем, что текст не переносится на новую строку и не ломает сетку */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scale-numbers-grid {
+  display: grid;
+  /* Создаем те же 5 колонок, что и для шкалы */
+  grid-template-columns: repeat(5, 1fr);
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.scale-numbers-grid span {
+  font-size: clamp(8px, 2vw, 12px);
+  color: #888;
+  /* Центрируем текст относительно линии, а не ячейки */
+  width: 0; 
+  display: flex;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+/* Позиционируем каждое число на соответствующую вертикальную линию сетки */
+.num-18 { grid-column: 2; } /* Начало 2-й колонки (граница 1 и 2) */
+.num-25 { grid-column: 3; } /* Начало 3-й колонки (граница 2 и 3) */
+.num-28 { grid-column: 4; } /* Начало 4-й колонки (граница 3 и 4) */
+.num-32 { grid-column: 5; } /* Начало 5-й колонки (граница 4 и 5) */
+
+/* Треугольник для градиентной шкалы */
+.scale-triangle {
+  position: absolute;
+  top: 0; 
+  width: 0; 
+  height: 0; 
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid #000; /* Черный треугольник смотрит вниз */
+  transform: translateX(-50%);
+  transition: left 0.5s ease;
+}
+
+/*.scale-legend {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  font-weight: 500;
+  color: #111;
+}*/
+
+/* Плашка сообщения внизу цветной карты */
+.profile-message-box {
+  width: 100%;
+  border-radius: 0px 0px 12px 12px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.3s ease;
+}
+
+/* Цветовые темы для плашки сообщения */
+.profile-message-box--green { background-color: #baffce; }
+.profile-message-box--blue  { background-color: #d1f1ff; }
+.profile-message-box--red   { background-color: #ffdce5; }
+
+/* Нижняя Серая Карточка */
+.profile-gray-card {
+  background-color: #f5f5f5;
+  border-radius: 20px;
+  padding: 24px 20px;
+  width: 100%;
+  padding-left: 60px;
+  padding-right: 60px;
+}
+
+/* Шкала CSS (3 деления) */
+.css-scale-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 24px;
+  padding-top: 12px; /* Место под треугольник, если он будет сверху, но у нас он на шкале */
+}
+
+.css-scale-track {
+  display: flex;
+  height: 12px;
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  gap: 2px; /* Расстояние между сегментами */
+}
+
+.css-scale-seg {
+  flex: 1;
+  background-color: #d5d9e5; /* Серый по умолчанию */
+  transition: background-color 0.3s;
+}
+
+/* Цвета сегментов */
+.css-scale-seg.blue { background-color: #448AFF; } /* Как на реф 3 */
+.css-scale-seg.green { background-color: #9cffbb; } /* Как на реф 1 */
+.css-scale-seg.red { background-color: #FF5252; }   /* Как на реф 4 */
+
+/* Треугольник для CSS шкалы */
+.scale-triangle-css {
+  position: absolute;
+  top: 4px; /* Позиционируем прямо на полоску */
+  width: 0; 
+  height: 0; 
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #000;
+  transform: translateX(-50%);
+  transition: left 0.5s ease;
+  z-index: 5;
+}
+
+.profile-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.profile-info-label {
+  color: #111;
+  font-weight: 500;
+  text-align: left;
+}
+
+.profile-info-val {
+  font-weight: 700;
+  color: #111;
+}
+
+/* ЭКРАН 33 */
+.summary-flex {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.summary-column {
+  flex: 1;
+}
+
+.summary-column--chart {
+  background: #f5f8ff;
+  border-radius: 20px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.summary-subtitle {
+  font-size: 18px;
+  line-height: 1.4;
+  color: #111;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Контейнер графика и плашек */
+.chart-container {
+  display: flex;
+  flex-direction: column; /* Элементы идут друг за другом вертикально */
+  align-items: center;
+  width: 100%;
+  max-width: 450px;
+}
+
+/* Общий контейнер для бейджей, копируем логику дат */
+.chart-weights {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 4px;
+  margin-bottom: 5px; /* Небольшой зазор перед графиком */
+}
+/* Корректировка контейнера дат для симметрии */
+.chart-dates {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 15px;
+  padding: 0 10px;
+  font-size: 12px;
+  color: #7e7e7e;
+  font-weight: 600;
+}
+
+/* Базовый стиль бейджа (убираем старые top/left) */
+.weight-badge {
+  position: relative; /* Позволяет двигать бейдж относительно его места в строке */
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+/* ТОЧНАЯ НАСТРОЙКА НАД ТОЧКАМИ ГРАФИКА
+   Используем top (отрицательный - вверх, положительный - вниз) 
+   и left для горизонтальной подгонки внутри флекс-блока.
+*/
+.weight-badge--1 { 
+  background-color: #485AFF; 
+  top: 0px; /* Смещаем к самой высокой точке */
+  left: -2px; 
+}
+
+.weight-badge--2 { 
+  background-color: #485AFF; 
+  top: 30px; /* Спускаем ниже ко второй точке */
+  left: 0px; 
+}
+
+.weight-badge--3 { 
+  background-color: #00D26A; 
+  top: 65px; /* Еще ниже к третьей точке */
+  left: 2px; 
+}
+
+.weight-badge--4 { 
+  background-color: #00D26A; 
+  top: 65px; /* На уровне с третьей точкой */
+  left: 8px; 
+}
+
+.chart-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  z-index: 1;
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+/* ОТЗЫВЫ */
+/* Контейнер для всех карточек */
+.summary-column--reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 600px; /* Ширина под ваш дизайн */
+  margin: 0 auto;
+}
+
+/* Сама карточка */
+.review-card {
+  background: #ffffff;
+  border-radius: 16px; /* Скругление углов плашки */
+  padding: 13px 10px 10px;
+  display: flex; /* Выстраиваем аватар и контент в ряд */
+  gap: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Мягкая тень плашки */
+  align-items: flex-start;
+}
+
+/* Левая часть (Аватар + Имя) */
+.review-avatar-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.avatar-wrapper {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 1px solid #FFB300; /* Желтый ободок из референса */
+  padding: 3px;
+  margin-bottom: 8px;
+}
+
+.review-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+
+/* Правая часть (Текст отзыва) */
+.review-content {
+  flex: 1;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.review-stars {
+  height: 18px; /* Подгоняем размер картинки со звездами */
+  object-fit: contain;
+}
+
+.review-rating {
+  font-size: 12px;
+  font-weight: 700; /* Жирный рейтинг 4.5 / 5.0 */
+  color: #111;
+  margin: 0;
+}
+
+.review-text {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #111;
+  margin: 0;
+  font-weight: 400;
+}
+.review-names {
+  font-size: 10px;
+  font-weight: 500;
+  font-style: italic; /* Имя Joe_88 под наклоном */
+  color: #111;
+  margin: 0;
+}
+
+/* Состояние disabled для стрелок навигации */
+.btn-arrow.disabled {
+  opacity: 0.2;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* Также убедимся, что кнопки в футере тоже визуально блокируются */
+.btn:disabled {
+  background: #E5E5EA !important; 
+  color: #8E8E93 !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+@media (max-width: 940px) {
+
+  .summary-column .summary-column--chart {
+    height: auto;
+  }
+
+  .chart-container {
+  width: 350px;
+  }
+
+  .chart-img {
+    padding-left: 10px;
+    padding-right: 8px;
+  }
+
+  .weight-badge {
+    /* Уменьшаем шрифт и отступы пропорционально ширине экрана */
+    /* Используем clamp, чтобы размер не становился меньше, чем нужно на 320px */
+    font-size: 10px; 
+    padding: clamp(2px, 1vw, 4px) clamp(6px, 2.5vw, 12px);
+  }
+
+   .chart-dates {
+    font-size: 10px; 
+  }
+
+   .summary-subtitle {
+    font-size: 16px; 
+  }
+
+  .weight-badge--1 { top: 2px; }
+  .weight-badge--2 { top: 30px; }
+  .weight-badge--3 { top: 55px; }
+  .weight-badge--4 { top: 55px; }
+
+  }
+
+/* MEDIA */
+@media (min-width: 768px) {
+  .nav-header { padding-right: calc(20px + var(--scrollbar-width, 0px));}
+  .grid-age { grid-template-columns: repeat(4, auto); gap: 60px; }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .card-person__img-wrap { width: 180px; height: 180px; }
+  .text-h1 { font-size: 40px; }
+  .zones-layout { gap: 40px; }
+  .zones-layout__image { height: auto; }
+  .zones-stack { position: sticky; top: 90px; height: auto; min-height: 400px; }
+}
+
+/* =========================
+   7. MEDIA QUERIES (MOBILE)
+   ========================= */
+@media (max-width: 767px) {
+  :root { 
+    --header-py: 30px;
+    --footer-pb: 20px; 
+    --header-height: 80px; 
+    --footer-height: 140px;
+  }
+  /* В мобильной версии скрываем логотип (как договаривались ранее) */
+  .header-logo {
+    display: none;
+  }
+
+    /* 1. ЭКРАН 32 */
+  /* ... ваши предыдущие стили ... */
+
+  /* 1. Уменьшаем общую высоту контейнера (5 строк * 25px = 125px) */
+  .date-selector-wrapper {
+    width: 90%;
+    height: 200px !important; 
+  }
+
+  /* 2. Настраиваем высоту строк */
+  .swiper-slide {
+    height: 40px !important;     /* Ваша желаемая высота */
+    font-size: 14px !important;  /* Шрифт тоже нужно уменьшить, чтобы влез */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* 3. Активный шрифт чуть крупнее */
+  .swiper-slide-active {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+  }
+
+  /* 4. Настраиваем синюю рамку */
+  .date-highlight {
+    height: 40px !important;        /* Рамка должна быть высотой со строку */
+    margin-top: -20px !important; /* Ровно половина от 25px, чтобы встать по центру */
+    border-radius: 6px;             /* Чуть уменьшим скругление для аккуратности */
+  }
+
+  /* Увеличим активный шрифт, чтобы смотрелось красиво */
+  .swiper-slide-active {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+  }
+
+  /* Типографика */
+  .text-display { font-size: 36px; }
+  .text-h1 { font-size: 26px; }
+  .text-h1-large { font-size: 30px; }
+  
+  /* 2. ВОЗВРАЩАЕМ ПРАВКУ ДЛЯ H2 */
+  .h2 { 
+    font-size: 24px; 
+    font-weight: 700; 
+    line-height: 1.25; 
+    margin-bottom: 12px; 
+  } 
+  .h2-wide { 
+    font-size: 24px; 
+    font-weight: 700; 
+    line-height: 1.25; 
+    margin-bottom: 12px; 
+    margin: auto; 
+    max-width: 350px;
+  } 
+  .h3 {font-size: 24px;}
+  
+  .text-subtitle { font-size: 16px; margin-bottom: 16px; }
+  .card__subtitle { font-size: 12px; color: var(--c-text-sub); font-weight: 400; margin-top: 4px; line-height: 1.4; }
+  
+  /* Карточки */
+  .card-person__img-wrap { width: 120px; height: 120px; }
+  .image-container-card { margin: 22px 0; }
+  .btn--age { font-size: 14px; padding: 6px 12px; margin-top: -15px; }
+  .btn { width: 100%; padding: 14px 20px; }
+  
+  /* Сетки */
+  .grid-age { margin-top: 30px; gap: 16px; }
+  
+  /* Отступы контента */
+  .split-layout__top { 
+    flex: 0 0 auto; 
+    width: 100%; 
+    text-align: center; 
+    padding-top: 40px; 
+    padding-left: 20px; 
+    /*padding-right: 20px; */
+    z-index: 10; 
+  }
+  .layout-main { 
+    /* Теперь это значение управляется через JS переменную --footer-h */
+    /* padding-bottom: calc(var(--footer-h, 120px) + 20px) !important; */
+    padding-bottom: calc(var(--footer-h, 120px) + 20px + env(safe-area-inset-bottom)) !important;
+  }
+  .split-layout__bottom { padding-bottom: 16px; }
+
+  /* --- 1. ВОЗВРАЩАЕМ РАСТЯГИВАНИЕ ПРОГРЕСС-БАРА --- */
+  
+  /* Убираем отступы у самого блока хедера */
+  .nav-header { 
+    padding-top: 40px; 
+    padding-left: 0; 
+    padding-right: 0; 
+  }
+
+  /* Переносим отступы во внутренний контейнер (чтобы совпадало с контентом) */
+  .nav-header__content { 
+    width: 100%; 
+    padding: 0 14px; 
+    box-sizing: border-box; 
+    gap: 5px;
+  }
+
+  .nav-header.nav-header--final {
+    display: none !important;
+  }
+  
+  /* Заставляем бар занимать все свободное место */
+  .step-progress {
+    max-width: none; 
+    flex: 1; 
+    width: auto; 
+    margin: 0 10px; 
+  }
+  
+  /* Точки поменьше для мобильного */
+  .step-dot {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .result-split {
+    flex-direction: column; /* Переключаем в колонку */
+    align-items: center;
+    margin-top: 0;
+    padding-top: 10px;
+    gap: 24px;
+  }
+
+  .result-animation-wrap {
+    width: 100%; /* На мобильном фото во всю ширину */
+    flex: none;  /* Отключаем гибкость flex */
+  }
+
+  .review-block {
+    width: 100%; /* На мобильном текст во всю ширину */
+    flex: none;
+  }
+
+  /* =========================
+   ИСПРАВЛЕННЫЙ ГИБКИЙ АДАПТИВ ЭКРАНА 29
+   ========================= */
+
+  .scale-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto 20px;
+  padding-left: 16px;
+  padding-right: 16px;
+  }
+  /* Перебиваем фиксированную ширину из HTML и CSS */
+  #view-29 .container-narrow {
+    width: 100% !important; 
+    max-width: 100% !important;
+    padding: 0px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Заставляем карточки занимать 100% ширины родителя */
+  .profile-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .profile-gray-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    box-sizing: border-box !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Адаптивные шрифты через clamp */
+  #view-29 .h2 {
+    font-size: clamp(22px, 6vw, 28px) !important;
+  }
+
+  /* Исправляем сетки шкал: теперь они будут сжиматься */
+  .scale-labels-grid, 
+  .scale-numbers-grid {
+    display: grid !important;
+    width: 100% !important;
+    gap: 0 !important;
+  }
+
+  .scale-labels-grid span, 
+  .scale-numbers-grid span {
+    /* Шрифт будет уменьшаться до 8px на очень узких экранах */
+    font-size: clamp(8px, 2.2vw, 11px) !important;
+    white-space: nowrap;
+  }
+
+  /* Внутренняя плашка Рост/Вес */
+  .profile-stats-row {
+    margin: 8px 8px 20px 8px !important;
+    width: auto !important;
+  }
+
+  /* Серая карточка: убираем боковой отступ 60px, который ломал вид */
+  .profile-gray-card {
+    padding: 20px 16px !important;
+  }
+
+  /* Мобильная адаптация */
+  .summary-flex {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .summary-column--chart {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 24px;
+  }
+  
+  .summary-subtitle {
+    margin-bottom: 40px;
+    font-size: 16px;
+    max-width: 350px;
+  }
+
+  .weight-badge {
+    font-size: 12px;
+  }
+
+  .review-card {
+    max-width: 500px;
+  }
+
+  .chart-container {
+  max-width: 400px;
+  }
+
+  .chart-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  z-index: 1;
+  padding-left: 10px;
+  padding-right: 10px;
+  }
+
+
+  /* ЭКРАНЫ 26-28 */
+  /* Убираем лишний воздух под заголовками на экранах ввода */
+  #view-26 .h2, 
+  #view-27 .h2, 
+  #view-28 .h2 {
+    margin-bottom: 20px !important; /* Было 60px в HTML */
+  }
+  .units-toggle-wrapper {
+    margin: 0 auto 0px auto; 
+  }
+
+  /* Чуть приподнимаем кнопку Done */
+  .inline-footer {
+    margin-top: 20px !important;
+    padding-bottom: 20px; /* Доп. воздух снизу */
+  }
+}
+
+/* Адаптация плашек веса для мобильных устройств */
+@media (max-width: 500px) {
+
+  .chart-container {
+  width: 290px;
+}
+
+  .weight-badge {
+    /* Уменьшаем шрифт и отступы пропорционально ширине экрана */
+    /* Используем clamp, чтобы размер не становился меньше, чем нужно на 320px */
+    font-size: 10px; 
+    padding: clamp(2px, 1vw, 4px) clamp(6px, 2.5vw, 12px);
+  }
+
+  .chart-dates {
+    font-size: 10px; 
+  }
+  /* При необходимости корректируем вертикальные отступы (top), 
+     так как на мобильных устройствах график может сжиматься по высоте */
+  .weight-badge--1 { top: 0px; }
+  .weight-badge--2 { top: 20px; }
+  .weight-badge--3 { top: 45px; }
+  .weight-badge--4 { top: 45px; }
+
+  .content-img { height: 150px; width: auto; border-radius: 20px; object-fit: contain; }
+  .content-image-wrap { display: flex; justify-content: center; margin-top: 10px !important; margin-bottom: 0px !important;}
+}
+
+@media (max-width: 330px) {
+
+  .nav-header__content {
+    gap: 2px;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+  .layout-footer {
+    padding-bottom: 25px;
+  }
+  .link {
+    font-size: 14px;
+  }
+
+  .split-layout__center {
+    padding-bottom: auto !important;
+  }
+
+  .card-checkbox__title {
+    font-size: 16px;
+  }
+  .card-zone__title {
+    font-size: 14px;
+  }
+  .card__title {
+    font-size: 16px;
+  }
+  .card-zone {
+    gap: 4px;
+  }
+
+
+  .card {
+    height: 80px !important;
+  }
+  .card-person__img-wrap { width: 95px; height: 95px; }
+  .btn--age { font-size: 12px; padding: 3px 8px; margin-top: -15px; }
+  .btn { width: 100%; padding: 12px 18px; }
+  .card-person{width: 120px;}
+  
+  /* Сетки */
+  /*.grid-age { margin-top: 30px; gap: 16px; width: auto;}*/
+  .grid-system { display: grid; width: auto; gap: 8px; } 
+  .grid-age { grid-template-columns: repeat(2, auto); justify-content: center; gap: 16px; margin-top: 30px; }
+
+  .h2 {font-size: 20px;}
+  .h2-wide {font-size: 20px;}
+  .h3 {font-size: 22px; margin-top: 12px !important;}
+  .text-subtitle {font-size: 14px;}
+  .image-container-card { 
+    border-radius: 12px; 
+    width: 100%; 
+    padding: 12px; 
+    margin: 12px 0; 
+ }
+  .content-img {
+    border-radius: 12px;
+  }
+
+}
+
+/* ЭКРАН АНАЛИЗА */
+.analysis-icon-wrap { position: relative; width: 80px; height: 80px; margin: 0 auto; }
+
+.analysis-spinner {
+  position: absolute; inset: 0;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--c-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+.analysis-logo-small {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30px; height: auto;
+}
+
+.analysis-list { margin-top: 40px; text-align: left; max-width: 320px; margin-left: auto; margin-right: auto; }
+
+.analysis-item {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+  opacity: 0.3; transition: opacity 0.5s ease;
+}
+
+.analysis-item.completed { opacity: 1; }
+
+.check-circle {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid #e0e0e0; display: flex; align-items: center; justify-content: center;
+  color: transparent; transition: all 0.4s ease;
+}
+
+.analysis-item.completed .check-circle {
+  background-color: var(--c-primary); border-color: var(--c-primary); color: #fff;
+}
+
+.check-circle svg { width: 16px; height: 16px; transform: scale(0.5); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+.analysis-item.completed .check-circle svg { transform: scale(1); }
+
+.analysis-text { font-size: 16px; font-weight: 600; color: #111; }
+
+
+/* 2. TIMELINE LIST */
+.timeline-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 40px; /* Расстояние между пунктами */
+  text-align: left;
+  padding-left: 20px; /* Небольшой отступ */
+  max-width: 350px;
+  margin: auto;
+}
+
+/* Линии (трек) */
+.timeline-track {
+  position: absolute;
+  top: 15px; /* Старт от центра первой точки */
+  bottom: 30px; /* Конец у центра последней (примерно) */
+  left: 35px; /* Центрируем по иконке (10px padding + 15px половина ширины иконки) */
+  width: 2px;
+  z-index: 0;
+}
+
+.timeline-line-dotted {
+  width: 100%; 
+  height: 100%;
+  border-left: 2px dotted #E0E0E0; /* Серая пунктирная */
+  position: absolute; 
+  top: 0; 
+  left: 0;
+}
+
+.timeline-line-fill {
+  width: 2px;
+  background-color: var(--c-primary);
+  height: 0%; /* Будем менять через JS */
+  position: absolute; top: 0;
+  transition: height 3.0s linear;
+}
+
+/* Элемент списка */
+.timeline-item {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  opacity: 1; /* Все видны, но цвет разный */
+}
+
+/* Маркер (Круг) */
+.timeline-marker {
+  position: relative;
+  width: 32px; height: 32px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.marker-circle {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 2px solid #E0E0E0; /* Серый бордюр по дефолту */
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.icon-check {
+  width: 16px; height: 16px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Текст */
+.timeline-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #BDBDBD; /* Серый текст по дефолту */
+  transition: color 0.3s;
+}
+
+/* --- СОСТОЯНИЯ --- */
+
+/* Active (Пульсирующий текущий шаг) */
+.timeline-item.active .timeline-text { color: var(--c-text-main); }
+.timeline-item.active .marker-circle {
+  border-color: var(--c-primary);
+  background: #fff;
+}
+
+/* Pulsing Animation Layer */
+.marker-pulse {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 32px; height: 32px;
+  background: rgba(41, 98, 255, 0.4);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 1;
+  opacity: 0;
+}
+
+.timeline-item.pulsing .marker-pulse {
+  animation: pulse-ring 1s infinite;
+}
+.timeline-item.pulsing .marker-circle {
+  border-color: var(--c-primary);
+}
+.timeline-item.pulsing .timeline-text {
+  color: var(--c-text-main);
+}
+
+@keyframes pulse-ring {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+}
+
+/* Completed (Завершенный шаг) */
+.timeline-item.completed .marker-circle {
+  background-color: var(--c-primary);
+  border-color: var(--c-primary);
+}
+.timeline-item.completed .icon-check {
+  opacity: 1;
+  transform: scale(1);
+}
+.timeline-item.completed .timeline-text {
+  color: var(--c-text-main);
+}
+
+
+/* =========================
+   POPUPS / MODALS (Ref 3 & 4)
+   ========================= */
+.modal-overlay {
+  position: fixed; 
+  inset: 0;
+  /* Убрали блюр, оставили только затемнение */
+  background: rgba(0, 0, 0, 0.6); 
+  /* backdrop-filter: blur(4px); <-- УДАЛЕНО */
+  
+  /* Ставим z-index больше, чем у nav-header (500), чтобы перекрыть меню и лого */
+  z-index: 2000; 
+  
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.modal-overlay.visible {
+  opacity: 1; 
+  visibility: visible;
+  pointer-events: auto;
+  z-index: 999;
+}
+
+.modal-card {
+  background: #fff;
+  width: 100%; max-width: 340px;
+  border-radius: 24px;
+  padding: 40px 24px 24px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 1000;
+}
+.modal-overlay.visible .modal-card { transform: scale(1); }
+
+/* Icons inside modals */
+.modal-loader-icon {
+  display: flex; justify-content: center; gap: 8px; margin-bottom: 24px;
+}
+.dot-static { width: 16px; height: 16px; border-radius: 50%; }
+
+.modal-loader-icon-tri {
+  position: relative; width: 40px; height: 36px; margin: 0 auto 24px;
+}
+.dot-tri { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: #D32F2F; }
+
+/* Buttons inside modals */
+.modal-btn-group { display: flex; flex-direction: column; gap: 12px; }
+.btn-modal {
+  background: #F5F5F5;
+  border: none;
+  border-radius: 16px;
+  padding: 16px;
+  font-size: 16px; font-weight: 600; color: #111;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-modal:active { background: #E0E0E0; transform: scale(0.98); }
+
+/* =========================
+   SCREEN 35: EMAIL INPUT STYLES
+   ========================= */
+
+.email-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 20px;
+}
+
+.input-email {
+  width: 100%;
+  height: 60px;
+  border-radius: 12px; /* Скругление как на референсах */
+  padding: 0 24px;
+  font-size: 18px;
+  font-weight: 400;
+  outline: none;
+  font-family: var(--font-main);
+  transition: all 0.2s ease;
+  
+  /* Состояние 3.1: По умолчанию (Ref 3) - Белый фон, синяя рамка */
+  background-color: #ffffff;
+  border: 1px solid var(--c-primary); /* Синий цвет рамки */
+  color: var(--c-text-main);
+}
+
+.input-email::placeholder {
+  color: #9E9E9E; /* Серый плейсхолдер */
+}
+
+/* Состояние 3.2: Фокус, но еще пусто (Ref 4) - Голубой фон */
+.input-email:focus {
+  background-color: #E8F0FE; /* Светло-голубой фон */
+  border-color: var(--c-primary);
+}
+
+/* Состояние 3.3: Введено значение (Ref 5) - Голубой фон сохраняется */
+/* :not(:placeholder-shown) срабатывает, когда в поле есть текст */
+.input-email:not(:placeholder-shown) {
+  background-color: #E8F0FE;
+  border-color: var(--c-primary);
+}
+
+/* Блок с замком */
+.secure-note {
+  display: flex;
+  align-items: flex-start; /* Выравнивание по верху */
+  justify-content: center;
+  gap: 12px;
+  max-width: 380px;
+  margin: 0 auto;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.secure-icon-wrap {
+  flex-shrink: 0;
+  margin-top: 2px; /* Небольшая коррекция, чтобы иконка была ровно с текстом */
+}
+
+.secure-img {
+  width: 16px; /* Размер иконки замка */
+  height: auto;
+  display: block;
+}
+
+/* Модификатор для text-legal, чтобы выровнять текст слева */
+.text-legal--left {
+  text-align: left !important;
+  margin: 0 !important;
+  color: #888888; /* Чуть темнее серого для читаемости */
+  line-height: 1.4;
+}
+
+/* =========================
+   SCREEN 35: DESKTOP CARD
+   ========================= */
+
+/* Базовые стили (Мобильный - Ref 2) */
+.email-content-card {
+  width: 100%;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Настройки только для ДЕСКТОПА (Ref 1) */
+@media (min-width: 768px) {
+  .email-content-card {
+    background-color: var(--c-bg-surface); /* Испольуем глобальный голубой цвет #f5f8ff */
+    border-radius: 24px;
+    padding: 60px 80px; /* Внутренние отступы плашки */
+    margin: 0 auto;
+    
+    /* Центрируем контент внутри */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Немного увеличим ширину контейнера на этом экране, чтобы плашка смотрелась просторнее */
+  #view-35 .container-narrow {
+    max-width: 650px;
+  }
+}
+
+/* =========================
+   PROGRESS BUTTON (Screen 25)
+   ========================= */
+
+.btn-progress-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 320px; /* Ширина обычной кнопки */
+  height: 56px;
+  background-color: #C7D2FE; /* Светло-сиреневый фон трека (как на рефе) */
+  border-radius: 99px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  cursor: default; /* Курсор обычный, пока не заполнится */
+  transition: transform 0.1s ease;
+  user-select: none;
+}
+
+.btn-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 0%; /* Будет меняться через JS */
+  background-color: var(--c-primary); /* Ваш основной синий #2962ff */
+  z-index: 1;
+  /* transition: width 0.1s linear; -> Убираем transition здесь, так как будем анимировать через JS requestAnimationFrame для плавности */
+}
+
+.btn-progress-text {
+  position: relative;
+  z-index: 2; /* Текст поверх заливки */
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--c-accent); /* Желтый #ffd600 */
+}
+
+/* Состояние готовности (когда 100%) */
+.btn-progress-wrapper.ready {
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(41, 98, 255, 0.25);
+}
+
+.btn-progress-wrapper.ready:active {
+  transform: scale(0.98);
+}
+
