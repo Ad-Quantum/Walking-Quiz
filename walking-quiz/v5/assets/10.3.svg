@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_5" data-name="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #4064ef;
+      }
+    </style>
+  </defs>
+  <rect class="cls-1" x="1" y="45.08" width="9.13" height="9.13" rx="1.43" ry="1.43"/>
+  <rect class="cls-1" x="13.22" y="35.75" width="9.13" height="18.45" rx="1.43" ry="1.43"/>
+  <rect class="cls-1" x="25.44" y="25.69" width="9.13" height="28.52" rx="1.43" ry="1.43"/>
+  <rect class="cls-1" x="37.66" y="15.91" width="9.13" height="38.29" rx="1.43" ry="1.43"/>
+  <rect class="cls-1" x="49.87" y="5.8" width="9.13" height="48.41" rx="1.43" ry="1.43"/>
+</svg>
