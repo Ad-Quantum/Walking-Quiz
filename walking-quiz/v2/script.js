@@ -1,3 +1,190 @@
+// ========== ГЛОБАЛЬНЫЕ ФУНКЦИИ ДЛЯ КУКИСОВ (ОПРЕДЕЛЕНЫ ДО ВСЕГО) ==========
+
+// Функции для работы с кукисами
+function setCookie(name, value, days) {
+  let expires = "";
+  if (days) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
+}
+
+function getCookie(name) {
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
+// Функция для проверки, можно ли использовать аналитику
+function canUseAnalytics() {
+  const consent = getCookie('cookie_consent');
+  if (!consent) return false;
+  
+  if (consent === 'accepted') return true;
+  
+  // Проверяем детальные настройки
+  const analyticsConsent = getCookie('cookie_consent_analytics');
+  return analyticsConsent === 'accepted';
+}
+
+// Показ баннера с анимацией
+function showCookieBanner() {
+  const banner = document.getElementById('cookieBanner');
+  if (banner && !getCookie('cookie_consent')) {
+    setTimeout(() => {
+      banner.classList.add('visible');
+    }, 1000);
+  }
+}
+
+// Скрытие баннера
+function hideCookieBanner() {
+  const banner = document.getElementById('cookieBanner');
+  if (banner) {
+    banner.classList.remove('visible');
+  }
+}
+
+// Открытие модального окна
+function openCookieModal() {
+  const modal = document.getElementById('cookieModal');
+  if (modal) {
+    modal.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+// Закрытие модального окна
+function closeCookieModal() {
+  const modal = document.getElementById('cookieModal');
+  if (modal) {
+    modal.classList.remove('visible');
+    document.body.style.overflow = '';
+  }
+}
+
+// Принятие всех cookies
+function acceptAllCookies() {
+  setCookie('cookie_consent', 'accepted', 365);
+  setCookie('cookie_consent_analytics', 'accepted', 365);
+  setCookie('cookie_consent_functional', 'accepted', 365);
+  
+  hideCookieBanner();
+  closeCookieModal();
+  
+  if (window.amplitude && typeof amplitude.logEvent === 'function') {
+    amplitude.logEvent('cookie_consent_accepted', {
+      type: 'all',
+      timestamp: new Date().toISOString()
+    });
+  }
+  
+  console.log('Cookies accepted');
+}
+
+// Сохранение настроек cookies
+function saveCookieSettings() {
+  const analyticsChecked = document.getElementById('analyticsCookies')?.checked || false;
+  const functionalChecked = document.getElementById('functionalCookies')?.checked || false;
+  
+  setCookie('cookie_consent_analytics', analyticsChecked ? 'accepted' : 'rejected', 365);
+  setCookie('cookie_consent_functional', functionalChecked ? 'accepted' : 'rejected', 365);
+  
+  if (analyticsChecked || functionalChecked) {
+    setCookie('cookie_consent', 'accepted', 365);
+  } else {
+    setCookie('cookie_consent', 'rejected', 365);
+  }
+  
+  hideCookieBanner();
+  closeCookieModal();
+  
+  if (window.amplitude && typeof amplitude.logEvent === 'function') {
+    amplitude.logEvent('cookie_consent_saved', {
+      analytics: analyticsChecked,
+      functional: functionalChecked,
+      timestamp: new Date().toISOString()
+    });
+  }
+  
+  console.log('Cookie settings saved');
+}
+
+// Сохраняем информацию о версии и визите
+function saveVersionInfo() {
+  const path = window.location.pathname;
+  let version = 'v1';
+  
+  if (path.includes('/v2/')) version = 'v2';
+  else if (path.includes('/v3/')) version = 'v3';
+  else if (path.includes('/v4/')) version = 'v4';
+  else if (path.includes('/v5/')) version = 'v5';
+  else if (path.includes('/v6/')) version = 'v6';
+  
+  setCookie('walking_quiz_version', version, 30);
+  
+  let visitCount = parseInt(getCookie('walking_quiz_visits') || '0');
+  setCookie('walking_quiz_visits', (visitCount + 1).toString(), 365);
+  
+  if (visitCount === 0) {
+    setCookie('walking_quiz_first_visit', new Date().toISOString(), 365);
+  }
+}
+
+// Инициализация обработчиков событий для cookie-баннера
+function initCookieBanner() {
+  const acceptBtn = document.getElementById('cookieAcceptBtn');
+  const settingsBtn = document.getElementById('cookieSettingsBtn');
+  const privacyLink = document.getElementById('privacyLink');
+  const modalClose = document.getElementById('cookieModalClose');
+  const modalOverlay = document.getElementById('cookieModalOverlay');
+  const saveSettingsBtn = document.getElementById('cookieSaveSettings');
+  const acceptAllBtn = document.getElementById('cookieAcceptAll');
+  
+  if (acceptBtn) {
+    acceptBtn.addEventListener('click', acceptAllCookies);
+  }
+  
+  if (settingsBtn) {
+    settingsBtn.addEventListener('click', openCookieModal);
+  }
+  
+  if (privacyLink) {
+    privacyLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.open('#', '_blank'); // Замените на реальную ссылку
+    });
+  }
+  
+  if (modalClose) {
+    modalClose.addEventListener('click', closeCookieModal);
+  }
+  
+  if (modalOverlay) {
+    modalOverlay.addEventListener('click', closeCookieModal);
+  }
+  
+  if (saveSettingsBtn) {
+    saveSettingsBtn.addEventListener('click', saveCookieSettings);
+  }
+  
+  if (acceptAllBtn) {
+    acceptAllBtn.addEventListener('click', acceptAllCookies);
+  }
+  
+  // Показываем баннер после небольшой задержки
+  showCookieBanner();
+}
+
+// ========== ОСНОВНАЯ ЛОГИКА ВОРОНКИ ==========
+
 document.addEventListener("DOMContentLoaded", () => {
   const views = Array.from(document.querySelectorAll(".view"));
   const globalHeader = document.getElementById("global-header");
@@ -6,197 +193,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const QUIZ_START_INDEX = 3;
   const LAST_VIEW_INDEX = 33;
   
-  // ========== НОВЫЕ ФУНКЦИИ ДЛЯ КУКИСОВ (СИНЯЯ ПЛАШКА СНИЗУ) ==========
-  
-  // Функции для работы с кукисами
-  function setCookie(name, value, days) {
-    let expires = "";
-    if (days) {
-      const date = new Date();
-      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-      expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
-  }
-
-  function getCookie(name) {
-    const nameEQ = name + "=";
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-  }
-
-  // Функция для проверки, можно ли использовать аналитику
-  function canUseAnalytics() {
-    const consent = getCookie('cookie_consent');
-    if (!consent) return false;
-    
-    if (consent === 'accepted') return true;
-    
-    // Проверяем детальные настройки
-    const analyticsConsent = getCookie('cookie_consent_analytics');
-    return analyticsConsent === 'accepted';
-  }
-
-  // Показ баннера с анимацией
-  function showCookieBanner() {
-    const banner = document.getElementById('cookieBanner');
-    if (banner && !getCookie('cookie_consent')) {
-      setTimeout(() => {
-        banner.classList.add('visible');
-      }, 1000);
-    }
-  }
-
-  // Скрытие баннера
-  function hideCookieBanner() {
-    const banner = document.getElementById('cookieBanner');
-    if (banner) {
-      banner.classList.remove('visible');
-    }
-  }
-
-  // Открытие модального окна
-  function openCookieModal() {
-    const modal = document.getElementById('cookieModal');
-    if (modal) {
-      modal.classList.add('visible');
-      document.body.style.overflow = 'hidden';
-    }
-  }
-
-  // Закрытие модального окна
-  function closeCookieModal() {
-    const modal = document.getElementById('cookieModal');
-    if (modal) {
-      modal.classList.remove('visible');
-      document.body.style.overflow = '';
-    }
-  }
-
-  // Принятие всех cookies
-  function acceptAllCookies() {
-    setCookie('cookie_consent', 'accepted', 365);
-    setCookie('cookie_consent_analytics', 'accepted', 365);
-    setCookie('cookie_consent_functional', 'accepted', 365);
-    
-    hideCookieBanner();
-    closeCookieModal();
-    
-    if (window.amplitude && typeof amplitude.logEvent === 'function') {
-      amplitude.logEvent('cookie_consent_accepted', {
-        type: 'all',
-        timestamp: new Date().toISOString()
-      });
-    }
-    
-    console.log('Cookies accepted');
-  }
-
-  // Сохранение настроек cookies
-  function saveCookieSettings() {
-    const analyticsChecked = document.getElementById('analyticsCookies')?.checked || false;
-    const functionalChecked = document.getElementById('functionalCookies')?.checked || false;
-    
-    setCookie('cookie_consent_analytics', analyticsChecked ? 'accepted' : 'rejected', 365);
-    setCookie('cookie_consent_functional', functionalChecked ? 'accepted' : 'rejected', 365);
-    
-    if (analyticsChecked || functionalChecked) {
-      setCookie('cookie_consent', 'accepted', 365);
-    } else {
-      setCookie('cookie_consent', 'rejected', 365);
-    }
-    
-    hideCookieBanner();
-    closeCookieModal();
-    
-    if (window.amplitude && typeof amplitude.logEvent === 'function') {
-      amplitude.logEvent('cookie_consent_saved', {
-        analytics: analyticsChecked,
-        functional: functionalChecked,
-        timestamp: new Date().toISOString()
-      });
-    }
-    
-    console.log('Cookie settings saved');
-  }
-
-  // Инициализация обработчиков событий для cookie-баннера
-  function initCookieBanner() {
-    const acceptBtn = document.getElementById('cookieAcceptBtn');
-    const settingsBtn = document.getElementById('cookieSettingsBtn');
-    const privacyLink = document.getElementById('privacyLink');
-    const modalClose = document.getElementById('cookieModalClose');
-    const modalOverlay = document.getElementById('cookieModalOverlay');
-    const saveSettingsBtn = document.getElementById('cookieSaveSettings');
-    const acceptAllBtn = document.getElementById('cookieAcceptAll');
-    
-    if (acceptBtn) {
-      acceptBtn.addEventListener('click', acceptAllCookies);
-    }
-    
-    if (settingsBtn) {
-      settingsBtn.addEventListener('click', openCookieModal);
-    }
-    
-    if (privacyLink) {
-      privacyLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.open('#', '_blank'); // Замените на реальную ссылку
-      });
-    }
-    
-    if (modalClose) {
-      modalClose.addEventListener('click', closeCookieModal);
-    }
-    
-    if (modalOverlay) {
-      modalOverlay.addEventListener('click', closeCookieModal);
-    }
-    
-    if (saveSettingsBtn) {
-      saveSettingsBtn.addEventListener('click', saveCookieSettings);
-    }
-    
-    if (acceptAllBtn) {
-      acceptAllBtn.addEventListener('click', acceptAllCookies);
-    }
-    
-    showCookieBanner();
-  }
-
-  // Сохраняем информацию о версии и визите
-  function saveVersionInfo() {
-    const path = window.location.pathname;
-    let version = 'v1';
-    
-    if (path.includes('/v2/')) version = 'v2';
-    else if (path.includes('/v3/')) version = 'v3';
-    else if (path.includes('/v4/')) version = 'v4';
-    else if (path.includes('/v5/')) version = 'v5';
-    else if (path.includes('/v6/')) version = 'v6';
-    
-    setCookie('walking_quiz_version', version, 30);
-    
-    let visitCount = parseInt(getCookie('walking_quiz_visits') || '0');
-    setCookie('walking_quiz_visits', (visitCount + 1).toString(), 365);
-    
-    if (visitCount === 0) {
-      setCookie('walking_quiz_first_visit', new Date().toISOString(), 365);
-    }
-  }
-  
-  // Показываем баннер при загрузке
-  setTimeout(() => {
-    saveVersionInfo();
-    initCookieBanner();
-  }, 1000);
-  
-  // ========== КОНЕЦ ФУНКЦИЙ ДЛЯ КУКИСОВ ==========
+  // Инициализируем cookie-баннер
+  saveVersionInfo();
+  initCookieBanner();
   
   // Функция для сбора UTM-параметров - теперь вызывается ПОСЛЕ инициализации Amplitude
   function collectUtmParams() {
@@ -701,7 +700,9 @@ document.addEventListener("DOMContentLoaded", () => {
         cookie_consent: getCookie('cookie_consent'),
         timestamp: new Date().toISOString()
       });
-      amplitude.flush();
+      
+      // Даем время на отправку
+      await wait(300);
     }
 
     await wait(500);
@@ -1542,7 +1543,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* =========================
-   ОБНОВЛЕННАЯ ФУНКЦИЯ РЕДИРЕКТА С UTM-МЕТКАМИ И COOKIES
+   ИСПРАВЛЕННАЯ ФУНКЦИЯ РЕДИРЕКТА (ТЕПЕРЬ РАБОТАЕТ С ГЛОБАЛЬНЫМИ ФУНКЦИЯМИ)
    ========================= */
 
 function redirectToClient() {
@@ -1572,7 +1573,10 @@ function redirectToClient() {
       has_utm_params: Object.keys(utmParams).length > 0
     });
     
-    amplitude.flush();
+    // Даем время на отправку
+    setTimeout(() => {
+      amplitude.flush();
+    }, 100);
   }
 
   // Сохраняем данные в localStorage
