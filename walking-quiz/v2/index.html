@@ -1312,16 +1312,91 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="script.js"></script>
 
-<!-- Инициализация OneTrust-подобной системы кукисов -->
-<script>
-  // Функция для принудительного показа баннера при первой загрузке
-  (function() {
-    // Проверяем, есть ли уже согласие
-    if (!document.cookie.includes('cookie_consent')) {
-      // Баннер появится автоматически через 1 секунду после загрузки страницы
-      console.log('Cookie consent banner will be shown');
-    }
-  })();
-</script>
+<!-- Cookie Banner - Синяя плашка снизу -->
+<div id="cookieBanner" class="cookie-banner">
+  <div class="cookie-banner__container">
+    <div class="cookie-banner__content">
+      <div class="cookie-banner__header">
+        <svg class="cookie-banner__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" />
+          <path d="M8.5 8.5v.01" />
+          <path d="M16 15.5v.01" />
+          <path d="M12 12v.01" />
+        </svg>
+        <span class="cookie-banner__title">🍪 Cookie Consent</span>
+      </div>
+      <p class="cookie-banner__text">
+        We use cookies to enhance your experience, analyze traffic, and personalize content. 
+        By clicking "Accept All", you consent to our use of cookies. 
+        <a href="#" class="cookie-banner__link" id="privacyLink">Privacy Policy</a>
+      </p>
+    </div>
+    <div class="cookie-banner__actions">
+      <button class="cookie-banner__btn cookie-banner__btn--settings" id="cookieSettingsBtn">
+        Cookie Settings
+      </button>
+      <button class="cookie-banner__btn cookie-banner__btn--accept" id="cookieAcceptBtn">
+        Accept All
+      </button>
+    </div>
+  </div>
+</div>
+<!-- Cookie Settings Modal -->
+<div id="cookieModal" class="cookie-modal">
+  <div class="cookie-modal__overlay" id="cookieModalOverlay"></div>
+  <div class="cookie-modal__container">
+    <div class="cookie-modal__header">
+      <h3 class="cookie-modal__title">Cookie Settings</h3>
+      <button class="cookie-modal__close" id="cookieModalClose">✕</button>
+    </div>
+    <div class="cookie-modal__content">
+      <p class="cookie-modal__text">
+        Customize your cookie preferences. Strictly necessary cookies are always enabled 
+        as they are essential for the website to function properly.
+      </p>
+      
+      <div class="cookie-option">
+        <div class="cookie-option__header">
+          <span class="cookie-option__title">Strictly Necessary</span>
+          <label class="cookie-switch">
+            <input type="checkbox" checked disabled>
+            <span class="cookie-switch__slider"></span>
+          </label>
+        </div>
+        <p class="cookie-option__desc">These cookies are essential for the website to function and cannot be disabled.</p>
+      </div>
+      
+      <div class="cookie-option">
+        <div class="cookie-option__header">
+          <span class="cookie-option__title">Analytics & Performance</span>
+          <label class="cookie-switch">
+            <input type="checkbox" id="analyticsCookies" checked>
+            <span class="cookie-switch__slider"></span>
+          </label>
+        </div>
+        <p class="cookie-option__desc">Help us understand how visitors interact with our website to improve performance.</p>
+      </div>
+      
+      <div class="cookie-option">
+        <div class="cookie-option__header">
+          <span class="cookie-option__title">Functional Cookies</span>
+          <label class="cookie-switch">
+            <input type="checkbox" id="functionalCookies" checked>
+            <span class="cookie-switch__slider"></span>
+          </label>
+        </div>
+        <p class="cookie-option__desc">Enable personalized features and remember your preferences.</p>
+      </div>
+    </div>
+    <div class="cookie-modal__footer">
+      <button class="cookie-modal__btn cookie-modal__btn--secondary" id="cookieSaveSettings">
+        Save Settings
+      </button>
+      <button class="cookie-modal__btn cookie-modal__btn--primary" id="cookieAcceptAll">
+        Accept All
+      </button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
