@@ -1957,101 +1957,124 @@ body {
   transform: scale(0.98);
 }
 
-/* ========== ONETRUST-ПОДОБНЫЙ БАННЕР КУКИСОВ ========== */
-.onetrust-banner {
+/* ========== COOKIE BANNER - СИНЯЯ ПЛАШКА СНИЗУ ========== */
+.cookie-banner {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
-  max-width: 450px;
-  width: calc(100% - 40px);
+  bottom: 0;
+  left: 0;
+  right: 0;
   background: white;
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-  z-index: 9999;
+  box-shadow: 0 -4px 20px rgba(41, 98, 255, 0.15);
+  z-index: 10000;
   font-family: 'Inter', sans-serif;
-  animation: slideIn 0.3s ease-out;
-  border-left: 4px solid #4CAF50;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border-top: 3px solid var(--c-primary);
 }
 
-@keyframes slideIn {
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+.cookie-banner.visible {
+  transform: translateY(0);
 }
 
-.onetrust-banner__container {
-  padding: 20px;
+.cookie-banner__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
 }
 
-.onetrust-banner__header {
-  margin-bottom: 12px;
+.cookie-banner__content {
+  flex: 1;
+  min-width: 280px;
 }
 
-.onetrust-banner__title {
+.cookie-banner__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.cookie-banner__icon {
+  width: 24px;
+  height: 24px;
+  color: var(--c-primary);
+}
+
+.cookie-banner__title {
   font-weight: 700;
   font-size: 16px;
-  color: #2d3748;
+  color: var(--c-text-main);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.onetrust-banner__text {
+.cookie-banner__text {
   font-size: 14px;
   line-height: 1.5;
-  color: #4a5568;
-  margin-bottom: 20px;
+  color: var(--c-text-sub);
+  margin: 0;
 }
 
-.onetrust-banner__link {
-  color: #4CAF50;
+.cookie-banner__link {
+  color: var(--c-primary);
   text-decoration: underline;
   cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.2s;
 }
 
-.onetrust-banner__link:hover {
+.cookie-banner__link:hover {
+  opacity: 0.8;
   text-decoration: none;
 }
 
-.onetrust-banner__actions {
+.cookie-banner__actions {
   display: flex;
   gap: 12px;
-  justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
-.onetrust-banner__btn {
-  padding: 10px 20px;
-  border-radius: 8px;
+.cookie-banner__btn {
+  padding: 12px 28px;
+  border-radius: var(--radius-btn);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
   border: none;
+  white-space: nowrap;
 }
 
-.onetrust-banner__btn--settings {
-  background: transparent;
-  color: #4CAF50;
-  border: 1px solid #e2e8f0;
+.cookie-banner__btn--settings {
+  background: var(--c-bg-surface);
+  color: var(--c-primary);
+  border: 1px solid var(--c-primary);
 }
 
-.onetrust-banner__btn--settings:hover {
-  background: #f7fafc;
+.cookie-banner__btn--settings:hover {
+  background: rgba(41, 98, 255, 0.05);
+  transform: translateY(-2px);
 }
 
-.onetrust-banner__btn--accept {
-  background: #4CAF50;
+.cookie-banner__btn--accept {
+  background: var(--c-primary);
   color: white;
+  box-shadow: 0 6px 16px rgba(41, 98, 255, 0.25);
 }
 
-.onetrust-banner__btn--accept:hover {
-  background: #45a049;
+.cookie-banner__btn--accept:hover {
+  background: var(--c-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(41, 98, 255, 0.35);
 }
 
-/* Модальное окно настроек кукисов */
-.onetrust-modal {
+/* Модальное окно настроек кукисов (синяя тема) */
+.cookie-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -2060,40 +2083,46 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000;
+  z-index: 11000;
   font-family: 'Inter', sans-serif;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
 }
 
-.onetrust-modal__overlay {
+.cookie-modal.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.cookie-modal__overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-  animation: fadeIn 0.2s ease-out;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease-out;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.onetrust-modal__container {
+.cookie-modal__container {
   position: relative;
   background: white;
-  border-radius: 20px;
+  border-radius: 24px;
   max-width: 500px;
   width: 90%;
   max-height: 80vh;
   overflow-y: auto;
-  animation: modalSlideUp 0.3s ease-out;
-  z-index: 10001;
+  animation: slideUp 0.3s ease-out;
+  z-index: 11001;
+  box-shadow: 0 20px 40px rgba(41, 98, 255, 0.2);
+  border: 1px solid rgba(41, 98, 255, 0.1);
 }
 
-@keyframes modalSlideUp {
+@keyframes slideUp {
   from {
-    transform: translateY(20px);
+    transform: translateY(30px);
     opacity: 0;
   }
   to {
@@ -2102,8 +2131,8 @@ body {
   }
 }
 
-.onetrust-modal__header {
-  padding: 20px;
+.cookie-modal__header {
+  padding: 24px;
   border-bottom: 1px solid #e2e8f0;
   display: flex;
   justify-content: space-between;
@@ -2111,89 +2140,96 @@ body {
   position: sticky;
   top: 0;
   background: white;
-  border-radius: 20px 20px 0 0;
+  border-radius: 24px 24px 0 0;
 }
 
-.onetrust-modal__title {
-  font-size: 20px;
+.cookie-modal__title {
+  font-size: 22px;
   font-weight: 700;
-  color: #2d3748;
+  color: var(--c-text-main);
   margin: 0;
 }
 
-.onetrust-modal__close {
+.cookie-modal__close {
   background: transparent;
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #718096;
-  width: 32px;
-  height: 32px;
+  color: var(--c-text-sub);
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: background 0.2s;
+  transition: all 0.2s;
 }
 
-.onetrust-modal__close:hover {
-  background: #f7fafc;
+.cookie-modal__close:hover {
+  background: var(--c-bg-surface);
+  color: var(--c-primary);
 }
 
-.onetrust-modal__content {
-  padding: 20px;
+.cookie-modal__content {
+  padding: 24px;
 }
 
-.onetrust-modal__text {
+.cookie-modal__text {
   font-size: 14px;
-  color: #4a5568;
+  color: var(--c-text-sub);
   margin-bottom: 24px;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
-.onetrust-option {
+.cookie-option {
   margin-bottom: 20px;
   padding: 16px;
-  background: #f8fafc;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  background: var(--c-bg-surface);
+  border-radius: 16px;
+  border: 1px solid rgba(41, 98, 255, 0.1);
+  transition: all 0.2s;
 }
 
-.onetrust-option__header {
+.cookie-option:hover {
+  border-color: var(--c-primary);
+  box-shadow: 0 4px 12px rgba(41, 98, 255, 0.1);
+}
+
+.cookie-option__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
 }
 
-.onetrust-option__title {
-  font-weight: 600;
+.cookie-option__title {
+  font-weight: 700;
   font-size: 16px;
-  color: #2d3748;
+  color: var(--c-text-main);
 }
 
-.onetrust-option__desc {
+.cookie-option__desc {
   font-size: 13px;
-  color: #718096;
+  color: var(--c-text-sub);
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
-/* Toggle Switch в стиле iOS */
-.onetrust-switch {
+/* Синий toggle switch */
+.cookie-switch {
   position: relative;
   display: inline-block;
-  width: 44px;
+  width: 46px;
   height: 24px;
 }
 
-.onetrust-switch input {
+.cookie-switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-.onetrust-switch__slider {
+.cookie-switch__slider {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -2201,11 +2237,11 @@ body {
   right: 0;
   bottom: 0;
   background-color: #cbd5e0;
-  transition: 0.2s;
+  transition: 0.3s;
   border-radius: 24px;
 }
 
-.onetrust-switch__slider:before {
+.cookie-switch__slider:before {
   position: absolute;
   content: "";
   height: 20px;
@@ -2213,26 +2249,26 @@ body {
   left: 2px;
   bottom: 2px;
   background-color: white;
-  transition: 0.2s;
+  transition: 0.3s;
   border-radius: 50%;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-input:checked + .onetrust-switch__slider {
-  background-color: #4CAF50;
+input:checked + .cookie-switch__slider {
+  background-color: var(--c-primary);
 }
 
-input:checked + .onetrust-switch__slider:before {
-  transform: translateX(20px);
+input:checked + .cookie-switch__slider:before {
+  transform: translateX(22px);
 }
 
-input:disabled + .onetrust-switch__slider {
+input:disabled + .cookie-switch__slider {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.onetrust-modal__footer {
-  padding: 20px;
+.cookie-modal__footer {
+  padding: 20px 24px;
   border-top: 1px solid #e2e8f0;
   display: flex;
   gap: 12px;
@@ -2240,147 +2276,115 @@ input:disabled + .onetrust-switch__slider {
   position: sticky;
   bottom: 0;
   background: white;
-  border-radius: 0 0 20px 20px;
+  border-radius: 0 0 24px 24px;
 }
 
-/* Адаптация для мобильных устройств */
-@media (max-width: 640px) {
-  .onetrust-banner {
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    max-width: none;
-    width: calc(100% - 20px);
-  }
-  
-  .onetrust-banner__actions {
+.cookie-modal__btn {
+  padding: 12px 28px;
+  border-radius: var(--radius-btn);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.cookie-modal__btn--secondary {
+  background: var(--c-bg-surface);
+  color: var(--c-primary);
+  border: 1px solid var(--c-primary);
+}
+
+.cookie-modal__btn--secondary:hover {
+  background: rgba(41, 98, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+.cookie-modal__btn--primary {
+  background: var(--c-primary);
+  color: white;
+  box-shadow: 0 6px 16px rgba(41, 98, 255, 0.25);
+}
+
+.cookie-modal__btn--primary:hover {
+  background: var(--c-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(41, 98, 255, 0.35);
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+  .cookie-banner__container {
     flex-direction: column;
+    align-items: stretch;
+    padding: 16px 20px;
   }
-  
-  .onetrust-banner__btn {
-    width: 100%;
+
+  .cookie-banner__actions {
+    justify-content: stretch;
+  }
+
+  .cookie-banner__btn {
+    flex: 1;
+    text-align: center;
     padding: 12px 20px;
   }
 
-  .onetrust-modal__container {
+  .cookie-modal__container {
     width: 95%;
-    max-height: 90vh;
+    max-height: 85vh;
   }
 
-  .onetrust-modal__footer {
+  .cookie-modal__footer {
     flex-direction: column;
   }
 
-  .onetrust-modal__footer .onetrust-banner__btn {
+  .cookie-modal__btn {
     width: 100%;
   }
 }
 
-/* Анимация появления для модального окна на мобильных */
 @media (max-width: 480px) {
-  .onetrust-modal__container {
-    margin: 10px;
-    max-height: calc(100vh - 20px);
-  }
-}
-
-/* Стили для очень маленьких экранов */
-@media (max-width: 360px) {
-  .onetrust-banner__container {
-    padding: 16px;
+  .cookie-banner__content {
+    min-width: auto;
   }
 
-  .onetrust-banner__text {
+  .cookie-banner__text {
     font-size: 13px;
   }
 
-  .onetrust-banner__btn {
-    font-size: 13px;
-    padding: 10px 16px;
+  .cookie-modal__header {
+    padding: 20px;
   }
 
-  .onetrust-option {
-    padding: 12px;
+  .cookie-modal__title {
+    font-size: 20px;
   }
 
-  .onetrust-option__title {
-    font-size: 14px;
+  .cookie-modal__content {
+    padding: 20px;
   }
 
-  .onetrust-option__desc {
+  .cookie-option {
+    padding: 14px;
+  }
+
+  .cookie-option__title {
+    font-size: 15px;
+  }
+
+  .cookie-option__desc {
     font-size: 12px;
   }
 }
 
-/* Темная тема (опционально - если сайт поддерживает темную тему) */
-@media (prefers-color-scheme: dark) {
-  .onetrust-banner {
-    background: #1a202c;
-    border-left-color: #4CAF50;
-  }
+/* Анимация для иконки */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
 
-  .onetrust-banner__title {
-    color: #f7fafc;
-  }
-
-  .onetrust-banner__text {
-    color: #a0aec0;
-  }
-
-  .onetrust-banner__link {
-    color: #4CAF50;
-  }
-
-  .onetrust-banner__btn--settings {
-    background: #2d3748;
-    color: #4CAF50;
-    border-color: #4a5568;
-  }
-
-  .onetrust-banner__btn--settings:hover {
-    background: #374151;
-  }
-
-  .onetrust-modal__container {
-    background: #1a202c;
-  }
-
-  .onetrust-modal__header {
-    background: #1a202c;
-    border-bottom-color: #2d3748;
-  }
-
-  .onetrust-modal__title {
-    color: #f7fafc;
-  }
-
-  .onetrust-modal__close {
-    color: #a0aec0;
-  }
-
-  .onetrust-modal__close:hover {
-    background: #2d3748;
-  }
-
-  .onetrust-modal__text {
-    color: #a0aec0;
-  }
-
-  .onetrust-option {
-    background: #2d3748;
-    border-color: #4a5568;
-  }
-
-  .onetrust-option__title {
-    color: #f7fafc;
-  }
-
-  .onetrust-option__desc {
-    color: #a0aec0;
-  }
-
-  .onetrust-modal__footer {
-    background: #1a202c;
-    border-top-color: #2d3748;
-  }
+.cookie-banner.visible .cookie-banner__icon {
+  animation: pulse 1s ease-in-out;
 }
