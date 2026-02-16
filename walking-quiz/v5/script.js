@@ -1543,7 +1543,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* =========================
-   ИСПРАВЛЕННАЯ ФУНКЦИЯ РЕДИРЕКТА (ТЕПЕРЬ РАБОТАЕТ С ГЛОБАЛЬНЫМИ ФУНКЦИЯМИ)
+   ИСПРАВЛЕННАЯ ФУНКЦИЯ РЕДИРЕКТА С ПОДДЕРЖКОЙ iOS
    ========================= */
 
 function redirectToClient() {
@@ -1603,10 +1603,75 @@ function redirectToClient() {
   
   console.log('Redirecting to URL with UTM:', targetUrl.toString());
   
-  // Редирект
+  // ========== iOS-СОВМЕСТИМЫЙ РЕДИРЕКТ ==========
+  
+  // Определяем устройство
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const redirectUrl = targetUrl.toString();
+  
+  // Функция для форсированного редиректа (для iOS)
+  function forceRedirect(url) {
+    // Метод 1: form submit (лучший для iOS)
+    try {
+      const form = document.createElement('form');
+      form.method = 'GET';
+      form.action = url;
+      form.style.display = 'none';
+      document.body.appendChild(form);
+      form.submit();
+      console.log('Redirect method 1: form submit');
+      return true;
+    } catch (e) {
+      console.log('Form submit failed:', e);
+    }
+    
+    // Метод 2: location.replace (тоже хорошо работает)
+    try {
+      window.location.replace(url);
+      console.log('Redirect method 2: location.replace');
+      return true;
+    } catch (e) {
+      console.log('Location.replace failed:', e);
+    }
+    
+    // Метод 3: location.href (стандартный)
+    try {
+      window.location.href = url;
+      console.log('Redirect method 3: location.href');
+      return true;
+    } catch (e) {
+      console.log('Location.href failed:', e);
+    }
+    
+    return false;
+  }
+  
+  // Пробуем редирект с учетом устройства
+  if (isIOS) {
+    // Для iOS используем form submit (наиболее надежный)
+    console.log('iOS device detected, using form submit');
+    setTimeout(() => {
+      const form = document.createElement('form');
+      form.method = 'GET';
+      form.action = redirectUrl;
+      form.style.display = 'none';
+      document.body.appendChild(form);
+      form.submit();
+    }, 50); // Минимальная задержка для iOS
+  } else {
+    // Для остальных устройств - стандартный редирект
+    setTimeout(() => {
+      window.location.href = redirectUrl;
+    }, 300);
+  }
+  
+  // Страховка: если редирект не сработал через 2 секунды
   setTimeout(() => {
-    window.location.href = targetUrl.toString();
-  }, 300);
+    if (document.visibilityState !== 'hidden') {
+      console.log('Fallback redirect triggered');
+      window.location.replace(redirectUrl);
+    }
+  }, 2000);
 }
 
 // Экспортируем функции в глобальную область видимости
