@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (privacyLink) {
       privacyLink.addEventListener('click', (e) => {
         e.preventDefault();
-        window.open('#', '_blank');
+        window.open('#', '_blank'); // Замените на реальную ссылку
       });
     }
     
@@ -169,34 +169,6 @@ document.addEventListener("DOMContentLoaded", () => {
     showCookieBanner();
   }
 
-  // OneTrust-подобный объект для совместимости
-  window.OptanonWrapper = function() {
-    console.log('Cookie consent updated');
-    const consentStatus = getCookie('cookie_consent') || 'not-set';
-    
-    if (window.amplitude && typeof amplitude.logEvent === 'function') {
-      amplitude.logEvent('cookie_consent_updated', {
-        consent_status: consentStatus,
-        timestamp: new Date().toISOString()
-      });
-    }
-  };
-
-  window.Optanon = {
-    IsConsentRequired: function() {
-      return !getCookie('cookie_consent');
-    },
-    
-    ToggleConsent: function(accept) {
-      if (accept) {
-        setCookie('cookie_consent', 'accepted', 365);
-      } else {
-        setCookie('cookie_consent', 'rejected', 365);
-      }
-      window.OptanonWrapper();
-    }
-  };
-  
   // Сохраняем информацию о версии и визите
   function saveVersionInfo() {
     const path = window.location.pathname;
@@ -226,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // ========== КОНЕЦ ФУНКЦИЙ ДЛЯ КУКИСОВ ==========
   
-  // Функция для сбора UTM-параметров
+  // Функция для сбора UTM-параметров - теперь вызывается ПОСЛЕ инициализации Amplitude
   function collectUtmParams() {
     const urlParams = new URLSearchParams(window.location.search);
     const utmData = {};
@@ -243,6 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
     
+    // Также собираем другие важные параметры
     const otherParams = ['source', 'ref', 'referrer', 'click_id', 'ad_id'];
     otherParams.forEach(key => {
       const value = urlParams.get(key);
@@ -251,9 +224,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
     
+    // Сохраняем в localStorage для дальнейшего использования
     if (Object.keys(utmData).length > 0) {
       localStorage.setItem('utm_params', JSON.stringify(utmData));
       
+      // Отправляем в Amplitude только если он уже инициализирован и есть согласие
       if (window.amplitude && typeof amplitude.logEvent === 'function' && canUseAnalytics()) {
         amplitude.logEvent('utm_params_collected', {
           ...utmData,
@@ -493,10 +468,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Инициализация Amplitude и сбор UTM-параметров после загрузки
   function initializeAnalytics() {
+    // Сначала проверяем, загрузился ли Amplitude
     if (window.amplitude && typeof amplitude.logEvent === 'function') {
+      // Amplitude уже загружен, собираем UTM сразу
       collectUtmParams();
     } else {
+      // Ждем немного и пробуем снова (например, если Amplitude загружается асинхронно)
       let attempts = 0;
       const maxAttempts = 10;
       
@@ -509,6 +488,7 @@ document.addEventListener("DOMContentLoaded", () => {
           console.log('Amplitude initialized, UTM params collected');
         } else if (attempts >= maxAttempts) {
           clearInterval(waitForAmplitude);
+          // Сохраняем UTM в localStorage, даже если Amplitude не загрузился
           const urlParams = new URLSearchParams(window.location.search);
           const utmData = {};
           ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(key => {
@@ -521,10 +501,11 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log('UTM params saved to localStorage (Amplitude not available)');
           }
         }
-      }, 500);
+      }, 500); // Проверяем каждые 500ms
     }
   }
 
+  // Запускаем инициализацию аналитики
   initializeAnalytics();
 
   views.forEach((v, i) => v.classList.toggle("active", i === 0));
@@ -705,6 +686,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     items[3].classList.add('completed');
 
+    // Отправляем событие завершения квиза перед редиректом
     if (window.amplitude && typeof amplitude.logEvent === 'function' && canUseAnalytics()) {
       const utmParams = JSON.parse(localStorage.getItem('utm_params') || '{}');
       amplitude.logEvent('quiz_completed_before_redirect', {
@@ -750,10 +732,12 @@ document.addEventListener("DOMContentLoaded", () => {
     observer34.observe(v34, { attributes: true, attributeFilter: ["class"] });
   }
 
+  // ========== AMPLITUDE MINIMAL TRACKING ==========
   (function() {
     let currentScreen = '';
     
     function trackScreen() {
+      // Проверяем согласие перед трекингом
       if (!canUseAnalytics()) return;
       
       const activeView = document.querySelector('.view.active');
@@ -765,18 +749,20 @@ document.addEventListener("DOMContentLoaded", () => {
       currentScreen = screenId;
       const screenNum = parseInt(screenId.replace('view-', '')) || 0;
       
+      // UTM-параметры в события Amplitude
       const utmParams = JSON.parse(localStorage.getItem('utm_params') || '{}');
       
       amplitude.logEvent('funnel_screen_viewed', {
         screen_id: screenId,
         screen_number: screenNum,
         timestamp: new Date().toISOString(),
-        ...utmParams
+        ...utmParams // Добавляем UTM-метки к каждому событию
       });
       
       console.log('Amplitude: screen', screenId, 'with UTM:', utmParams);
     }
     
+    // Запускаем трекинг только после инициализации Amplitude
     const startTracking = setInterval(() => {
       if (window.amplitude && typeof amplitude.logEvent === 'function') {
         clearInterval(startTracking);
@@ -1556,10 +1542,11 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* =========================
-   ФУНКЦИЯ РЕДИРЕКТА С UTM-МЕТКАМИ И COOKIES
+   ОБНОВЛЕННАЯ ФУНКЦИЯ РЕДИРЕКТА С UTM-МЕТКАМИ И COOKIES
    ========================= */
 
 function redirectToClient() {
+  // Собираем данные пользователя
   const userData = {
     height_cm: window.userHeightCm || 0,
     weight_kg: window.userWeightKg || 0,
@@ -1572,8 +1559,10 @@ function redirectToClient() {
     cookie_consent: getCookie('cookie_consent') || 'not-set'
   };
 
+  // Получаем UTM-параметры из localStorage
   const utmParams = JSON.parse(localStorage.getItem('utm_params') || '{}');
   
+  // Логируем завершение воронки в Amplitude (с проверкой на доступность и согласие)
   if (window.amplitude && typeof amplitude.logEvent === 'function' && canUseAnalytics()) {
     amplitude.logEvent('funnel_completed_to_client', {
       ...userData,
@@ -1586,24 +1575,31 @@ function redirectToClient() {
     amplitude.flush();
   }
 
+  // Сохраняем данные в localStorage
   localStorage.setItem('slimkit_user_data', JSON.stringify({
     ...userData,
-    utm_params: utmParams
+    utm_params: utmParams // Сохраняем UTM вместе с данными пользователя
   }));
 
+  // СОЗДАЕМ URL С UTM-МЕТКАМИ
   const baseUrl = 'https://slimkit.health/walking/survey/?config=V3&stripeV64=true&fbpxls[]=walking6_indoor';
   const targetUrl = new URL(baseUrl);
   
+  // Добавляем UTM-параметры к целевому URL
   Object.entries(utmParams).forEach(([key, value]) => {
     targetUrl.searchParams.set(key, value);
   });
   
+  // Также добавляем user_id для отслеживания
   const userId = window.amplitude ? amplitude.getDeviceId() : `user_${Date.now()}`;
   targetUrl.searchParams.set('user_id', userId);
+  
+  // Добавляем информацию о согласии
   targetUrl.searchParams.set('cookie_consent', getCookie('cookie_consent') || 'not-set');
   
   console.log('Redirecting to URL with UTM:', targetUrl.toString());
   
+  // Редирект
   setTimeout(() => {
     window.location.href = targetUrl.toString();
   }, 300);
