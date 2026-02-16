@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const QUIZ_START_INDEX = 3;
   const LAST_VIEW_INDEX = 33;
   
-  // ========== ONETRUST-ПОДОБНЫЕ ФУНКЦИИ ДЛЯ КУКИСОВ ==========
+  // ========== НОВЫЕ ФУНКЦИИ ДЛЯ КУКИСОВ (СИНЯЯ ПЛАШКА СНИЗУ) ==========
   
   // Функции для работы с кукисами
   function setCookie(name, value, days) {
@@ -30,23 +30,156 @@ document.addEventListener("DOMContentLoaded", () => {
     return null;
   }
 
-  // OneTrust-подобный объект для управления согласием
-  window.OptanonWrapper = function() {
-    console.log('OneTrust-like consent updated');
+  // Функция для проверки, можно ли использовать аналитику
+  function canUseAnalytics() {
+    const consent = getCookie('cookie_consent');
+    if (!consent) return false;
     
-    // Получаем статус согласия
+    if (consent === 'accepted') return true;
+    
+    // Проверяем детальные настройки
+    const analyticsConsent = getCookie('cookie_consent_analytics');
+    return analyticsConsent === 'accepted';
+  }
+
+  // Показ баннера с анимацией
+  function showCookieBanner() {
+    const banner = document.getElementById('cookieBanner');
+    if (banner && !getCookie('cookie_consent')) {
+      setTimeout(() => {
+        banner.classList.add('visible');
+      }, 1000);
+    }
+  }
+
+  // Скрытие баннера
+  function hideCookieBanner() {
+    const banner = document.getElementById('cookieBanner');
+    if (banner) {
+      banner.classList.remove('visible');
+    }
+  }
+
+  // Открытие модального окна
+  function openCookieModal() {
+    const modal = document.getElementById('cookieModal');
+    if (modal) {
+      modal.classList.add('visible');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  // Закрытие модального окна
+  function closeCookieModal() {
+    const modal = document.getElementById('cookieModal');
+    if (modal) {
+      modal.classList.remove('visible');
+      document.body.style.overflow = '';
+    }
+  }
+
+  // Принятие всех cookies
+  function acceptAllCookies() {
+    setCookie('cookie_consent', 'accepted', 365);
+    setCookie('cookie_consent_analytics', 'accepted', 365);
+    setCookie('cookie_consent_functional', 'accepted', 365);
+    
+    hideCookieBanner();
+    closeCookieModal();
+    
+    if (window.amplitude && typeof amplitude.logEvent === 'function') {
+      amplitude.logEvent('cookie_consent_accepted', {
+        type: 'all',
+        timestamp: new Date().toISOString()
+      });
+    }
+    
+    console.log('Cookies accepted');
+  }
+
+  // Сохранение настроек cookies
+  function saveCookieSettings() {
+    const analyticsChecked = document.getElementById('analyticsCookies')?.checked || false;
+    const functionalChecked = document.getElementById('functionalCookies')?.checked || false;
+    
+    setCookie('cookie_consent_analytics', analyticsChecked ? 'accepted' : 'rejected', 365);
+    setCookie('cookie_consent_functional', functionalChecked ? 'accepted' : 'rejected', 365);
+    
+    if (analyticsChecked || functionalChecked) {
+      setCookie('cookie_consent', 'accepted', 365);
+    } else {
+      setCookie('cookie_consent', 'rejected', 365);
+    }
+    
+    hideCookieBanner();
+    closeCookieModal();
+    
+    if (window.amplitude && typeof amplitude.logEvent === 'function') {
+      amplitude.logEvent('cookie_consent_saved', {
+        analytics: analyticsChecked,
+        functional: functionalChecked,
+        timestamp: new Date().toISOString()
+      });
+    }
+    
+    console.log('Cookie settings saved');
+  }
+
+  // Инициализация обработчиков событий для cookie-баннера
+  function initCookieBanner() {
+    const acceptBtn = document.getElementById('cookieAcceptBtn');
+    const settingsBtn = document.getElementById('cookieSettingsBtn');
+    const privacyLink = document.getElementById('privacyLink');
+    const modalClose = document.getElementById('cookieModalClose');
+    const modalOverlay = document.getElementById('cookieModalOverlay');
+    const saveSettingsBtn = document.getElementById('cookieSaveSettings');
+    const acceptAllBtn = document.getElementById('cookieAcceptAll');
+    
+    if (acceptBtn) {
+      acceptBtn.addEventListener('click', acceptAllCookies);
+    }
+    
+    if (settingsBtn) {
+      settingsBtn.addEventListener('click', openCookieModal);
+    }
+    
+    if (privacyLink) {
+      privacyLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open('#', '_blank');
+      });
+    }
+    
+    if (modalClose) {
+      modalClose.addEventListener('click', closeCookieModal);
+    }
+    
+    if (modalOverlay) {
+      modalOverlay.addEventListener('click', closeCookieModal);
+    }
+    
+    if (saveSettingsBtn) {
+      saveSettingsBtn.addEventListener('click', saveCookieSettings);
+    }
+    
+    if (acceptAllBtn) {
+      acceptAllBtn.addEventListener('click', acceptAllCookies);
+    }
+    
+    showCookieBanner();
+  }
+
+  // OneTrust-подобный объект для совместимости
+  window.OptanonWrapper = function() {
+    console.log('Cookie consent updated');
     const consentStatus = getCookie('cookie_consent') || 'not-set';
     
-    // Отправляем событие в Amplitude о изменении согласия
     if (window.amplitude && typeof amplitude.logEvent === 'function') {
       amplitude.logEvent('cookie_consent_updated', {
         consent_status: consentStatus,
         timestamp: new Date().toISOString()
       });
     }
-    
-    // Обновляем интерфейс при необходимости
-    updateConsentUI(consentStatus);
   };
 
   window.Optanon = {
@@ -63,476 +196,6 @@ document.addEventListener("DOMContentLoaded", () => {
       window.OptanonWrapper();
     }
   };
-
-  // Функция для показа баннера согласия
-  function showCookieConsentBanner() {
-    // Проверяем, есть ли уже согласие
-    if (getCookie('cookie_consent')) {
-      return;
-    }
-    
-    // Создаем баннер если его нет
-    if (!document.getElementById('onetrust-consent-banner')) {
-      const banner = document.createElement('div');
-      banner.id = 'onetrust-consent-banner';
-      banner.className = 'onetrust-banner';
-      banner.innerHTML = `
-        <div class="onetrust-banner__container">
-          <div class="onetrust-banner__content">
-            <div class="onetrust-banner__header">
-              <span class="onetrust-banner__title">🍪 Cookies & Privacy</span>
-            </div>
-            <p class="onetrust-banner__text">
-              We use cookies to enhance your experience, analyze site traffic, and personalize content. 
-              By clicking "Accept All", you consent to our use of cookies. 
-              <a href="#" class="onetrust-banner__link" id="onetrust-privacy-link">Privacy Policy</a>
-            </p>
-          </div>
-          <div class="onetrust-banner__actions">
-            <button class="onetrust-banner__btn onetrust-banner__btn--settings" id="onetrust-pc-btn">
-              Cookie Settings
-            </button>
-            <button class="onetrust-banner__btn onetrust-banner__btn--accept" id="onetrust-accept-btn">
-              Accept All
-            </button>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(banner);
-      
-      // Добавляем стили для баннера
-      const style = document.createElement('style');
-      style.textContent = `
-        .onetrust-banner {
-          position: fixed;
-          bottom: 20px;
-          left: 20px;
-          max-width: 450px;
-          background: white;
-          border-radius: 16px;
-          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-          z-index: 9999;
-          font-family: 'Inter', sans-serif;
-          animation: slideIn 0.3s ease-out;
-          border-left: 4px solid #4CAF50;
-        }
-        
-        @keyframes slideIn {
-          from {
-            transform: translateX(-100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-        
-        .onetrust-banner__container {
-          padding: 20px;
-        }
-        
-        .onetrust-banner__header {
-          margin-bottom: 12px;
-        }
-        
-        .onetrust-banner__title {
-          font-weight: 700;
-          font-size: 16px;
-          color: #2d3748;
-        }
-        
-        .onetrust-banner__text {
-          font-size: 14px;
-          line-height: 1.5;
-          color: #4a5568;
-          margin-bottom: 20px;
-        }
-        
-        .onetrust-banner__link {
-          color: #4CAF50;
-          text-decoration: underline;
-          cursor: pointer;
-        }
-        
-        .onetrust-banner__link:hover {
-          text-decoration: none;
-        }
-        
-        .onetrust-banner__actions {
-          display: flex;
-          gap: 12px;
-          justify-content: flex-end;
-        }
-        
-        .onetrust-banner__btn {
-          padding: 10px 20px;
-          border-radius: 8px;
-          font-size: 14px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s;
-          border: none;
-        }
-        
-        .onetrust-banner__btn--settings {
-          background: transparent;
-          color: #4CAF50;
-          border: 1px solid #e2e8f0;
-        }
-        
-        .onetrust-banner__btn--settings:hover {
-          background: #f7fafc;
-        }
-        
-        .onetrust-banner__btn--accept {
-          background: #4CAF50;
-          color: white;
-        }
-        
-        .onetrust-banner__btn--accept:hover {
-          background: #45a049;
-        }
-        
-        /* Модальное окно настроек */
-        .onetrust-modal {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 10000;
-          font-family: 'Inter', sans-serif;
-        }
-        
-        .onetrust-modal__overlay {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.5);
-          animation: fadeIn 0.2s ease-out;
-        }
-        
-        .onetrust-modal__container {
-          position: relative;
-          background: white;
-          border-radius: 20px;
-          max-width: 500px;
-          width: 90%;
-          max-height: 80vh;
-          overflow-y: auto;
-          animation: modalSlideUp 0.3s ease-out;
-          z-index: 10001;
-        }
-        
-        .onetrust-modal__header {
-          padding: 20px;
-          border-bottom: 1px solid #e2e8f0;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-        
-        .onetrust-modal__title {
-          font-size: 20px;
-          font-weight: 700;
-          color: #2d3748;
-          margin: 0;
-        }
-        
-        .onetrust-modal__close {
-          background: transparent;
-          border: none;
-          font-size: 24px;
-          cursor: pointer;
-          color: #718096;
-          width: 32px;
-          height: 32px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 50%;
-        }
-        
-        .onetrust-modal__close:hover {
-          background: #f7fafc;
-        }
-        
-        .onetrust-modal__content {
-          padding: 20px;
-        }
-        
-        .onetrust-modal__text {
-          font-size: 14px;
-          color: #4a5568;
-          margin-bottom: 24px;
-          line-height: 1.5;
-        }
-        
-        .onetrust-option {
-          margin-bottom: 20px;
-          padding: 16px;
-          background: #f8fafc;
-          border-radius: 12px;
-        }
-        
-        .onetrust-option__header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 8px;
-        }
-        
-        .onetrust-option__title {
-          font-weight: 600;
-          font-size: 16px;
-          color: #2d3748;
-        }
-        
-        .onetrust-option__desc {
-          font-size: 13px;
-          color: #718096;
-          margin: 0;
-        }
-        
-        /* Toggle Switch */
-        .onetrust-switch {
-          position: relative;
-          display: inline-block;
-          width: 44px;
-          height: 24px;
-        }
-        
-        .onetrust-switch input {
-          opacity: 0;
-          width: 0;
-          height: 0;
-        }
-        
-        .onetrust-switch__slider {
-          position: absolute;
-          cursor: pointer;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-color: #cbd5e0;
-          transition: 0.2s;
-          border-radius: 24px;
-        }
-        
-        .onetrust-switch__slider:before {
-          position: absolute;
-          content: "";
-          height: 20px;
-          width: 20px;
-          left: 2px;
-          bottom: 2px;
-          background-color: white;
-          transition: 0.2s;
-          border-radius: 50%;
-        }
-        
-        input:checked + .onetrust-switch__slider {
-          background-color: #4CAF50;
-        }
-        
-        input:checked + .onetrust-switch__slider:before {
-          transform: translateX(20px);
-        }
-        
-        input:disabled + .onetrust-switch__slider {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-        
-        .onetrust-modal__footer {
-          padding: 20px;
-          border-top: 1px solid #e2e8f0;
-          display: flex;
-          gap: 12px;
-          justify-content: flex-end;
-        }
-        
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        
-        @keyframes modalSlideUp {
-          from {
-            transform: translateY(20px);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-        
-        @media (max-width: 640px) {
-          .onetrust-banner {
-            left: 10px;
-            right: 10px;
-            bottom: 10px;
-            max-width: none;
-          }
-          
-          .onetrust-banner__actions {
-            flex-direction: column;
-          }
-          
-          .onetrust-banner__btn {
-            width: 100%;
-          }
-        }
-      `;
-      document.head.appendChild(style);
-      
-      // Добавляем обработчики событий
-      document.getElementById('onetrust-accept-btn').addEventListener('click', function() {
-        window.Optanon.ToggleConsent(true);
-        document.getElementById('onetrust-consent-banner').remove();
-      });
-      
-      document.getElementById('onetrust-pc-btn').addEventListener('click', function() {
-        showCookieSettingsModal();
-      });
-      
-      document.getElementById('onetrust-privacy-link').addEventListener('click', function(e) {
-        e.preventDefault();
-        window.open('#', '_blank'); // Замените на реальную ссылку на Privacy Policy
-      });
-    }
-  }
-  
-  // Функция для показа модального окна настроек кукисов
-  function showCookieSettingsModal() {
-    // Проверяем, не открыто ли уже модальное окно
-    if (document.getElementById('onetrust-settings-modal')) {
-      return;
-    }
-    
-    const currentConsent = getCookie('cookie_consent');
-    
-    const modal = document.createElement('div');
-    modal.id = 'onetrust-settings-modal';
-    modal.className = 'onetrust-modal';
-    modal.innerHTML = `
-      <div class="onetrust-modal__overlay" id="onetrust-modal-overlay"></div>
-      <div class="onetrust-modal__container">
-        <div class="onetrust-modal__header">
-          <h3 class="onetrust-modal__title">Cookie Settings</h3>
-          <button class="onetrust-modal__close" id="onetrust-modal-close">✕</button>
-        </div>
-        <div class="onetrust-modal__content">
-          <p class="onetrust-modal__text">
-            We use cookies to help you navigate efficiently and perform certain functions. 
-            You can customize your preferences below.
-          </p>
-          
-          <div class="onetrust-option">
-            <div class="onetrust-option__header">
-              <span class="onetrust-option__title">Strictly Necessary</span>
-              <label class="onetrust-switch">
-                <input type="checkbox" checked disabled>
-                <span class="onetrust-switch__slider"></span>
-              </label>
-            </div>
-            <p class="onetrust-option__desc">These cookies are essential for the website to function properly.</p>
-          </div>
-          
-          <div class="onetrust-option">
-            <div class="onetrust-option__header">
-              <span class="onetrust-option__title">Analytics & Performance</span>
-              <label class="onetrust-switch">
-                <input type="checkbox" id="analytics-cookies" ${currentConsent === 'accepted' ? 'checked' : ''}>
-                <span class="onetrust-switch__slider"></span>
-              </label>
-            </div>
-            <p class="onetrust-option__desc">These cookies help us understand how visitors interact with our website.</p>
-          </div>
-          
-          <div class="onetrust-option">
-            <div class="onetrust-option__header">
-              <span class="onetrust-option__title">Functional Cookies</span>
-              <label class="onetrust-switch">
-                <input type="checkbox" id="functional-cookies" ${currentConsent === 'accepted' ? 'checked' : ''}>
-                <span class="onetrust-switch__slider"></span>
-              </label>
-            </div>
-            <p class="onetrust-option__desc">These cookies enable personalized features and functionality.</p>
-          </div>
-        </div>
-        <div class="onetrust-modal__footer">
-          <button class="onetrust-banner__btn onetrust-banner__btn--settings" id="onetrust-save-settings">Save Settings</button>
-          <button class="onetrust-banner__btn onetrust-banner__btn--accept" id="onetrust-accept-all">Accept All</button>
-        </div>
-      </div>
-    `;
-    
-    document.body.appendChild(modal);
-    
-    // Обработчики событий для модального окна
-    document.getElementById('onetrust-modal-overlay').addEventListener('click', function() {
-      modal.remove();
-    });
-    
-    document.getElementById('onetrust-modal-close').addEventListener('click', function() {
-      modal.remove();
-    });
-    
-    document.getElementById('onetrust-save-settings').addEventListener('click', function() {
-      const analyticsChecked = document.getElementById('analytics-cookies').checked;
-      const functionalChecked = document.getElementById('functional-cookies').checked;
-      
-      // Сохраняем детальные настройки
-      setCookie('cookie_consent_analytics', analyticsChecked ? 'accepted' : 'rejected', 365);
-      setCookie('cookie_consent_functional', functionalChecked ? 'accepted' : 'rejected', 365);
-      
-      // Если хоть что-то принято, ставим общее согласие
-      if (analyticsChecked || functionalChecked) {
-        window.Optanon.ToggleConsent(true);
-      } else {
-        window.Optanon.ToggleConsent(false);
-      }
-      
-      modal.remove();
-      document.getElementById('onetrust-consent-banner').remove();
-    });
-    
-    document.getElementById('onetrust-accept-all').addEventListener('click', function() {
-      window.Optanon.ToggleConsent(true);
-      setCookie('cookie_consent_analytics', 'accepted', 365);
-      setCookie('cookie_consent_functional', 'accepted', 365);
-      modal.remove();
-      document.getElementById('onetrust-consent-banner').remove();
-    });
-  }
-  
-  // Функция для обновления UI в зависимости от согласия
-  function updateConsentUI(consentStatus) {
-    console.log('Consent status:', consentStatus);
-    // Здесь можно добавить логику для изменения интерфейса
-    // Например, скрыть/показать элементы аналитики
-  }
-  
-  // Функция для проверки, можно ли использовать аналитику
-  function canUseAnalytics() {
-    const consent = getCookie('cookie_consent');
-    if (!consent) return false;
-    
-    if (consent === 'accepted') return true;
-    
-    // Проверяем детальные настройки
-    const analyticsConsent = getCookie('cookie_consent_analytics');
-    return analyticsConsent === 'accepted';
-  }
   
   // Сохраняем информацию о версии и визите
   function saveVersionInfo() {
@@ -547,7 +210,6 @@ document.addEventListener("DOMContentLoaded", () => {
     
     setCookie('walking_quiz_version', version, 30);
     
-    // Счетчик посещений
     let visitCount = parseInt(getCookie('walking_quiz_visits') || '0');
     setCookie('walking_quiz_visits', (visitCount + 1).toString(), 365);
     
@@ -556,15 +218,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   
-  // Показываем баннер согласия при загрузке
+  // Показываем баннер при загрузке
   setTimeout(() => {
     saveVersionInfo();
-    showCookieConsentBanner();
+    initCookieBanner();
   }, 1000);
   
-  // ========== КОНЕЦ ONETRUST-ФУНКЦИЙ ==========
+  // ========== КОНЕЦ ФУНКЦИЙ ДЛЯ КУКИСОВ ==========
   
-  // Функция для сбора UTM-параметров - теперь вызывается ПОСЛЕ инициализации Amplitude
+  // Функция для сбора UTM-параметров
   function collectUtmParams() {
     const urlParams = new URLSearchParams(window.location.search);
     const utmData = {};
@@ -581,7 +243,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
     
-    // Также собираем другие важные параметры
     const otherParams = ['source', 'ref', 'referrer', 'click_id', 'ad_id'];
     otherParams.forEach(key => {
       const value = urlParams.get(key);
@@ -590,11 +251,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
     
-    // Сохраняем в localStorage для дальнейшего использования
     if (Object.keys(utmData).length > 0) {
       localStorage.setItem('utm_params', JSON.stringify(utmData));
       
-      // Отправляем в Amplitude только если он уже инициализирован и есть согласие
       if (window.amplitude && typeof amplitude.logEvent === 'function' && canUseAnalytics()) {
         amplitude.logEvent('utm_params_collected', {
           ...utmData,
@@ -834,14 +493,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Инициализация Amplitude и сбор UTM-параметров после загрузки
   function initializeAnalytics() {
-    // Сначала проверяем, загрузился ли Amplitude
     if (window.amplitude && typeof amplitude.logEvent === 'function') {
-      // Amplitude уже загружен, собираем UTM сразу
       collectUtmParams();
     } else {
-      // Ждем немного и пробуем снова (например, если Amplitude загружается асинхронно)
       let attempts = 0;
       const maxAttempts = 10;
       
@@ -854,7 +509,6 @@ document.addEventListener("DOMContentLoaded", () => {
           console.log('Amplitude initialized, UTM params collected');
         } else if (attempts >= maxAttempts) {
           clearInterval(waitForAmplitude);
-          // Сохраняем UTM в localStorage, даже если Amplitude не загрузился
           const urlParams = new URLSearchParams(window.location.search);
           const utmData = {};
           ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(key => {
@@ -867,11 +521,10 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log('UTM params saved to localStorage (Amplitude not available)');
           }
         }
-      }, 500); // Проверяем каждые 500ms
+      }, 500);
     }
   }
 
-  // Запускаем инициализацию аналитики
   initializeAnalytics();
 
   views.forEach((v, i) => v.classList.toggle("active", i === 0));
@@ -1052,7 +705,6 @@ document.addEventListener("DOMContentLoaded", () => {
     
     items[3].classList.add('completed');
 
-    // Отправляем событие завершения квиза перед редиректом
     if (window.amplitude && typeof amplitude.logEvent === 'function' && canUseAnalytics()) {
       const utmParams = JSON.parse(localStorage.getItem('utm_params') || '{}');
       amplitude.logEvent('quiz_completed_before_redirect', {
@@ -1098,12 +750,10 @@ document.addEventListener("DOMContentLoaded", () => {
     observer34.observe(v34, { attributes: true, attributeFilter: ["class"] });
   }
 
-  // ========== AMPLITUDE MINIMAL TRACKING ==========
   (function() {
     let currentScreen = '';
     
     function trackScreen() {
-      // Проверяем согласие перед трекингом
       if (!canUseAnalytics()) return;
       
       const activeView = document.querySelector('.view.active');
@@ -1115,20 +765,18 @@ document.addEventListener("DOMContentLoaded", () => {
       currentScreen = screenId;
       const screenNum = parseInt(screenId.replace('view-', '')) || 0;
       
-      // UTM-параметры в события Amplitude
       const utmParams = JSON.parse(localStorage.getItem('utm_params') || '{}');
       
       amplitude.logEvent('funnel_screen_viewed', {
         screen_id: screenId,
         screen_number: screenNum,
         timestamp: new Date().toISOString(),
-        ...utmParams // Добавляем UTM-метки к каждому событию
+        ...utmParams
       });
       
       console.log('Amplitude: screen', screenId, 'with UTM:', utmParams);
     }
     
-    // Запускаем трекинг только после инициализации Amplitude
     const startTracking = setInterval(() => {
       if (window.amplitude && typeof amplitude.logEvent === 'function') {
         clearInterval(startTracking);
@@ -1908,11 +1556,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* =========================
-   ОБНОВЛЕННАЯ ФУНКЦИЯ РЕДИРЕКТА С UTM-МЕТКАМИ
+   ФУНКЦИЯ РЕДИРЕКТА С UTM-МЕТКАМИ И COOKIES
    ========================= */
 
 function redirectToClient() {
-  // Собираем данные пользователя
   const userData = {
     height_cm: window.userHeightCm || 0,
     weight_kg: window.userWeightKg || 0,
@@ -1925,10 +1572,8 @@ function redirectToClient() {
     cookie_consent: getCookie('cookie_consent') || 'not-set'
   };
 
-  // Получаем UTM-параметры из localStorage
   const utmParams = JSON.parse(localStorage.getItem('utm_params') || '{}');
   
-  // Логируем завершение воронки в Amplitude (с проверкой на доступность и согласие)
   if (window.amplitude && typeof amplitude.logEvent === 'function' && canUseAnalytics()) {
     amplitude.logEvent('funnel_completed_to_client', {
       ...userData,
@@ -1941,31 +1586,24 @@ function redirectToClient() {
     amplitude.flush();
   }
 
-  // Сохраняем данные в localStorage
   localStorage.setItem('slimkit_user_data', JSON.stringify({
     ...userData,
-    utm_params: utmParams // Сохраняем UTM вместе с данными пользователя
+    utm_params: utmParams
   }));
 
-  // СОЗДАЕМ URL С UTM-МЕТКАМИ
   const baseUrl = 'https://slimkit.health/walking/survey/?config=V3&stripeV64=true&fbpxls[]=walking6_indoor';
   const targetUrl = new URL(baseUrl);
   
-  // Добавляем UTM-параметры к целевому URL
   Object.entries(utmParams).forEach(([key, value]) => {
     targetUrl.searchParams.set(key, value);
   });
   
-  // Также добавляем user_id для отслеживания
   const userId = window.amplitude ? amplitude.getDeviceId() : `user_${Date.now()}`;
   targetUrl.searchParams.set('user_id', userId);
-  
-  // Добавляем информацию о согласии
   targetUrl.searchParams.set('cookie_consent', getCookie('cookie_consent') || 'not-set');
   
   console.log('Redirecting to URL with UTM:', targetUrl.toString());
   
-  // Редирект
   setTimeout(() => {
     window.location.href = targetUrl.toString();
   }, 300);
@@ -1976,3 +1614,7 @@ window.redirectToClient = redirectToClient;
 window.setCookie = setCookie;
 window.getCookie = getCookie;
 window.canUseAnalytics = canUseAnalytics;
+window.acceptAllCookies = acceptAllCookies;
+window.openCookieModal = openCookieModal;
+window.closeCookieModal = closeCookieModal;
+window.saveCookieSettings = saveCookieSettings;
