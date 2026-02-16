@@ -1311,5 +1311,17 @@
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="script.js"></script>
+
+<!-- Инициализация OneTrust-подобной системы кукисов -->
+<script>
+  // Функция для принудительного показа баннера при первой загрузке
+  (function() {
+    // Проверяем, есть ли уже согласие
+    if (!document.cookie.includes('cookie_consent')) {
+      // Баннер появится автоматически через 1 секунду после загрузки страницы
+      console.log('Cookie consent banner will be shown');
+    }
+  })();
+</script>
 </body>
 </html>
