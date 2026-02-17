@@ -8,7 +8,6 @@
   <!-- ========== AMPLITUDE ANALYTICS ========== -->
   <script async src="https://cdn.amplitude.com/libs/analytics-browser-2.8.0-min.js.gz"></script>
   <script>
-  // Инициализация Amplitude с ТЕСТОВЫМ ключом
   window.amplitude = window.amplitude || {_q: [], _iq: {}};
   
   function initAmplitude() {
@@ -41,7 +40,9 @@
   </script>
   <!-- ========== END AMPLITUDE ========== -->
 
-  <link rel="preload" as="image" href="assets/1.25.1.webp">
+  <!-- Заменяем preload изображения на preload видео (опционально) -->
+  <link rel="preload" as="video" href="assets/background-video.mp4">
+  
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -76,8 +77,20 @@
      </div>
   </header>
 
+  <!-- ========== ОБНОВЛЕННЫЙ ПЕРВЫЙ ЭКРАН С ВИДЕО ========== -->
   <div class="view active view--no-bg" id="view-1">
-    <div class="bg-image" style="background-image: url('assets/1.25.1.webp');"></div>
+    <!-- Видео-фон с правильными атрибутами для мобильных устройств -->
+    <video class="bg-video" autoplay muted loop playsinline poster="assets/1.24.1.webp">
+      <!-- Замените "background-video.mp4" на имя вашего видеофайла -->
+      <source src="assets/background-video.mp4" type="video/mp4">
+      <!-- Видео в формате WebM для лучшей оптимизации (опционально) -->
+      <!-- <source src="assets/background-video.webm" type="video/webm"> -->
+      Ваш браузер не поддерживает видео.
+    </video>
+    
+    <!-- Затемняющий оверлей для лучшей читаемости текста -->
+    <div class="bg-overlay"></div>
+    
     <main class="layout-main layout-main--centered">
       <div class="container-narrow text-center">
         <h1 class="h1" style="color: #fff; font-size: 36px;">Lose Weight Just by Walking on Treadmill</h1>
@@ -87,6 +100,7 @@
       </div>
     </main>
   </div>
+  <!-- ========== КОНЕЦ ПЕРВОГО ЭКРАНА ========== -->
 
   <div class="view" id="view-2">
     <div class="split-layout">
@@ -549,7 +563,7 @@
           The Myth of <br> "No Time for Treadmill"
         </h1>
         
-        <p class="text-subtitle"> <!-- style="width: 448px; -->
+        <p class="text-subtitle">
           Most women avoid treadmills because they think it's torture. The truth? 15–30 minutes of smart interval walking burns more fat than an hour outside — and you're already home. No commute, no weather, no excuses. Just results.
         </p>
 
