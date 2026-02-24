@@ -1,6 +1,5 @@
-
 /* =========================
-   1. DESIGN TOKENS (АТОМЫ)
+   1. DESIGN TOKENS (ATOMS)
    ========================= */
 :root {
   --c-primary: #2962ff; --c-primary-hover: #1e40ff; --c-accent: #ffd600;
@@ -20,8 +19,8 @@ body {
   background-color: #ffffff; 
   color: var(--c-text-main); 
   overflow: hidden; 
-  height: 100vh;  /* Для старых телефонов */
-  height: 100dvh; /* Dynamic Viewport Height: вычитает панели браузера! */
+  height: 100vh;  /* For older phones */
+  height: 100dvh; /* Dynamic Viewport Height: subtracts browser panels! */
 }
 .hidden { display: none !important; }
 
@@ -62,14 +61,14 @@ body {
 
 
 .header-logo {
-  position: absolute; /* Извлекаем из потока, чтобы не толкал другие элементы */
-  top: 20px;           /* Позиционируем по вертикали по центру хедера */
-  left: 30px;         /* Фиксированный отступ слева */
-  transform: translateY(-50%); /* Корректировка для точного центрирования по вертикали */
-  height: 25px;       /* Высота подбирается под размер стрелок */
-  width: auto;        /* Ширина авто, чтобы не искажать пропорции */
+  position: absolute; /* Remove from flow so it doesn't push other elements */
+  top: 20px;           /* Position vertically in the center of the header */
+  left: 30px;         /* Fixed left margin */
+  transform: translateY(-50%); /* Adjustment for precise vertical centering */
+  height: 25px;       /* Height adjusted to arrow size */
+  width: auto;        /* Auto width to keep proportions */
   object-fit: contain;
-  z-index: 600;       /* Поверх всего */
+  z-index: 600;       /* On top of everything */
   margin-top: 12px;      
 }
 
@@ -95,11 +94,11 @@ body {
   gap: 20px; width: 100%; 
   max-width: var(--w-wide); padding: 0 20px; }
 
-  /* БЛОКИРОВКА СТРЕЛКИ */
+  /* ARROW LOCK */
 .btn-arrow.disabled,
 .btn.disabled {
   opacity: 0.3 !important;
-  pointer-events: none !important; /* Физически запрещает клик */
+  pointer-events: none !important; /* Physically prevents click */
   cursor: default !important;
 }
 
@@ -113,14 +112,14 @@ body {
   display: flex; 
   flex-direction: column; 
   align-items: center; 
-  /* Добавляем динамический нижний отступ, равный высоте футера + небольшой запас */
+  /* Add dynamic bottom margin equal to footer height + a small buffer */
   padding-bottom: calc(var(--footer-h, 120px) + 20px + env(safe-area-inset-bottom)) !important;
 }
 .layout-main--centered { justify-content: center; padding-bottom: 40px; }
 .layout-main--with-header {
-  /* Высота хедера + ваши 20px зазора */
+  /* Header height + your 20px gap */
   padding-top: calc(var(--header-height) + 20px) !important;
-  /* Высота футера + запас, чтобы контент не прилипал */
+  /* Footer height + buffer, so content doesn't stick */
   padding-bottom: calc(var(--footer-height) + 20px) !important;
 }
 .view:not(:has(.layout-footer)) .layout-main {
@@ -141,12 +140,12 @@ body {
   align-items: center; 
   justify-content: center; 
   padding: 20px 20px var(--footer-pb); 
-  /* Добавляем тень */
+  /* Add shadow */
   box-shadow: 0 -10px 20px #ffffff;
   border-top: 1px solid var(--c-bg-surface);
   
 
-  /* Дополнительно: добавим тонкую линию сверху для четкости границ */
+  /* Additionally: add a thin line on top for border clarity */
   /* border-top: 1px solid var(--c-bg-surface); */
 }
 .layout-footer--transparent { background: transparent; pointer-events: none; }
@@ -233,7 +232,7 @@ body {
 .card.selected { background: #3f51ff; border-color: #3f51ff; } .card.selected .card__title { color: #fff; }
 .card--small.selected { background: #3f51ff; border-color: #3f51ff; } .card--small.selected .card__title { color: #fff; }
 
-/* НОВЫЕ СТИЛИ ДЛЯ ЭКРАНА 10 (ПОДЗАГОЛОВКИ И СМЕНА КАРТИНОК) */
+/* NEW STYLES FOR SCREEN 10 (SUBTITLES AND IMAGE SWAP) */
 .card__text-wrap { flex: 1; display: flex; flex-direction: column; align-items: flex-start; padding-right: 16px; text-align: left; }
 .card__text-wrap .card__title { padding-right: 0; }
 .card__subtitle { font-size: 14px; color: var(--c-text-sub); font-weight: 400; margin-top: 4px; line-height: 1.4; }
@@ -241,7 +240,7 @@ body {
 .card .card__img--active { display: none; }
 .card.selected .card__img--normal { display: none; }
 .card.selected .card__img--active { display: block; }
-.card--small .card__img--active { display: none; } /* Подстраховка для малых карт */
+.card--small .card__img--active { display: none; } /* Fallback for small cards */
 
 .card-zone { background: var(--c-bg-surface); border-radius: 16px; border: 2px solid transparent; cursor: pointer; transition: 0.2s all; padding: 10px 8px; min-height: 50px; width: 100%; display: flex; align-items: center; }
 .card-zone__check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #ccc; background: #fff; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 12px; flex-shrink: 0; }
@@ -276,20 +275,20 @@ body {
 .zones-layout__list { display: flex; flex-direction: column; gap: 8px; width: 100%; }
 
 .card.selected .card__subtitle {
-  color: #ffffff !important; /* Используем !important, чтобы точно перебить серый цвет */
+  color: #ffffff !important; /* Use !important to definitely override the gray color */
 }
 
 /* =========================
-   TOGGLE SWITCH (Для Экрана 22)
+   TOGGLE SWITCH (For Screen 22)
    ========================= */
 
-/* Контейнер для строки с переключателем */
+/* Container for the switch row */
 .switch-row {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Разъезжаются по краям */
+  justify-content: space-between; /* Spread to edges */
   width: 100%;
-  padding: 20px 0; /* Отступы сверху и снизу */
+  padding: 20px 0; /* Top and bottom padding */
   padding-left: 10px;
   padding-right: 10px;
   margin-top: 10px;
@@ -301,7 +300,7 @@ body {
   color: var(--c-text-main);
 }
 
-/* Сам переключатель (iOS style) */
+/* The switch itself (iOS style) */
 .toggle-switch {
   position: relative;
   width: 50px;
@@ -312,7 +311,7 @@ body {
   transition: background-color 0.3s;
 }
 
-/* Кружок внутри */
+/* Inner circle */
 .toggle-switch::after {
   content: '';
   position: absolute;
@@ -326,7 +325,7 @@ body {
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-/* Активное состояние */
+/* Active state */
 .toggle-switch.active {
   background-color: var(--c-primary);
 }
@@ -344,7 +343,7 @@ body {
   position: relative;
   width: 100%;
   max-width: 340px;
-  height: 250px; /* Высота всего барабана */
+  height: 250px; /* Height of the whole drum */
   margin: 0 auto 0 auto;
   /* margin: auto;
   /*margin-top: 0px;
@@ -361,14 +360,14 @@ body {
   justify-content: space-between;
 }
 
-/* Синяя рамка выбора */
+/* Blue selection frame */
 .date-highlight {
   position: absolute;
   top: 50%;
   left: 0px;
   right: 0px;
-  height: 50px; /* Высота строки выбора */
-  margin-top: -36px; /* Ровно половина высоты, чтобы центрировать */
+  height: 50px; /* Height of the selection row */
+  margin-top: -36px; /* Exactly half the height to center */
   border-top: 2px solid #2962ff;
   border-bottom: 2px solid #2962ff;
   pointer-events: none;
@@ -376,7 +375,7 @@ body {
   border-radius: 8px;
 }
 
-/* Экран 34 */
+/* Screen 34 */
 
 .video-container {
   display: flex; 
@@ -384,43 +383,43 @@ body {
   margin-bottom: -20px;
 }
 
-/* Настройки Swiper */
+/* Swiper settings */
 .swiper {
-  /* width: 32%; убрали */
+  /* width: 32%; removed */
   height: 100%;
   overflow: hidden;
-  /* Маска для красивого исчезновения сверху и снизу */
+  /* Mask for smooth fade at top and bottom */
   mask-image: linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%);
 }
 
-/* Индивидуальная ширина колонок */
+/* Individual column widths */
 .swiper-month {
-  width: 45%; /* Месяцам нужно больше места */
+  width: 45%; /* Months need more space */
 }
 .swiper-day {
-  width: 20%; /* Дням нужно меньше всего */
+  width: 20%; /* Days need the least */
 }
 .swiper-year {
-  width: 35%; /* Годам средне */
+  width: 35%; /* Years medium */
 }
 
 .swiper-slide {
-  display: flex;       /* Включаем Flexbox */
-  align-items: center; /* Центрируем текст по вертикали */
-  justify-content: center; /* Центрируем текст по горизонтали */
+  display: flex;       /* Enable Flexbox */
+  align-items: center; /* Center text vertically */
+  justify-content: center; /* Center text horizontally */
   font-size: 18px;
   color: #a0a0a0;
-  height: 50px !important; /* Фиксируем высоту слайда */
+  height: 50px !important; /* Fix slide height */
   cursor: pointer;
   user-select: none;
   transition: all 0.2s;
-    /* Гарантируем, что текст не переносится */
+    /* Ensure text doesn't wrap */
   white-space: nowrap; 
   overflow: visible;
 }
 
-/* Активный элемент (по центру) */
+/* Active element (centered) */
 .swiper-slide-active {
   color: #111;
   font-weight: 700;
@@ -430,12 +429,12 @@ body {
 }
 
 /* =========================
-   ЭКРАН 25: RESULT & REVIEW (DESKTOP FIRST)
+   SCREEN 25: RESULT & REVIEW (DESKTOP FIRST)
    ========================= */
 
-/* 1. БАЗОВЫЕ СТИЛИ (ДЛЯ ДЕСКТОПА) */
+/* 1. BASE STYLES (FOR DESKTOP) */
 
-/* Общий контейнер */
+/* General container */
 
 .result-split {
   display: flex;
@@ -448,20 +447,20 @@ body {
   margin: 60px auto 0;
 } 
 
-/* Контейнер для фото */
+/* Container for photo */
 .result-animation-wrap {
   position: relative;
-  flex: 1;       /* Гибкость: занимает 1 долю места */
-  width: auto;   /* Ширина автоматическая */
+  flex: 1;       /* Flexibility: takes 1 share of space */
+  width: auto;   /* Automatic width */
   max-width: 400px; 
-  aspect-ratio: 4 / 3; /* Пропорции фото */
+  aspect-ratio: 4 / 3; /* Photo proportions */
   border-radius: 20px;
   overflow: hidden;
   line-height: 0;
   flex-shrink: 0;
 }
 
-/* Основное фото */
+/* Main photo */
 .result-base-img {
   width: 100%;
   height: 100%;
@@ -469,7 +468,7 @@ body {
   display: block;
 }
 
-/* Бегающая полоска */
+/* Moving strip */
 .result-moving-figure {
   position: absolute;
   top: 0; bottom: 0; left: 0;
@@ -483,9 +482,9 @@ body {
   100% { left: 650%; }
 }
 
-/* Блок отзыва */
+/* Review block */
 .review-block {
-  flex: 1;       /* Гибкость: занимает 1 долю места */
+  flex: 1;       /* Flexibility: takes 1 share of space */
   width: auto;
   max-width: 400px;
   text-align: left;
@@ -510,14 +509,14 @@ body {
   letter-spacing: 2px;
 }
 
-/* --- Переключатель (Toggle) --- */
+/* --- Toggle --- */
 .units-toggle-wrapper {
   display: flex;
-  background-color: #F2F2F7; /* Светло-серый фон плашки */
-  border-radius: 50px;        /* Скругление как в iOS */
+  background-color: #F2F2F7; /* Light gray background for the plate */
+  border-radius: 50px;        /* Rounded like iOS */
   padding: 3px;
-  margin: 0 auto 20px auto;  /* Отступы */
-  max-width: 300px;          /* Ограничим ширину переключателя */
+  margin: 0 auto 20px auto;  /* Margins */
+  max-width: 300px;          /* Limit toggle width */
 }
 
 .toggle-btn {
@@ -533,21 +532,21 @@ body {
   transition: all 0.2s ease;
 }
 
-/* Активное состояние (синяя кнопка) */
+/* Active state (blue button) */
 .toggle-btn.active {
-  background-color: #485AFF; /* Цвет SlimKit */
+  background-color: #485AFF; /* SlimKit color */
   color: #fff;
-  /* box-shadow: 0 2px 4px rgba(0,0,0,0.15);*/ /* старая тень для кнопки */
+  /* box-shadow: 0 2px 4px rgba(0,0,0,0.15);*/ /* old button shadow */
   box-shadow: 0 6px 16px rgba(41, 98, 255, 0.25);
 }
 
 
 
-/* --- ЭКРАН 26 --- */
+/* --- SCREEN 26 --- */
 
 .h4 { font-size: 14px; font-weight: 500; line-height: 1.25;}
 
-/* --- Поля ввода (Inputs) --- */
+/* --- Inputs --- */
 .height-input-area {
   display: flex;
   justify-content: center;
@@ -568,12 +567,12 @@ body {
   margin: 0 10px;
 }
 
-/* Скрытый элемент */
+/* Hidden element */
 .hidden {
   display: none !important;
 }
 
-/* Стиль самого инпута (огромные цифры) */
+/* Input style (huge digits) */
 .input-huge {
   border: none;
   border-bottom: 2px solid #E5E5E5; 
@@ -592,7 +591,7 @@ body {
   border-bottom-color: #485AFF;
 }
 
-/* Для футов поля чуть уже */
+/* For feet, fields slightly narrower */
 .input-short {
   width: 60px;
 }
@@ -606,7 +605,7 @@ body {
 .info-banner {
   display: flex;
   flex-direction: column;
-  background: var(--c-bg-surface); /* Или дефолтный цвет */
+  background: var(--c-bg-surface); /* Or default color */
   border-radius: var(--radius-card);
   width: 340px;
   height: auto;
@@ -616,12 +615,12 @@ body {
   gap: 10px;
   justify-content: start;
   align-items: start;
-  transition: background-color 0.3s ease; /* Плавный переход цвета */
+  transition: background-color 0.3s ease; /* Smooth color transition */
 }
 
-/* Состояние ОШИБКИ */
+/* ERROR state */
 .info-banner.error {
-  background-color: #FFF0F0; /* Розовый фон как на референсе */
+  background-color: #FFF0F0; /* Pink background as in reference */
 }
 
 .icon-and-text {
@@ -641,13 +640,13 @@ body {
   text-align: left;
 }
 
-/* Состояние SUCCESS для плашки (Зеленая) */
+/* SUCCESS state for the plate (Green) */
 .info-banner.success {
-  background-color: #E8F5E9; /* Светло-зеленый фон */
+  background-color: #E8F5E9; /* Light green background */
 }
 
-/* Стиль неактивной кнопки (серый), когда стоит атрибут disabled */
-/* Когда disabled уберется через JS, кнопка автоматически станет градиентной (btn--primary) */
+/* Style for inactive button (gray), when disabled attribute is present */
+/* When disabled is removed via JS, the button automatically becomes gradient (btn--primary) */
 .btn--primary:disabled {
   background: #E5E5EA; 
   color: #8E8E93;
@@ -657,45 +656,45 @@ body {
 }
 
 /* =========================
-   ЭКРАН 29: ПРОФИЛЬ
+   SCREEN 29: PROFILE
    ========================= */
 
-/* Карточка Профиля (Верхняя) */
+/* Profile Card (Top) */
 .profile-card {
   width: 100%;
   border-radius: 20px;
-  padding: 0px; /* Равномерный отступ со всех сторон для корректного отображения внутренней плашки */
+  padding: 0px; /* Uniform padding on all sides for correct display of inner plate */
   margin-bottom: 16px;
   transition: background-color 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden; /* Чтобы скругления карточки обрезали вложенную плашку */
+  overflow: hidden; /* So card rounding cuts the nested plate */
 }
 
-/* Цветовые темы верхней карточки */
-.profile-card--green { background-color: #eafbf0; } /* Зеленый (Ref 1) */
-.profile-card--blue  { background-color: #eaf8ff; } /* Синий (Ref 3) */
-.profile-card--red   { background-color: #fff2f6; } /* Красный (Ref 4) */
+/* Color themes for the top card */
+.profile-card--green { background-color: #eafbf0; } /* Green (Ref 1) */
+.profile-card--blue  { background-color: #eaf8ff; } /* Blue (Ref 3) */
+.profile-card--red   { background-color: #fff2f6; } /* Red (Ref 4) */
 
-/* Блок Рост / Вес */
+/* Height / Weight Block */
 .profile-stats-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  margin: 8px 8px 20px 8px; /* Задаем внешние отступы от краев карточки */
-  width: auto; /* Позволяем margin работать корректно */
+  margin: 8px 8px 20px 8px; /* Set outer margins from card edges */
+  width: auto; /* Allow margin to work correctly */
   align-self: stretch;
   height: 60;
-  /* Новые стили для соответствия референсу */
-  background-color: rgba(255, 255, 255, 0.5); /* Полупрозрачный белый для наложения цвета */
+  /* New styles to match reference */
+  background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white for color overlay */
   border-radius: 16px;
   padding: 16px 0;
   transition: background-color 0.3s ease;
 }
 
-/* Добавляем специфические цвета для внутренней плашки в зависимости от состояния карточки */
+/* Add specific colors for inner plate depending on card state */
 .profile-card--green .profile-stats-row { background-color: #e1f6e9; }
 .profile-card--blue .profile-stats-row  { background-color: #e0f1fa; }
 .profile-card--red .profile-stats-row   { background-color: #fee5eb; }
@@ -725,7 +724,7 @@ body {
   width: 1px;
   height: 40px;
   background-color: rgba(0,0,0,0.1);
-  flex-shrink: 0; /* Чтобы черточка не сжималась */
+  flex-shrink: 0; /* So the dash doesn't shrink */
 }
 
 .profile-bmi-row {
@@ -734,7 +733,7 @@ body {
   margin-bottom: 16px;
 }
 
-/* Шкала с картинкой (Верхняя) */
+/* Scale with image (Top) */
 .scale-wrapper {
   position: relative;
   width: 100%;
@@ -745,19 +744,19 @@ body {
 .scale-labels {
   display: flex;
   justify-content: space-between;
-  padding: 0 15%; /* Отступы примерно подгоняем под картинку 29.1 */
+  padding: 0 15%; /* Margins roughly match image 29.1 */
   font-size: 10px;
   color: #888;
   margin-bottom: 4px;
 }
-/* Немного смещаем лейблы, чтобы попадали под деления картинки */
+/* Slightly shift labels to align with image divisions */
 .scale-labels span:nth-child(1) { margin-left: 5%; }
 .scale-labels span:nth-child(4) { margin-right: 5%; }
 
 .scale-track-img-wrap {
   position: relative;
   width: 100%;
-  height: auto; /* Высота полоски на картинке */
+  height: auto; /* Height of the strip in the image */
   margin-bottom: 6px;
 }
 
@@ -771,11 +770,11 @@ body {
 
 .scale-labels-grid {
   display: grid;
-  /* Создаем 5 абсолютно равных колонок */
+  /* Create 5 absolutely equal columns */
   grid-template-columns: repeat(5, 1fr);
   width: 100%;
   margin-top: 8px;
-  /* Убедитесь, что padding совпадает с отступами вашей картинки, если они есть */
+  /* Ensure padding matches image padding if any */
   box-sizing: border-box;
 }
 
@@ -783,14 +782,14 @@ body {
   text-align: center;
   color: #333;
   
-  /* Динамический размер шрифта:
-     12px — минимальный размер
-     2.5vw — шрифт будет расти вместе с шириной экрана
-     16px — (опционально) максимальный предел, чтобы текст не стал огромным
+  /* Dynamic font size:
+     12px — minimum size
+     2.5vw — font grows with screen width
+     16px — (optional) maximum limit so text doesn't get huge
   */
   font-size: clamp(8px, 2.5vw, 10px);
   
-  /* Гарантируем, что текст не переносится на новую строку и не ломает сетку */
+  /* Ensure text doesn't wrap and break the grid */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -798,7 +797,7 @@ body {
 
 .scale-numbers-grid {
   display: grid;
-  /* Создаем те же 5 колонок, что и для шкалы */
+  /* Create the same 5 columns as for the scale */
   grid-template-columns: repeat(5, 1fr);
   width: 100%;
   margin-bottom: 4px;
@@ -807,20 +806,20 @@ body {
 .scale-numbers-grid span {
   font-size: clamp(8px, 2vw, 12px);
   color: #888;
-  /* Центрируем текст относительно линии, а не ячейки */
+  /* Center text relative to the line, not the cell */
   width: 0; 
   display: flex;
   justify-content: center;
   white-space: nowrap;
 }
 
-/* Позиционируем каждое число на соответствующую вертикальную линию сетки */
-.num-18 { grid-column: 2; } /* Начало 2-й колонки (граница 1 и 2) */
-.num-25 { grid-column: 3; } /* Начало 3-й колонки (граница 2 и 3) */
-.num-28 { grid-column: 4; } /* Начало 4-й колонки (граница 3 и 4) */
-.num-32 { grid-column: 5; } /* Начало 5-й колонки (граница 4 и 5) */
+/* Position each number on the corresponding grid line */
+.num-18 { grid-column: 2; } /* Start of 2nd column (border of 1 and 2) */
+.num-25 { grid-column: 3; } /* Start of 3rd column (border of 2 and 3) */
+.num-28 { grid-column: 4; } /* Start of 4th column (border of 3 and 4) */
+.num-32 { grid-column: 5; } /* Start of 5th column (border of 4 and 5) */
 
-/* Треугольник для градиентной шкалы */
+/* Triangle for gradient scale */
 .scale-triangle {
   position: absolute;
   top: 0; 
@@ -828,7 +827,7 @@ body {
   height: 0; 
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-top: 10px solid #000; /* Черный треугольник смотрит вниз */
+  border-top: 10px solid #000; /* Black triangle pointing down */
   transform: translateX(-50%);
   transition: left 0.5s ease;
 }
@@ -841,7 +840,7 @@ body {
   color: #111;
 }*/
 
-/* Плашка сообщения внизу цветной карты */
+/* Message plate at bottom of color card */
 .profile-message-box {
   width: 100%;
   border-radius: 0px 0px 12px 12px;
@@ -855,12 +854,12 @@ body {
   transition: background-color 0.3s ease;
 }
 
-/* Цветовые темы для плашки сообщения */
+/* Color themes for message plate */
 .profile-message-box--green { background-color: #baffce; }
 .profile-message-box--blue  { background-color: #d1f1ff; }
 .profile-message-box--red   { background-color: #ffdce5; }
 
-/* Нижняя Серая Карточка */
+/* Bottom Gray Card */
 .profile-gray-card {
   background-color: #f5f5f5;
   border-radius: 20px;
@@ -870,12 +869,12 @@ body {
   padding-right: 60px;
 }
 
-/* Шкала CSS (3 деления) */
+/* CSS Scale (3 divisions) */
 .css-scale-container {
   position: relative;
   width: 100%;
   margin-bottom: 24px;
-  padding-top: 12px; /* Место под треугольник, если он будет сверху, но у нас он на шкале */
+  padding-top: 12px; /* Space for triangle, if it's on top, but we have it on the scale */
 }
 
 .css-scale-track {
@@ -884,24 +883,24 @@ body {
   width: 100%;
   border-radius: 6px;
   overflow: hidden;
-  gap: 2px; /* Расстояние между сегментами */
+  gap: 2px; /* Gap between segments */
 }
 
 .css-scale-seg {
   flex: 1;
-  background-color: #d5d9e5; /* Серый по умолчанию */
+  background-color: #d5d9e5; /* Gray by default */
   transition: background-color 0.3s;
 }
 
-/* Цвета сегментов */
-.css-scale-seg.blue { background-color: #448AFF; } /* Как на реф 3 */
-.css-scale-seg.green { background-color: #9cffbb; } /* Как на реф 1 */
-.css-scale-seg.red { background-color: #FF5252; }   /* Как на реф 4 */
+/* Segment colors */
+.css-scale-seg.blue { background-color: #448AFF; } /* As in ref 3 */
+.css-scale-seg.green { background-color: #9cffbb; } /* As in ref 1 */
+.css-scale-seg.red { background-color: #FF5252; }   /* As in ref 4 */
 
-/* Треугольник для CSS шкалы */
+/* Triangle for CSS scale */
 .scale-triangle-css {
   position: absolute;
-  top: 4px; /* Позиционируем прямо на полоску */
+  top: 4px; /* Position directly on the strip */
   width: 0; 
   height: 0; 
   border-left: 6px solid transparent;
@@ -931,7 +930,7 @@ body {
   color: #111;
 }
 
-/* ЭКРАН 33 */
+/* SCREEN 33 */
 .summary-flex {
   display: flex;
   gap: 24px;
@@ -960,24 +959,24 @@ body {
   margin-bottom: 10px;
 }
 
-/* Контейнер графика и плашек */
+/* Chart and badge container */
 .chart-container {
   display: flex;
-  flex-direction: column; /* Элементы идут друг за другом вертикально */
+  flex-direction: column; /* Elements go one after another vertically */
   align-items: center;
   width: 100%;
   max-width: 450px;
 }
 
-/* Общий контейнер для бейджей, копируем логику дат */
+/* Common container for badges, copy date logic */
 .chart-weights {
   display: flex;
   justify-content: space-between;
   width: 100%;
   padding: 0 4px;
-  margin-bottom: 5px; /* Небольшой зазор перед графиком */
+  margin-bottom: 5px; /* Small gap before chart */
 }
-/* Корректировка контейнера дат для симметрии */
+/* Adjust date container for symmetry */
 .chart-dates {
   display: flex;
   justify-content: space-between;
@@ -989,9 +988,9 @@ body {
   font-weight: 600;
 }
 
-/* Базовый стиль бейджа (убираем старые top/left) */
+/* Base badge style (remove old top/left) */
 .weight-badge {
-  position: relative; /* Позволяет двигать бейдж относительно его места в строке */
+  position: relative; /* Allows moving the badge relative to its place in the row */
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 14px;
@@ -1001,31 +1000,31 @@ body {
   z-index: 2;
 }
 
-/* ТОЧНАЯ НАСТРОЙКА НАД ТОЧКАМИ ГРАФИКА
-   Используем top (отрицательный - вверх, положительный - вниз) 
-   и left для горизонтальной подгонки внутри флекс-блока.
+/* PRECISE ADJUSTMENT ABOVE CHART POINTS
+   Use top (negative - up, positive - down) 
+   and left for horizontal adjustment within the flex block.
 */
 .weight-badge--1 { 
   background-color: #485AFF; 
-  top: 0px; /* Смещаем к самой высокой точке */
+  top: 0px; /* Shift to the highest point */
   left: -2px; 
 }
 
 .weight-badge--2 { 
   background-color: #485AFF; 
-  top: 30px; /* Спускаем ниже ко второй точке */
+  top: 30px; /* Lower to the second point */
   left: 0px; 
 }
 
 .weight-badge--3 { 
   background-color: #00D26A; 
-  top: 65px; /* Еще ниже к третьей точке */
+  top: 65px; /* Even lower to the third point */
   left: 2px; 
 }
 
 .weight-badge--4 { 
   background-color: #00D26A; 
-  top: 65px; /* На уровне с третьей точкой */
+  top: 65px; /* Level with the third point */
   left: 8px; 
 }
 
@@ -1038,28 +1037,28 @@ body {
   padding-right: 14px;
 }
 
-/* ОТЗЫВЫ */
-/* Контейнер для всех карточек */
+/* REVIEWS */
+/* Container for all cards */
 .summary-column--reviews {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-width: 600px; /* Ширина под ваш дизайн */
+  max-width: 600px; /* Width for your design */
   margin: 0 auto;
 }
 
-/* Сама карточка */
+/* The card itself */
 .review-card {
   background: #ffffff;
-  border-radius: 16px; /* Скругление углов плашки */
+  border-radius: 16px; /* Card rounding */
   padding: 13px 10px 10px;
-  display: flex; /* Выстраиваем аватар и контент в ряд */
+  display: flex; /* Align avatar and content in a row */
   gap: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Мягкая тень плашки */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Soft card shadow */
   align-items: flex-start;
 }
 
-/* Левая часть (Аватар + Имя) */
+/* Left part (Avatar + Name) */
 .review-avatar-card {
   display: flex;
   flex-direction: column;
@@ -1071,7 +1070,7 @@ body {
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  border: 1px solid #FFB300; /* Желтый ободок из референса */
+  border: 1px solid #FFB300; /* Yellow border from reference */
   padding: 3px;
   margin-bottom: 8px;
 }
@@ -1084,7 +1083,7 @@ body {
 }
 
 
-/* Правая часть (Текст отзыва) */
+/* Right part (Review text) */
 .review-content {
   flex: 1;
 }
@@ -1097,13 +1096,13 @@ body {
 }
 
 .review-stars {
-  height: 18px; /* Подгоняем размер картинки со звездами */
+  height: 18px; /* Adjust star image size */
   object-fit: contain;
 }
 
 .review-rating {
   font-size: 12px;
-  font-weight: 700; /* Жирный рейтинг 4.5 / 5.0 */
+  font-weight: 700; /* Bold rating 4.5 / 5.0 */
   color: #111;
   margin: 0;
 }
@@ -1118,19 +1117,19 @@ body {
 .review-names {
   font-size: 10px;
   font-weight: 500;
-  font-style: italic; /* Имя Joe_88 под наклоном */
+  font-style: italic; /* Name Joe_88 in italics */
   color: #111;
   margin: 0;
 }
 
-/* Состояние disabled для стрелок навигации */
+/* Disabled state for navigation arrows */
 .btn-arrow.disabled {
   opacity: 0.2;
   pointer-events: none;
   cursor: default;
 }
 
-/* Также убедимся, что кнопки в футере тоже визуально блокируются */
+/* Also ensure footer buttons are visually blocked */
 .btn:disabled {
   background: #E5E5EA !important; 
   color: #8E8E93 !important;
@@ -1155,8 +1154,8 @@ body {
   }
 
   .weight-badge {
-    /* Уменьшаем шрифт и отступы пропорционально ширине экрана */
-    /* Используем clamp, чтобы размер не становился меньше, чем нужно на 320px */
+    /* Reduce font and padding proportionally to screen width */
+    /* Use clamp so size doesn't get smaller than needed at 320px */
     font-size: 10px; 
     padding: clamp(2px, 1vw, 4px) clamp(6px, 2.5vw, 12px);
   }
@@ -1198,54 +1197,54 @@ body {
     --header-height: 80px; 
     --footer-height: 140px;
   }
-  /* В мобильной версии скрываем логотип (как договаривались ранее) */
+  /* In mobile version, hide the logo (as previously agreed) */
   .header-logo {
     display: none;
   }
 
-    /* 1. ЭКРАН 32 */
-  /* ... ваши предыдущие стили ... */
+    /* 1. SCREEN 32 */
+  /* ... your previous styles ... */
 
-  /* 1. Уменьшаем общую высоту контейнера (5 строк * 25px = 125px) */
+  /* 1. Reduce overall container height (5 rows * 25px = 125px) */
   .date-selector-wrapper {
     width: 90%;
     height: 200px !important; 
   }
 
-  /* 2. Настраиваем высоту строк */
+  /* 2. Adjust row height */
   .swiper-slide {
-    height: 40px !important;     /* Ваша желаемая высота */
-    font-size: 14px !important;  /* Шрифт тоже нужно уменьшить, чтобы влез */
+    height: 40px !important;     /* Your desired height */
+    font-size: 14px !important;  /* Font also needs to be reduced to fit */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
   }
 
-  /* 3. Активный шрифт чуть крупнее */
+  /* 3. Active font slightly larger */
   .swiper-slide-active {
     font-size: 16px !important;
     font-weight: 700 !important;
   }
 
-  /* 4. Настраиваем синюю рамку */
+  /* 4. Adjust the blue frame */
   .date-highlight {
-    height: 40px !important;        /* Рамка должна быть высотой со строку */
-    margin-top: -20px !important; /* Ровно половина от 25px, чтобы встать по центру */
-    border-radius: 6px;             /* Чуть уменьшим скругление для аккуратности */
+    height: 40px !important;        /* Frame should be row height */
+    margin-top: -20px !important; /* Exactly half of 25px to center */
+    border-radius: 6px;             /* Slightly reduce rounding for neatness */
   }
 
-  /* Увеличим активный шрифт, чтобы смотрелось красиво */
+  /* Increase active font for better look */
   .swiper-slide-active {
     font-size: 20px !important;
     font-weight: 700 !important;
   }
 
-  /* Типографика */
+  /* Typography */
   .text-display { font-size: 36px; }
   .text-h1 { font-size: 26px; }
   .text-h1-large { font-size: 30px; }
   
-  /* 2. ВОЗВРАЩАЕМ ПРАВКУ ДЛЯ H2 */
+  /* 2. RETURN THE FIX FOR H2 */
   .h2 { 
     font-size: 24px; 
     font-weight: 700; 
@@ -1265,16 +1264,16 @@ body {
   .text-subtitle { font-size: 16px; margin-bottom: 16px; }
   .card__subtitle { font-size: 12px; color: var(--c-text-sub); font-weight: 400; margin-top: 4px; line-height: 1.4; }
   
-  /* Карточки */
+  /* Cards */
   .card-person__img-wrap { width: 120px; height: 120px; }
   .image-container-card { margin: 22px 0; }
   .btn--age { font-size: 14px; padding: 6px 12px; margin-top: -15px; }
   .btn { width: 100%; padding: 14px 20px; }
   
-  /* Сетки */
+  /* Grids */
   .grid-age { margin-top: 30px; gap: 16px; }
   
-  /* Отступы контента */
+  /* Content padding */
   .split-layout__top { 
     flex: 0 0 auto; 
     width: 100%; 
@@ -1285,22 +1284,22 @@ body {
     z-index: 10; 
   }
   .layout-main { 
-    /* Теперь это значение управляется через JS переменную --footer-h */
+    /* Now this value is controlled via JS variable --footer-h */
     /* padding-bottom: calc(var(--footer-h, 120px) + 20px) !important; */
     padding-bottom: calc(var(--footer-h, 120px) + 20px + env(safe-area-inset-bottom)) !important;
   }
   .split-layout__bottom { padding-bottom: 16px; }
 
-  /* --- 1. ВОЗВРАЩАЕМ РАСТЯГИВАНИЕ ПРОГРЕСС-БАРА --- */
+  /* --- 1. RETURN THE PROGRESS BAR STRETCHING --- */
   
-  /* Убираем отступы у самого блока хедера */
+  /* Remove header block padding */
   .nav-header { 
     padding-top: 40px; 
     padding-left: 0; 
     padding-right: 0; 
   }
 
-  /* Переносим отступы во внутренний контейнер (чтобы совпадало с контентом) */
+  /* Move padding to inner container (to match content) */
   .nav-header__content { 
     width: 100%; 
     padding: 0 14px; 
@@ -1312,7 +1311,7 @@ body {
     display: none !important;
   }
   
-  /* Заставляем бар занимать все свободное место */
+  /* Make bar take all available space */
   .step-progress {
     max-width: none; 
     flex: 1; 
@@ -1320,14 +1319,14 @@ body {
     margin: 0 10px; 
   }
   
-  /* Точки поменьше для мобильного */
+  /* Smaller dots for mobile */
   .step-dot {
     width: 10px;
     height: 10px;
   }
   
   .result-split {
-    flex-direction: column; /* Переключаем в колонку */
+    flex-direction: column; /* Switch to column */
     align-items: center;
     margin-top: 0;
     padding-top: 10px;
@@ -1335,17 +1334,17 @@ body {
   }
 
   .result-animation-wrap {
-    width: 100%; /* На мобильном фото во всю ширину */
-    flex: none;  /* Отключаем гибкость flex */
+    width: 100%; /* On mobile, photo full width */
+    flex: none;  /* Disable flex flexibility */
   }
 
   .review-block {
-    width: 100%; /* На мобильном текст во всю ширину */
+    width: 100%; /* On mobile, text full width */
     flex: none;
   }
 
   /* =========================
-   ИСПРАВЛЕННЫЙ ГИБКИЙ АДАПТИВ ЭКРАНА 29
+   FIXED FLEXIBLE ADAPTATION FOR SCREEN 29
    ========================= */
 
   .scale-wrapper {
@@ -1356,7 +1355,7 @@ body {
   padding-left: 16px;
   padding-right: 16px;
   }
-  /* Перебиваем фиксированную ширину из HTML и CSS */
+  /* Override fixed width from HTML and CSS */
   #view-29 .container-narrow {
     width: 100% !important; 
     max-width: 100% !important;
@@ -1364,7 +1363,7 @@ body {
     box-sizing: border-box !important;
   }
 
-  /* Заставляем карточки занимать 100% ширины родителя */
+  /* Force cards to take 100% of parent width */
   .profile-card {
     width: 100% !important;
     max-width: 100% !important;
@@ -1383,12 +1382,12 @@ body {
     margin-right: 0 !important;
   }
 
-  /* Адаптивные шрифты через clamp */
+  /* Adaptive fonts via clamp */
   #view-29 .h2 {
     font-size: clamp(22px, 6vw, 28px) !important;
   }
 
-  /* Исправляем сетки шкал: теперь они будут сжиматься */
+  /* Fix scale grids: they will now shrink */
   .scale-labels-grid, 
   .scale-numbers-grid {
     display: grid !important;
@@ -1398,23 +1397,23 @@ body {
 
   .scale-labels-grid span, 
   .scale-numbers-grid span {
-    /* Шрифт будет уменьшаться до 8px на очень узких экранах */
+    /* Font will shrink to 8px on very narrow screens */
     font-size: clamp(8px, 2.2vw, 11px) !important;
     white-space: nowrap;
   }
 
-  /* Внутренняя плашка Рост/Вес */
+  /* Inner Height/Weight plate */
   .profile-stats-row {
     margin: 8px 8px 20px 8px !important;
     width: auto !important;
   }
 
-  /* Серая карточка: убираем боковой отступ 60px, который ломал вид */
+  /* Gray card: remove side 60px padding that broke the view */
   .profile-gray-card {
     padding: 20px 16px !important;
   }
 
-  /* Мобильная адаптация */
+  /* Mobile adaptation */
   .summary-flex {
     flex-direction: column;
     gap: 0;
@@ -1454,25 +1453,25 @@ body {
   }
 
 
-  /* ЭКРАНЫ 26-28 */
-  /* Убираем лишний воздух под заголовками на экранах ввода */
+  /* SCREENS 26-28 */
+  /* Remove extra space under titles on input screens */
   #view-26 .h2, 
   #view-27 .h2, 
   #view-28 .h2 {
-    margin-bottom: 20px !important; /* Было 60px в HTML */
+    margin-bottom: 20px !important; /* Was 60px in HTML */
   }
   .units-toggle-wrapper {
     margin: 0 auto 0px auto; 
   }
 
-  /* Чуть приподнимаем кнопку Done */
+  /* Slightly raise the Done button */
   .inline-footer {
     margin-top: 20px !important;
-    padding-bottom: 20px; /* Доп. воздух снизу */
+    padding-bottom: 20px; /* Extra bottom air */
   }
 }
 
-/* Адаптация плашек веса для мобильных устройств */
+/* Adapt weight badges for mobile devices */
 @media (max-width: 500px) {
 
   .chart-container {
@@ -1480,8 +1479,8 @@ body {
 }
 
   .weight-badge {
-    /* Уменьшаем шрифт и отступы пропорционально ширине экрана */
-    /* Используем clamp, чтобы размер не становился меньше, чем нужно на 320px */
+    /* Reduce font and padding proportionally to screen width */
+    /* Use clamp so size doesn't get smaller than needed at 320px */
     font-size: 10px; 
     padding: clamp(2px, 1vw, 4px) clamp(6px, 2.5vw, 12px);
   }
@@ -1489,8 +1488,8 @@ body {
   .chart-dates {
     font-size: 10px; 
   }
-  /* При необходимости корректируем вертикальные отступы (top), 
-     так как на мобильных устройствах график может сжиматься по высоте */
+  /* Adjust vertical offsets (top) if necessary,
+     as the chart may shrink in height on mobile */
   .weight-badge--1 { top: 0px; }
   .weight-badge--2 { top: 20px; }
   .weight-badge--3 { top: 45px; }
@@ -1540,7 +1539,7 @@ body {
   .btn { width: 100%; padding: 12px 18px; }
   .card-person{width: 120px;}
   
-  /* Сетки */
+  /* Grids */
   /*.grid-age { margin-top: 30px; gap: 16px; width: auto;}*/
   .grid-system { display: grid; width: auto; gap: 8px; } 
   .grid-age { grid-template-columns: repeat(2, auto); justify-content: center; gap: 16px; margin-top: 30px; }
@@ -1561,7 +1560,7 @@ body {
 
 }
 
-/* ЭКРАН АНАЛИЗА */
+/* ANALYSIS SCREEN */
 .analysis-icon-wrap { position: relative; width: 80px; height: 80px; margin: 0 auto; }
 
 .analysis-spinner {
@@ -1611,19 +1610,19 @@ body {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 40px; /* Расстояние между пунктами */
+  gap: 40px; /* Distance between items */
   text-align: left;
-  padding-left: 20px; /* Небольшой отступ */
+  padding-left: 20px; /* Small padding */
   max-width: 350px;
   margin: auto;
 }
 
-/* Линии (трек) */
+/* Lines (track) */
 .timeline-track {
   position: absolute;
-  top: 15px; /* Старт от центра первой точки */
-  bottom: 30px; /* Конец у центра последней (примерно) */
-  left: 35px; /* Центрируем по иконке (10px padding + 15px половина ширины иконки) */
+  top: 15px; /* Start from center of first dot */
+  bottom: 30px; /* End near center of last (approx) */
+  left: 35px; /* Center relative to icon (10px padding + 15px half icon width) */
   width: 2px;
   z-index: 0;
 }
@@ -1631,7 +1630,7 @@ body {
 .timeline-line-dotted {
   width: 100%; 
   height: 100%;
-  border-left: 2px dotted #E0E0E0; /* Серая пунктирная */
+  border-left: 2px dotted #E0E0E0; /* Gray dotted */
   position: absolute; 
   top: 0; 
   left: 0;
@@ -1640,22 +1639,22 @@ body {
 .timeline-line-fill {
   width: 2px;
   background-color: var(--c-primary);
-  height: 0%; /* Будем менять через JS */
+  height: 0%; /* Will be changed via JS */
   position: absolute; top: 0;
   transition: height 3.0s linear;
 }
 
-/* Элемент списка */
+/* List item */
 .timeline-item {
   position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
   gap: 20px;
-  opacity: 1; /* Все видны, но цвет разный */
+  opacity: 1; /* All visible, but color differs */
 }
 
-/* Маркер (Круг) */
+/* Marker (Circle) */
 .timeline-marker {
   position: relative;
   width: 32px; height: 32px;
@@ -1666,7 +1665,7 @@ body {
 .marker-circle {
   width: 32px; height: 32px;
   border-radius: 50%;
-  border: 2px solid #E0E0E0; /* Серый бордюр по дефолту */
+  border: 2px solid #E0E0E0; /* Gray border by default */
   background: #fff;
   display: flex; align-items: center; justify-content: center;
   transition: all 0.3s ease;
@@ -1680,17 +1679,17 @@ body {
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Текст */
+/* Text */
 .timeline-text {
   font-size: 16px;
   font-weight: 500;
-  color: #BDBDBD; /* Серый текст по дефолту */
+  color: #BDBDBD; /* Gray text by default */
   transition: color 0.3s;
 }
 
-/* --- СОСТОЯНИЯ --- */
+/* --- STATES --- */
 
-/* Active (Пульсирующий текущий шаг) */
+/* Active (Pulsing current step) */
 .timeline-item.active .timeline-text { color: var(--c-text-main); }
 .timeline-item.active .marker-circle {
   border-color: var(--c-primary);
@@ -1724,7 +1723,7 @@ body {
   100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
 }
 
-/* Completed (Завершенный шаг) */
+/* Completed (Finished step) */
 .timeline-item.completed .marker-circle {
   background-color: var(--c-primary);
   border-color: var(--c-primary);
@@ -1744,11 +1743,11 @@ body {
 .modal-overlay {
   position: fixed; 
   inset: 0;
-  /* Убрали блюр, оставили только затемнение */
+  /* Removed blur, kept only darkening */
   background: rgba(0, 0, 0, 0.6); 
-  /* backdrop-filter: blur(4px); <-- УДАЛЕНО */
+  /* backdrop-filter: blur(4px); <-- REMOVED */
   
-  /* Ставим z-index больше, чем у nav-header (500), чтобы перекрыть меню и лого */
+  /* Set z-index higher than nav-header (500) to overlay menu and logo */
   z-index: 2000; 
   
   display: flex; align-items: center; justify-content: center;
@@ -1813,7 +1812,7 @@ body {
 .input-email {
   width: 100%;
   height: 60px;
-  border-radius: 12px; /* Скругление как на референсах */
+  border-radius: 12px; /* Rounding as in references */
   padding: 0 24px;
   font-size: 18px;
   font-weight: 400;
@@ -1821,33 +1820,33 @@ body {
   font-family: var(--font-main);
   transition: all 0.2s ease;
   
-  /* Состояние 3.1: По умолчанию (Ref 3) - Белый фон, синяя рамка */
+  /* State 3.1: Default (Ref 3) - White background, blue border */
   background-color: #ffffff;
-  border: 1px solid var(--c-primary); /* Синий цвет рамки */
+  border: 1px solid var(--c-primary); /* Blue border color */
   color: var(--c-text-main);
 }
 
 .input-email::placeholder {
-  color: #9E9E9E; /* Серый плейсхолдер */
+  color: #9E9E9E; /* Gray placeholder */
 }
 
-/* Состояние 3.2: Фокус, но еще пусто (Ref 4) - Голубой фон */
+/* State 3.2: Focus, but still empty (Ref 4) - Light blue background */
 .input-email:focus {
-  background-color: #E8F0FE; /* Светло-голубой фон */
+  background-color: #E8F0FE; /* Light blue background */
   border-color: var(--c-primary);
 }
 
-/* Состояние 3.3: Введено значение (Ref 5) - Голубой фон сохраняется */
-/* :not(:placeholder-shown) срабатывает, когда в поле есть текст */
+/* State 3.3: Value entered (Ref 5) - Light blue background remains */
+/* :not(:placeholder-shown) triggers when field has text */
 .input-email:not(:placeholder-shown) {
   background-color: #E8F0FE;
   border-color: var(--c-primary);
 }
 
-/* Блок с замком */
+/* Block with lock */
 .secure-note {
   display: flex;
-  align-items: flex-start; /* Выравнивание по верху */
+  align-items: flex-start; /* Align to top */
   justify-content: center;
   gap: 12px;
   max-width: 380px;
@@ -1858,20 +1857,20 @@ body {
 
 .secure-icon-wrap {
   flex-shrink: 0;
-  margin-top: 2px; /* Небольшая коррекция, чтобы иконка была ровно с текстом */
+  margin-top: 2px; /* Slight correction to align icon with text */
 }
 
 .secure-img {
-  width: 16px; /* Размер иконки замка */
+  width: 16px; /* Lock icon size */
   height: auto;
   display: block;
 }
 
-/* Модификатор для text-legal, чтобы выровнять текст слева */
+/* Modifier for text-legal to align text left */
 .text-legal--left {
   text-align: left !important;
   margin: 0 !important;
-  color: #888888; /* Чуть темнее серого для читаемости */
+  color: #888888; /* Slightly darker gray for readability */
   line-height: 1.4;
 }
 
@@ -1879,7 +1878,7 @@ body {
    SCREEN 35: DESKTOP CARD
    ========================= */
 
-/* Базовые стили (Мобильный - Ref 2) */
+/* Base styles (Mobile - Ref 2) */
 .email-content-card {
   width: 100%;
   background: transparent;
@@ -1887,21 +1886,21 @@ body {
   border-radius: 0;
 }
 
-/* Настройки только для ДЕСКТОПА (Ref 1) */
+/* Settings only for DESKTOP (Ref 1) */
 @media (min-width: 768px) {
   .email-content-card {
-    background-color: var(--c-bg-surface); /* Испольуем глобальный голубой цвет #f5f8ff */
+    background-color: var(--c-bg-surface); /* Use global blue color #f5f8ff */
     border-radius: 24px;
-    padding: 60px 80px; /* Внутренние отступы плашки */
+    padding: 60px 80px; /* Inner card padding */
     margin: 0 auto;
     
-    /* Центрируем контент внутри */
+    /* Center content inside */
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 
-  /* Немного увеличим ширину контейнера на этом экране, чтобы плашка смотрелась просторнее */
+  /* Slightly increase container width on this screen for a roomier card look */
   #view-35 .container-narrow {
     max-width: 650px;
   }
@@ -1914,16 +1913,16 @@ body {
 .btn-progress-wrapper {
   position: relative;
   width: 100%;
-  max-width: 320px; /* Ширина обычной кнопки */
+  max-width: 320px; /* Standard button width */
   height: 56px;
-  background-color: #C7D2FE; /* Светло-сиреневый фон трека (как на рефе) */
+  background-color: #C7D2FE; /* Light lilac track background (as in ref) */
   border-radius: 99px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  cursor: default; /* Курсор обычный, пока не заполнится */
+  cursor: default; /* Default cursor until filled */
   transition: transform 0.1s ease;
   user-select: none;
 }
@@ -1933,21 +1932,21 @@ body {
   top: 0;
   left: 0;
   bottom: 0;
-  width: 0%; /* Будет меняться через JS */
-  background-color: var(--c-primary); /* Ваш основной синий #2962ff */
+  width: 0%; /* Will be changed via JS */
+  background-color: var(--c-primary); /* Your main blue #2962ff */
   z-index: 1;
-  /* transition: width 0.1s linear; -> Убираем transition здесь, так как будем анимировать через JS requestAnimationFrame для плавности */
+  /* transition: width 0.1s linear; -> Remove transition here, as we'll animate via JS requestAnimationFrame for smoothness */
 }
 
 .btn-progress-text {
   position: relative;
-  z-index: 2; /* Текст поверх заливки */
+  z-index: 2; /* Text above fill */
   font-size: 20px;
   font-weight: 700;
-  color: var(--c-accent); /* Желтый #ffd600 */
+  color: var(--c-accent); /* Yellow #ffd600 */
 }
 
-/* Состояние готовности (когда 100%) */
+/* Ready state (at 100%) */
 .btn-progress-wrapper.ready {
   cursor: pointer;
   box-shadow: 0 6px 16px rgba(41, 98, 255, 0.25);
@@ -1957,7 +1956,7 @@ body {
   transform: scale(0.98);
 }
 
-/* ========== COOKIE BANNER - СИНЯЯ ПЛАШКА СНИЗУ ========== */
+/* ========== COOKIE BANNER - BLUE BANNER AT BOTTOM ========== */
 .cookie-banner {
   position: fixed;
   bottom: 0;
@@ -2073,7 +2072,7 @@ body {
   box-shadow: 0 8px 20px rgba(41, 98, 255, 0.35);
 }
 
-/* Модальное окно настроек кукисов (синяя тема) */
+/* Cookie settings modal window (blue theme) */
 .cookie-modal {
   position: fixed;
   top: 0;
@@ -2215,7 +2214,7 @@ body {
   line-height: 1.5;
 }
 
-/* Синий toggle switch */
+/* Blue toggle switch */
 .cookie-switch {
   position: relative;
   display: inline-block;
@@ -2312,7 +2311,7 @@ input:disabled + .cookie-switch__slider {
   box-shadow: 0 8px 20px rgba(41, 98, 255, 0.35);
 }
 
-/* Адаптация для мобильных */
+/* Adaptation for mobile */
 @media (max-width: 768px) {
   .cookie-banner__container {
     flex-direction: column;
@@ -2378,7 +2377,7 @@ input:disabled + .cookie-switch__slider {
   }
 }
 
-/* Анимация для иконки */
+/* Animation for icon */
 @keyframes pulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.05); }
