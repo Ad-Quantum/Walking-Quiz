@@ -410,7 +410,7 @@ document.addEventListener("DOMContentLoaded", () => {
         clearInterval(timer);
         setTimeout(() => showView(1), 500);
       }
-    }, 40);
+    }, 25);
   }
 
   document.body.addEventListener("click", (e) => {
