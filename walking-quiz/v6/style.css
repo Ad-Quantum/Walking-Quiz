@@ -1139,67 +1139,71 @@ body {
 }
 
 /* =========================
-   ВИДЕО-ФОН ДЛЯ ПЕРВОГО ЭКРАНА
+   ВИДЕО-ФОН ДЛЯ ПЕРВОГО ЭКРАНА (ИСПРАВЛЕНО)
    ========================= */
 
 /* Контейнер для первого экрана с видео */
 #view-1 {
   position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh; /* dynamic viewport height */
   overflow: hidden;
+  background-color: #000; /* fallback */
 }
 
-/* Стили для видео-фона */
+/* Стили для видео-фона - исправлено для мобильных */
 .bg-video {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  transform: translateX(-50%) translateY(-50%);
-  /* object-fit: cover заставляет видео вести себя как background-size: cover */
-  object-fit: cover;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important; /* Важно: cover заполняет весь экран */
+  object-position: center !important;
   z-index: 0;
+  pointer-events: none; /* чтобы видео не мешало кликам */
 }
 
-/* Затемняющий оверлей для лучшей читаемости текста */
+/* Затемняющий оверлей */
 .bg-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.3); /* Регулируйте прозрачность по необходимости */
+  background-color: rgba(0, 0, 0, 0.3);
   z-index: 1;
+  pointer-events: none;
 }
 
-/* Убедимся, что контент находится поверх видео и оверлея */
+/* Контент поверх видео */
 #view-1 main {
   position: relative;
   z-index: 2;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Мобильная оптимизация для видео */
+/* Удалите старые медиа-запросы для видео или замените их этим: */
 @media (max-width: 768px) {
   .bg-video {
-    /* На мобильных также используем object-fit: cover */
-    object-fit: cover;
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
   }
   
-  /* Уменьшаем прозрачность оверлея для мобильных, чтобы текст был контрастнее */
   .bg-overlay {
     background-color: rgba(0, 0, 0, 0.4);
   }
 }
 
-/* Для очень узких экранов (например, iPhone SE) */
+/* Для очень узких экранов */
 @media (max-width: 375px) {
   .bg-video {
-    /* Убеждаемся, что видео заполняет весь экран */
-    min-width: 100%;
-    min-height: 100%;
-    object-fit: cover;
+    object-fit: cover !important;
   }
 }
 
